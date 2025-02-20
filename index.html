@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Source Sharing Plaform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', '楷体', cursive;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffcc99, #99ccff);
+            color: #333;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #ff6699;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #ff6699;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 80px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            color: #ff3366;
+            text-shadow: 2px 2px #fff;
+            margin-bottom: 1rem;
+            animation: bounce 1.5s infinite;
+        }
+
+        .cta-button {
+            background: #66ff66;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            border: 3px solid #fff;
+            transition: all 0.3s;
+            margin-top: 2rem;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #ff6699;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            padding: 2rem;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: transform 0.3s;
+            border: 3px solid white;
+        }
+
+        .gallery img:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#notes">Notes</a>
+            <a href="#courses">Courses</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Welcome to Source Sharing Platform</h1>
+        <p>Select any part to get sources.</p>
+    </section>
+
+    <footer>
+        <p>© 2024-2025</p>
+	<p>Last Updated: Feb 20th, 2025</p>
+	<p>Get more information about this project: <a id="github-link" href="https://github.com/haidemath">Github</a></p>
+    </footer>
+</body>
+</html>
