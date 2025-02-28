@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Source Sharing Plaform</title>
+    <title>Source Sharing Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -20,17 +20,29 @@
 
         .navbar {
             background: rgba(255, 255, 255, 0.9);
-            padding: 1.5rem;
+            padding: 1rem; /* 减少内边距 */
             position: fixed;
             width: 100%;
             top: 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            height: 40px; /* 调整Logo容器的高度 */
+        }
+
+        .logo img {
+            height: 100%; /* 让图片高度与容器一致 */
+            width: auto; /* 宽度自适应，保持图片比例 */
+            border-radius: 10px; /* 可选：给Logo加圆角 */
         }
 
         .nav-links {
             display: flex;
-            justify-content: center;
             gap: 2rem;
         }
 
@@ -151,13 +163,19 @@
             .hero h1 {
                 font-size: 2.5rem;
             }
+            .navbar {
+                padding: 0.5rem; /* 在小屏幕上减少内边距 */
+            }
+            .logo {
+                height: 30px; /* 在小屏幕上进一步缩小Logo */
+            }
         }
     </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img src="images/a-23.png" alt="Logo">
+            <img src="path/to/your/logo.png" alt="Logo">
         </div>
         <div class="nav-links">
             <a href="/">Home</a>
@@ -174,8 +192,8 @@
 
     <footer>
         <p>© 2024-2025</p>
-	<p>Last Updated: Feb 20th, 2025</p>
-	<p>Get more information about this project: <a id="github-link" href="https://github.com/haidemath">Github</a></p>
+        <p>Last Updated: Feb 20th, 2025</p>
+        <p>Get more information about this project: <a id="github-link" href="https://github.com/haidemath">Github</a></p>
     </footer>
 </body>
 </html>
