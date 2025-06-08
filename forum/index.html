@@ -143,17 +143,37 @@
             font-size: 0.9rem;
         }
 
-        .discussions-container {
+        .discussion-section {
+            display: none; /* 默认隐藏所有讨论区域 */
             background: #f8f9fa;
             border-radius: 15px;
             padding: 1.5rem;
             margin-top: 2rem;
         }
-
-        .forum-actions {
+        
+        .discussion-section.active {
+            display: block; /* 只显示当前活跃的讨论区域 */
+        }
+        
+        .section-header {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(255, 102, 153, 0.2);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #ff6699;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.5rem;
         }
         
         .new-discussion-btn {
@@ -249,7 +269,7 @@
         </div>
 
         <div class="forum-categories">
-            <div class="category-card" data-category="general">
+            <div class="category-card active" data-category="general">
                 <h3><i class="fas fa-comments"></i> 综合讨论</h3>
                 <p>关于学习、考试和课程的一般性讨论</p>
             </div>
@@ -270,17 +290,56 @@
             </div>
         </div>
 
-        <div class="discussions-container">
-            <div class="forum-actions">
-                <a href="https://github.com/haidemath/haidemath.github.io/discussions/new" target="_blank" class="new-discussion-btn">
+        <!-- 综合讨论区域 -->
+        <div id="general-section" class="discussion-section active">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-comments"></i> 综合讨论区
+                </div>
+                <a href="https://github.com/haidemath/haidemath.github.io/discussions/new?category=general" target="_blank" class="new-discussion-btn">
                     <i class="fas fa-plus btn-icon"></i>发起新讨论
                 </a>
             </div>
-            
-            <!-- 论坛内容将通过Giscus加载 -->
-            <div id="forum-content">
-                <div class="giscus"></div>
+            <div class="giscus-general"></div>
+        </div>
+
+        <!-- 数学问答区域 -->
+        <div id="math-section" class="discussion-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-square-root-alt"></i> 数学问答区
+                </div>
+                <a href="https://github.com/haidemath/haidemath.github.io/discussions/new?category=math" target="_blank" class="new-discussion-btn">
+                    <i class="fas fa-plus btn-icon"></i>发起数学问题
+                </a>
             </div>
+            <div class="giscus-math"></div>
+        </div>
+
+        <!-- 编程交流区域 -->
+        <div id="programming-section" class="discussion-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-code"></i> 编程交流区
+                </div>
+                <a href="https://github.com/haidemath/haidemath.github.io/discussions/new?category=programming" target="_blank" class="new-discussion-btn">
+                    <i class="fas fa-plus btn-icon"></i>发起编程讨论
+                </a>
+            </div>
+            <div class="giscus-programming"></div>
+        </div>
+
+        <!-- 课程讨论区域 -->
+        <div id="courses-section" class="discussion-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-chalkboard-teacher"></i> 课程讨论区
+                </div>
+                <a href="https://github.com/haidemath/haidemath.github.io/discussions/new?category=courses" target="_blank" class="new-discussion-btn">
+                    <i class="fas fa-plus btn-icon"></i>发起课程讨论
+                </a>
+            </div>
+            <div class="giscus-courses"></div>
         </div>
     </div>
 
@@ -294,6 +353,9 @@
         // 分类点击事件处理
         document.querySelectorAll('.category-card').forEach(card => {
             card.addEventListener('click', function() {
+                // 获取当前分类
+                const category = this.dataset.category;
+                
                 // 移除所有分类的active类
                 document.querySelectorAll('.category-card').forEach(c => 
                     c.classList.remove('active'));
@@ -301,31 +363,93 @@
                 // 给当前点击的分类添加active类
                 this.classList.add('active');
                 
-                // 获取分类名称用于显示
-                const categoryName = this.querySelector('h3').textContent.trim();
-                console.log(`选择了分类: ${categoryName}`);
+                // 隐藏所有讨论区域
+                document.querySelectorAll('.discussion-section').forEach(section => 
+                    section.classList.remove('active'));
                 
-                // 在实际应用中，可以基于此筛选Discussions
-                // 目前仅做视觉反馈
-                alert(`您选择了"${categoryName}"分类。\n\n在GitHub Discussions中，您可以使用对应的标签筛选讨论。`);
+                // 显示对应的讨论区域
+                document.getElementById(`${category}-section`).classList.add('active');
             });
         });
     </script>
 
-    <!-- Giscus Script -->
+    <!-- 综合讨论区域的Giscus脚本 -->
     <script src="https://giscus.app/client.js"
         data-repo="haidemath/haidemath.github.io"
         data-repo-id="R_kgDON8pmrA"
         data-category-id="DIC_kwDON8pmrM4CrLtW"
-        data-mapping="pathname"
+        data-mapping="specific"
+        data-term="forum-general"
         data-strict="0"
         data-reactions-enabled="1"
         data-emit-metadata="1"
         data-input-position="top"
-        data-theme="dark"
+        data-theme="light"
         data-lang="zh-CN"
         data-loading="lazy"
         crossorigin="anonymous"
+        class="giscus-frame"
+        data-container=".giscus-general"
+        async>
+    </script>
+
+    <!-- 数学问答区域的Giscus脚本 -->
+    <script src="https://giscus.app/client.js"
+        data-repo="haidemath/haidemath.github.io"
+        data-repo-id="R_kgDON8pmrA"
+        data-category-id="DIC_kwDON8pmrM4CrLtW"
+        data-mapping="specific"
+        data-term="forum-math"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="1"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        class="giscus-frame"
+        data-container=".giscus-math"
+        async>
+    </script>
+
+    <!-- 编程交流区域的Giscus脚本 -->
+    <script src="https://giscus.app/client.js"
+        data-repo="haidemath/haidemath.github.io"
+        data-repo-id="R_kgDON8pmrA"
+        data-category-id="DIC_kwDON8pmrM4CrLtW"
+        data-mapping="specific"
+        data-term="forum-programming"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="1"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        class="giscus-frame"
+        data-container=".giscus-programming"
+        async>
+    </script>
+
+    <!-- 课程讨论区域的Giscus脚本 -->
+    <script src="https://giscus.app/client.js"
+        data-repo="haidemath/haidemath.github.io"
+        data-repo-id="R_kgDON8pmrA"
+        data-category-id="DIC_kwDON8pmrM4CrLtW"
+        data-mapping="specific"
+        data-term="forum-courses"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="1"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        class="giscus-frame"
+        data-container=".giscus-courses"
         async>
     </script>
 </body>
