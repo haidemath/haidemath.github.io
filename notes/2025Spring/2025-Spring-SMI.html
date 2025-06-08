@@ -1,103 +1,240 @@
-
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Source Sharing Platform - Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>复变函数 - 课程资源</title>
     <link rel="stylesheet" type="text/css" href="realmodel.css" media="all">
     <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #1abc9c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f0f0f0, #d0d0d0);
+            font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
             margin: 0;
             padding: 0;
-            color: #333;
+            color: var(--text);
+            line-height: 1.6;
         }
 
         #wrap {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
         }
 
         #header {
             text-align: center;
-            background-color: #3948D2;
-            color: #fff;
-            padding: 20px;
-            border-radius: 10px 10px 0 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 3rem 2rem;
+            position: relative;
         }
 
         #header h1 {
             margin: 0;
-            font-size: 2.5em;
+            font-size: 3rem;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
 
         #header p {
-            margin: 10px 0 0;
-            font-size: 1.2em;
+            margin: 0.8rem 0 0;
+            font-size: 1.4rem;
+            opacity: 0.9;
         }
 
         #content {
-            padding: 20px;
+            padding: 2.5rem;
         }
 
         h2 {
-            color: #3948D2;
-            border-bottom: 2px solid #3948D2;
-            padding-bottom: 10px;
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+            position: relative;
+        }
+
+        h2:first-child {
+            margin-top: 0;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: var(--accent);
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
         }
 
         th, td {
-            border: 1px solid #ccc;
-            padding: 15px;
-            text-align: center;
+            padding: 1rem 1.2rem;
+            text-align: left;
         }
 
         th {
-            background-color: #3948D2;
-            color: #fff;
+            background-color: var(--secondary);
+            color: white;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 2px;
+        }
+
+        a:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .chapter-mark {
             font-weight: bold;
+            color: var(--primary);
         }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
+        .date {
+            color: #666;
+            font-size: 0.9rem;
         }
 
         #footer {
             text-align: center;
-            padding: 20px;
-            background-color: #f0f0f0;
-            border-radius: 0 0 10px 10px;
-            margin-top: 20px;
+            padding: 2rem;
+            background-color: var(--primary);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
         }
 
         #footer p {
-            margin: 5px 0;
+            margin: 0.5rem 0;
         }
 
         #footer a {
-            color: #3948D2;
-            text-decoration: none;
-            font-weight: bold;
+            color: white;
+            border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
         }
 
         #footer a:hover {
-            text-decoration: underline;
+            border-bottom: 1px solid white;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .note {
+            background-color: rgba(26, 188, 156, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        @media (max-width: 768px) {
+            #wrap {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            #header {
+                padding: 2rem 1rem;
+            }
+            
+            #header h1 {
+                font-size: 2rem;
+            }
+            
+            #content {
+                padding: 1.5rem;
+            }
+            
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            tr {
+                margin-bottom: 1rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            
+            td {
+                border: none;
+                position: relative;
+                padding-left: 40%;
+                text-align: right;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            td:before {
+                position: absolute;
+                left: 1rem;
+                width: 35%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+                content: attr(data-label);
+            }
+            
+            td:last-child {
+                border-bottom: 0;
+            }
         }
     </style>
 </head>
@@ -109,13 +246,13 @@
     </div>
     <font face="仿宋">
     <div id="content">
-        <h2><strong>简介</strong></h2>
-        <p>统计建模与推断是统计学的一个分支，旨在通过数学模型描述数据生成过程，并利用数据进行参数估计、假设检验和预测，主要内容包括：模型构建、参数估计、假设检验、预测与推断。</p>
+        <h2>简介</h2>
+        <p class="intro-text">统计建模与推断是统计学的一个分支，旨在通过数学模型描述数据生成过程，并利用数据进行参数估计、假设检验和预测，主要内容包括：模型构建、参数估计、假设检验、预测与推断。</p>
 
-       
-        <p>&nbsp;</p>
-        <h2><strong>课程笔记</strong></h2>
-        <p><strong>以下为课程资料</strong></p>
+        <h2>课程笔记</h2>
+        <div class="note">
+            <strong>以下为课程资料</strong>
+        </div>
         <table>
             <tr>
                 <th>章节</th>
@@ -151,7 +288,7 @@
         </font>
     </div>
     <div id="footer">
-        <p>Last Updated on March 23th, 2025</p>
+        <p>Last Updated on June 8th, 2025</p>
         <p>Special Thanks for <a href="http://home.ustc.edu.cn/~matchbox/real.html">Page Reference.</a></p>
     </div>
 </body>
