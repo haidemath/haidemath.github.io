@@ -12,12 +12,10 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', '微软雅黑', cursive;
         }
-
         body {
             background: linear-gradient(135deg, #ffcc99, #99ccff);
             color: #333;
         }
-
         .navbar {
             background: rgba(255, 255, 255, 0.9);
             padding: 1.5rem 2rem;
@@ -30,7 +28,6 @@
             align-items: center;
             justify-content: flex-start;
         }
-        
         .logo {
             display: flex;
             align-items: center;
@@ -38,12 +35,10 @@
             height: 50px;
             flex-shrink: 0;
         }
-
         .logo img {
             height: 50px;
             display: block;
         }
-
         .nav-links {
             position: absolute;
             left: 50%;
@@ -53,7 +48,6 @@
             gap: 2rem;
             width: max-content;
         }
-
         .nav-links a {
             text-decoration: none;
             color: #ff6699;
@@ -62,18 +56,15 @@
             border-radius: 20px;
             transition: all 0.3s;
         }
-
         .nav-links a:hover {
             background: #ff6699;
             color: white;
             transform: translateY(-3px);
         }
-
         .nav-links a.active {
             background: #ff6699;
             color: white;
         }
-
         .content {
             max-width: 1200px;
             margin: 120px auto 40px;
@@ -82,121 +73,84 @@
             border-radius: 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-
         .forum-header {
             text-align: center;
             margin-bottom: 2rem;
         }
-
         .forum-header h1 {
             font-size: 2.5rem;
             color: #ff3366;
             margin-bottom: 1rem;
         }
-
         .forum-header p {
             color: #666;
             max-width: 800px;
             margin: 0 auto 1.5rem;
             line-height: 1.6;
         }
-
-        .forum-categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+        .forum-modules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
         }
-
-        .category-card {
+        .forum-module {
             background: #f8f9fa;
-            border-radius: 15px;
-            padding: 1.5rem;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-left: 4px solid #ff6699;
-            cursor: pointer;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 2rem 1.5rem 2rem 1.5rem;
+            flex: 1 1 400px;
+            min-width: 320px;
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
         }
-
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-        }
-        
-        .category-card.active {
-            border-left-color: #66ff66;
-            background-color: rgba(102, 255, 102, 0.1);
-        }
-
-        .category-card h3 {
+        .forum-module h2 {
             color: #ff6699;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            text-align: left;
             display: flex;
             align-items: center;
+            gap: 0.5em;
         }
-
-        .category-card i {
-            margin-right: 0.5rem;
+        .giscus-comments {
+            max-width: 95%;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+            padding: 0.5rem 0.5rem 0.5rem 0.5rem;
         }
-
-        .category-card p {
-            color: #666;
-            font-size: 0.9rem;
+        /* 让 giscus 评论区不贴边 */
+        .giscus-frame, .giscus-general, .giscus-math, .giscus-programming, .giscus-courses {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+            box-sizing: border-box;
+            padding: 0;
         }
-
-        .discussion-section {
-            display: none; /* 默认隐藏所有讨论区域 */
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-top: 2rem;
+        @media (max-width: 1100px) {
+            .forum-modules {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .forum-module {
+                max-width: 100%;
+            }
         }
-        
-        .discussion-section.active {
-            display: block; /* 只显示当前活跃的讨论区域 */
+        @media (max-width: 600px) {
+            .content {
+                padding: 0.5rem;
+            }
+            .forum-module {
+                padding: 1rem 0.2rem;
+                min-width: 0;
+            }
         }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid rgba(255, 102, 153, 0.2);
-        }
-        
-        .section-title {
-            font-size: 1.5rem;
-            color: #ff6699;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        
-        .section-title i {
-            margin-right: 0.5rem;
-        }
-        
-        .new-discussion-btn {
-            background: #66ff66;
-            color: #333;
-            padding: 0.8rem 1.5rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            transition: all 0.3s;
-        }
-        
-        .new-discussion-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(102, 255, 102, 0.3);
-        }
-
-        .btn-icon {
-            margin-right: 0.5rem;
-        }
-
         footer {
             background: #333;
             color: white;
@@ -204,50 +158,12 @@
             text-align: center;
             margin-top: 3rem;
         }
-
         footer a {
             color: #99ccff;
             text-decoration: none;
         }
-
         footer a:hover {
             text-decoration: underline;
-        }
-        
-        /* Giscus customization */
-        .giscus {
-            margin-top: 1rem;
-        }
-        
-        .giscus-frame,.giscus-general, .giscus-math, .giscus-programming, .giscus-courses {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 auto;
-            box-sizing: border-box;
-            padding: 0;
-        }
-
-        @media (max-width: 768px) {
-            .forum-categories {
-                grid-template-columns: 1fr;
-            }
-            
-            .content {
-                padding: 1.5rem;
-                margin-top: 100px;
-            }
-            
-            .forum-header h1 {
-                font-size: 2rem;
-            }
-            
-            .nav-links {
-                position: relative;
-                left: 0;
-                transform: none;
-                overflow-x: auto;
-                padding: 1rem 0;
-            }
         }
     </style>
 </head>
@@ -264,113 +180,35 @@
             <a href="/forum" class="active">Forum</a>
         </div>
     </nav>
-
     <div class="content">
         <div class="forum-header">
             <h1>学习交流论坛</h1>
-            <p>欢迎来到学习交流社区！在这里你可以提问、回答、分享学习资源、编程经验和课程知识。请注意不要在本平台发布任何违反法律、社会公德的内容。</p>
+            <p>欢迎来到学习交流社区！在这里你可以提问、回答、分享学习资源、编程经验和课程知识。请注意不要在本平台发布任何违反法律、社会道德、学术诚信的内容。</p>
         </div>
-
-        <div class="forum-categories">
-            <div class="category-card active" data-category="general">
-                <h3><i class="fas fa-comments"></i> 综合讨论</h3>
-                <p>关于学习、考试和课程的一般性讨论</p>
-            </div>
-            
-            <div class="category-card" data-category="math">
-                <h3><i class="fas fa-square-root-alt"></i> 数学问答</h3>
-                <p>数学相关问题及解答</p>
-            </div>
-
-            <div class="category-card" data-category="programming">
-                <h3><i class="fas fa-code"></i> 编程交流</h3>
-                <p>编程语言、算法和项目相关讨论</p>
-            </div>
-            
-            <div class="category-card" data-category="courses">
-                <h3><i class="fas fa-chalkboard-teacher"></i> 课程讨论</h3>
-                <p>特定课程相关的问题和讨论</p>
-            </div>
-        </div>
-
-        <!-- 综合讨论区域 -->
-        <div id="general-section" class="discussion-section active">
-            <div class="section-header">
-                <div class="section-title">
-                    <i class="fas fa-comments"></i> 综合讨论区
-                </div>
-                <a href="https://github.com/haidemath/haidemath.github.io/discussions/new?category=general" target="_blank" class="new-discussion-btn">
-                    <i class="fas fa-plus btn-icon"></i>发起综合讨论
-                </a>
-            </div>
-            <div class="giscus-general"></div>
-        </div>
-
-        <!-- 数学问答区域 -->
-        <div id="math-section" class="discussion-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <i class="fas fa-square-root-alt"></i> 数学问答区
-                </div>
-                <a href="https://github.com/haidemath/haidemath.github.io/discussions/new?category=math" target="_blank" class="new-discussion-btn">
-                    <i class="fas fa-plus btn-icon"></i>发起数学讨论
-                </a>
-            </div>
-            <div class="giscus-math"></div>
-        </div>
-
-        <!-- 编程交流区域 -->
-        <div id="programming-section" class="discussion-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <i class="fas fa-code"></i> 编程交流区
-                </div>
-                <a href="https://github.com/haidemath/haidemath.github.io/discussions/new?category=programming" target="_blank" class="new-discussion-btn">
-                    <i class="fas fa-plus btn-icon"></i>发起编程讨论
-                </a>
-            </div>
-            <div class="giscus-programming"></div>
-        </div>
-
-        <!-- 课程讨论区域 -->
-        <div id="courses-section" class="discussion-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <i class="fas fa-chalkboard-teacher"></i> 课程讨论区
-                </div>
-                <a href="https://github.com/haidemath/haidemath.github.io/discussions/new?category=courses" target="_blank" class="new-discussion-btn">
-                    <i class="fas fa-plus btn-icon"></i>发起课程讨论
-                </a>
-            </div>
-            <div class="giscus-courses"></div>
+        <div class="forum-modules">
+            <!-- 综合讨论 -->
+            <section class="forum-module">
+                <h2><i class="fas fa-comments"></i> 综合讨论区</h2>
+                <div class="giscus-comments giscus-general"></div>
+            </section>
+            <!-- 数学问答 -->
+            <section class="forum-module">
+                <h2><i class="fas fa-square-root-alt"></i> 数学问答区</h2>
+                <div class="giscus-comments giscus-math"></div>
+            </section>
+            <!-- 编程交流 -->
+            <section class="forum-module">
+                <h2><i class="fas fa-code"></i> 编程交流区</h2>
+                <div class="giscus-comments giscus-programming"></div>
+            </section>
+            <!-- 课程讨论 -->
+            <section class="forum-module">
+                <h2><i class="fas fa-chalkboard-teacher"></i> 课程讨论区</h2>
+                <div class="giscus-comments giscus-courses"></div>
+            </section>
         </div>
     </div>
-
-    <script>
-        // 分类点击事件处理
-        document.querySelectorAll('.category-card').forEach(card => {
-            card.addEventListener('click', function() {
-                // 获取当前分类
-                const category = this.dataset.category;
-                
-                // 移除所有分类的active类
-                document.querySelectorAll('.category-card').forEach(c => 
-                    c.classList.remove('active'));
-                
-                // 给当前点击的分类添加active类
-                this.classList.add('active');
-                
-                // 隐藏所有讨论区域
-                document.querySelectorAll('.discussion-section').forEach(section => 
-                    section.classList.remove('active'));
-                
-                // 显示对应的讨论区域
-                document.getElementById(`${category}-section`).classList.add('active');
-            });
-        });
-    </script>
-
-    <!-- 综合讨论区域的Giscus脚本 -->
+    <!-- 下方四个giscus脚本不可更改 -->
     <script src="https://giscus.app/client.js"
         data-repo="haidemath/haidemath.github.io"
         data-repo-id="R_kgDON8pmrA"
@@ -389,8 +227,6 @@
         data-container=".giscus-general"
         async>
     </script>
-
-    <!-- 数学问答区域的Giscus脚本 -->
     <script src="https://giscus.app/client.js"
         data-repo="haidemath/haidemath.github.io"
         data-repo-id="R_kgDON8pmrA"
@@ -409,8 +245,6 @@
         data-container=".giscus-math"
         async>
     </script>
-
-    <!-- 编程交流区域的Giscus脚本 -->
     <script src="https://giscus.app/client.js"
         data-repo="haidemath/haidemath.github.io"
         data-repo-id="R_kgDON8pmrA"
@@ -429,8 +263,6 @@
         data-container=".giscus-programming"
         async>
     </script>
-
-    <!-- 课程讨论区域的Giscus脚本 -->
     <script src="https://giscus.app/client.js"
         data-repo="haidemath/haidemath.github.io"
         data-repo-id="R_kgDON8pmrA"
@@ -449,10 +281,9 @@
         data-container=".giscus-courses"
         async>
     </script>
-
     <footer>
         <p>© 2024-2025 上次更新: June 8th, 2025</p>
-        <p>获取更多信息, 请访问<a id="github-link" href="https://github.com/haidemath">Github</a> <a id="github-link" href="https://github.com/haidemath/haidemath.github.io/discussions">Discussions</a></p>
+        <p>获取更多信息, 请访问<a id="github-link" href="https://github.com/haidemath">Github</a> <a id="github-link" href="https://github.com/haidemath/haidemath.github.io/discussions">讨论区</a></p>
         <p>本项目由2023级数学2班建设, 特别感谢刘小允、孙景昱同学的支持。</p>
     </footer>
 </body>
