@@ -220,8 +220,18 @@
         }
         
         .giscus-frame {
-            border: none;
+            max-width: 100%;
+            width: 100% !important;
+            margin: 0 auto;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        .giscus-general, .giscus-math, .giscus-programming, .giscus-courses {
+            max-width: 100%;
             width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
         }
 
         @media (max-width: 768px) {
