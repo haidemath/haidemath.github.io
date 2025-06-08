@@ -3,19 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>论坛互动 - Source Sharing Platform</title>
+    <title>Source Sharing Platform - Forum</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', '微软雅黑', cursive;
-        }
-        body {
-            background: linear-gradient(135deg, #ffcc99, #99ccff);
-            color: #333;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', '微软雅黑', cursive; }
+        body { background: linear-gradient(135deg, #ffcc99, #99ccff); color: #333; }
         .navbar {
             background: rgba(255, 255, 255, 0.9);
             padding: 1.5rem 2rem;
@@ -28,17 +20,8 @@
             align-items: center;
             justify-content: flex-start;
         }
-        .logo {
-            display: flex;
-            align-items: center;
-            margin-right: 2rem;
-            height: 50px;
-            flex-shrink: 0;
-        }
-        .logo img {
-            height: 50px;
-            display: block;
-        }
+        .logo { display: flex; align-items: center; margin-right: 2rem; height: 50px; flex-shrink: 0; }
+        .logo img { height: 50px; display: block; }
         .nav-links {
             position: absolute;
             left: 50%;
@@ -56,14 +39,10 @@
             border-radius: 20px;
             transition: all 0.3s;
         }
-        .nav-links a:hover {
+        .nav-links a:hover, .nav-links a.active {
             background: #ff6699;
             color: white;
             transform: translateY(-3px);
-        }
-        .nav-links a.active {
-            background: #ff6699;
-            color: white;
         }
         .content {
             max-width: 1200px;
@@ -73,39 +52,51 @@
             border-radius: 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        .forum-header {
-            text-align: center;
+        .forum-header { text-align: center; margin-bottom: 2rem; }
+        .forum-header h1 { font-size: 2.5rem; color: #ff3366; margin-bottom: 1rem; }
+        .forum-header p { color: #666; max-width: 800px; margin: 0 auto 1.5rem; line-height: 1.6; }
+
+        /* Tab切换栏样式 */
+        .tab-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
             margin-bottom: 2rem;
         }
-        .forum-header h1 {
-            font-size: 2.5rem;
+        .tab-bar button {
+            padding: 0.6em 2em;
+            border: none;
+            background: #f2f2f2;
             color: #ff3366;
-            margin-bottom: 1rem;
+            font-weight: bold;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background 0.2s, color 0.2s;
         }
-        .forum-header p {
-            color: #666;
-            max-width: 800px;
-            margin: 0 auto 1.5rem;
-            line-height: 1.6;
-        }
-        .forum-modules {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            justify-content: center;
+        .tab-bar button.active {
+            background: #ff6699;
+            color: #fff;
         }
         .forum-module {
+            display: none;
             background: #f8f9fa;
             border-radius: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            padding: 2rem 1.5rem 2rem 1.5rem;
-            flex: 1 1 400px;
-            min-width: 320px;
-            max-width: 500px;
+            padding: 2rem 1.5rem;
             margin: 0 auto;
-            display: flex;
+            min-width: 320px;
+            max-width: 700px;
             flex-direction: column;
             align-items: stretch;
+        }
+        .forum-module.active {
+            display: block;
+            animation: fadeIn 0.35s;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px);}
+          to { opacity: 1; transform: none;}
         }
         .forum-module h2 {
             color: #ff6699;
@@ -116,40 +107,22 @@
             align-items: center;
             gap: 0.5em;
         }
+        /* 评论区美观不贴边 */
         .giscus-comments {
-            max-width: 95%;
-            margin: 0 auto;
+            max-width: 98%;
+            margin: 0 auto !important;
             border-radius: 12px;
-            overflow: hidden;
             background: #fff;
             box-shadow: 0 1px 6px rgba(0,0,0,0.07);
             padding: 0.5rem 0.5rem 0.5rem 0.5rem;
         }
-        /* 让 giscus 评论区不贴边 */
-        .giscus-frame, .giscus-general, .giscus-math, .giscus-programming, .giscus-courses {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 auto !important;
-            box-sizing: border-box;
-            padding: 0;
-        }
         @media (max-width: 1100px) {
-            .forum-modules {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-            .forum-module {
-                max-width: 100%;
-            }
+            .forum-module { max-width: 100%; }
+            .content { padding: 1rem; }
         }
         @media (max-width: 600px) {
-            .content {
-                padding: 0.5rem;
-            }
-            .forum-module {
-                padding: 1rem 0.2rem;
-                min-width: 0;
-            }
+            .content { padding: 0.5rem; }
+            .forum-module { padding: 1rem 0.2rem; min-width: 0; }
         }
         footer {
             background: #333;
@@ -158,13 +131,8 @@
             text-align: center;
             margin-top: 3rem;
         }
-        footer a {
-            color: #99ccff;
-            text-decoration: none;
-        }
-        footer a:hover {
-            text-decoration: underline;
-        }
+        footer a { color: #99ccff; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -183,32 +151,34 @@
     <div class="content">
         <div class="forum-header">
             <h1>学习交流论坛</h1>
-            <p>欢迎来到学习交流社区！在这里你可以提问、回答、分享学习资源、编程经验和课程知识。请注意不要在本平台发布任何违反法律、社会道德、学术诚信的内容。</p>
+            <p>欢迎来到学习交流社区！在这里你可以提问、回答、分享学习资源、编程经验和课程知识。请注意不要在本平台发布任何违反法律、社会道德及不适宜内容。</p>
         </div>
-        <div class="forum-modules">
-            <!-- 综合讨论 -->
-            <section class="forum-module">
-                <h2><i class="fas fa-comments"></i> 综合讨论区</h2>
-                <div class="giscus-comments giscus-general"></div>
-            </section>
-            <!-- 数学问答 -->
-            <section class="forum-module">
-                <h2><i class="fas fa-square-root-alt"></i> 数学问答区</h2>
-                <div class="giscus-comments giscus-math"></div>
-            </section>
-            <!-- 编程交流 -->
-            <section class="forum-module">
-                <h2><i class="fas fa-code"></i> 编程交流区</h2>
-                <div class="giscus-comments giscus-programming"></div>
-            </section>
-            <!-- 课程讨论 -->
-            <section class="forum-module">
-                <h2><i class="fas fa-chalkboard-teacher"></i> 课程讨论区</h2>
-                <div class="giscus-comments giscus-courses"></div>
-            </section>
+        <!-- Tab切换栏 -->
+        <div class="tab-bar">
+            <button class="active" data-tab="general">综合讨论区</button>
+            <button data-tab="math">数学问答区</button>
+            <button data-tab="programming">编程交流区</button>
+            <button data-tab="courses">课程讨论区</button>
         </div>
+        <!-- 四大板块 -->
+        <section class="forum-module active" id="tab-general">
+            <h2><i class="fas fa-comments"></i> 综合讨论区</h2>
+            <div class="giscus-comments giscus-general"></div>
+        </section>
+        <section class="forum-module" id="tab-math">
+            <h2><i class="fas fa-square-root-alt"></i> 数学问答区</h2>
+            <div class="giscus-comments giscus-math"></div>
+        </section>
+        <section class="forum-module" id="tab-programming">
+            <h2><i class="fas fa-code"></i> 编程交流区</h2>
+            <div class="giscus-comments giscus-programming"></div>
+        </section>
+        <section class="forum-module" id="tab-courses">
+            <h2><i class="fas fa-chalkboard-teacher"></i> 课程讨论区</h2>
+            <div class="giscus-comments giscus-courses"></div>
+        </section>
     </div>
-    <!-- 下方四个giscus脚本不可更改 -->
+    <!-- giscus 四个脚本，保持原样不可更改 -->
     <script src="https://giscus.app/client.js"
         data-repo="haidemath/haidemath.github.io"
         data-repo-id="R_kgDON8pmrA"
@@ -281,9 +251,25 @@
         data-container=".giscus-courses"
         async>
     </script>
+    <!-- Tab切换JS -->
+    <script>
+        const tabs = document.querySelectorAll('.tab-bar button');
+        const modules = document.querySelectorAll('.forum-module');
+        tabs.forEach(btn => {
+            btn.onclick = function() {
+                tabs.forEach(b => b.classList.remove('active'));
+                modules.forEach(mod => mod.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+            };
+        });
+    </script>
     <footer>
         <p>© 2024-2025 上次更新: June 8th, 2025</p>
-        <p>获取更多信息, 请访问<a id="github-link" href="https://github.com/haidemath">Github</a> <a id="github-link" href="https://github.com/haidemath/haidemath.github.io/discussions">讨论区</a></p>
+        <p>获取更多信息, 请访问
+            <a id="github-link" href="https://github.com/haidemath">Github</a>
+            <a id="github-link" href="https://github.com/haidemath/haidemath.github.io/discussions">社区讨论</a>
+        </p>
         <p>本项目由2023级数学2班建设, 特别感谢刘小允、孙景昱同学的支持。</p>
     </footer>
 </body>
