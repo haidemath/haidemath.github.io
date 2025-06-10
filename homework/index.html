@@ -436,15 +436,15 @@
 
     <header>
         <div class="container header-content">
-            <h1 class="header-title">Homework Information Platform</h1>
+            <h1 class="header-title">Welcome to Homework Information Platform</h1>
             <p class="header-subtitle">You can find any homework information that are related to your study here.</p>
         </div>
     </header>
 
     <main class="container">
         <div class="intro-card">
-            <h2 class="section-title">课程简介</h2>
-            <p>本页面汇总了海德学院2023级数学与应用数学专业的所有课程作业。每周的作业将会在这里更新。</p>
+            <h2 class="section-title">平台简介</h2>
+            <p>本页面汇总了海德学院2023级数学与应用数学专业的所有课程作业，每周的作业将会在这里更新。</p>
         </div>
 
         <div class="semester-tabs">
@@ -695,7 +695,20 @@
     </main>
 
     <footer>
-        <p class="footer-text">Last Updated: June 9th, 2025</p>
+        <p class="footer-text">© 2024-2025 Last Updated: June 10th, 2025</p>
+        <p class="footer-text">获取更多信息，请访问 <a href="https://github.com/haidemath" class="footer-link">Github</a> 或提交 <a href="https://github.com/haidemath/haidemath.github.io/issues/new" class="footer-link">Issue</a></p>
+        <p class="footer-text">本项目由2023级数学2班建设, 特别感谢刘小允、孙景昱同学的支持。</p>
+        <p class="footer-text">本页访问次数: <span id="visit-count">0</span> 次</p>
+
+        <script>
+        // Visit counter using localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            let visits = localStorage.getItem('visit-count') || 0;
+            visits = parseInt(visits) + 1;
+            localStorage.setItem('visit-count', visits);
+            document.getElementById('visit-count').textContent = visits;
+        });
+        </script>
     </footer>
 
     <div class="back-to-top" id="backToTop">
