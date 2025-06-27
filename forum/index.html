@@ -4,13 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Source Sharing Platform - Forum</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', '微软雅黑', cursive; }
-        body { background: linear-gradient(135deg, #ffcc99, #99ccff); color: #333; }
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+            --text-lighter: #adb5bd;
+            --border: #e9ecef;
+            --success: #38b000;
+            --warning: #ffaa00;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', '微软雅黑', cursive;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-top: 70px; /* Add space for fixed navbar */
+        }
+
+        /* Navbar styles */
         .navbar {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 1.5rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
             position: fixed;
             width: 100%;
             top: 0;
@@ -20,145 +53,370 @@
             align-items: center;
             justify-content: flex-start;
         }
-        .logo { display: flex; align-items: center; margin-right: 2rem; height: 50px; flex-shrink: 0; }
-        .logo img { height: 50px; display: block; }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-right: 2rem;
+            height: 40px;
+            flex-shrink: 0;
+        }
+
+        .logo img {
+            height: 40px;
+            display: block;
+        }
+
         .nav-links {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             justify-content: center;
-            gap: 2rem;
+            gap: 1.5rem;
             width: max-content;
         }
+
         .nav-links a {
             text-decoration: none;
-            color: #ff6699;
+            color: var(--primary);
             font-weight: bold;
             padding: 0.5rem 1rem;
             border-radius: 20px;
             transition: all 0.3s;
         }
-        .nav-links a:hover, .nav-links a.active {
-            background: #ff6699;
+
+        .nav-links a:hover {
+            background: var(--primary);
             color: white;
             transform: translateY(-3px);
         }
-        .content {
-            max-width: 1200px;
-            margin: 120px auto 40px;
-            padding: 2rem;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .forum-header { text-align: center; margin-bottom: 2rem; }
-        .forum-header h1 { font-size: 2.5rem; color: #ff3366; margin-bottom: 1rem; }
-        .forum-header p { color: #666; max-width: 800px; margin: 0 auto 1.5rem; line-height: 1.6; }
 
-        /* Tab切换栏样式 */
+        .nav-links a.active {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 60px 0 80px;
+            position: relative;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--shadow);
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f8f9fa' fill-opacity='1' d='M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,208C1248,171,1344,117,1392,90.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        main {
+            margin-top: -40px;
+            position: relative;
+            z-index: 10;
+            margin-bottom: 60px;
+        }
+
+        .intro-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        /* Tab Bar Styles */
         .tab-bar {
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            gap: 1rem;
+            margin-bottom: 30px;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow);
         }
+
         .tab-bar button {
-            padding: 0.6em 2em;
+            padding: 12px 24px;
             border: none;
-            background: #f2f2f2;
-            color: #ff3366;
+            background: var(--background);
+            color: var(--primary);
             font-weight: bold;
-            border-radius: 18px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 1.1rem;
-            transition: background 0.2s, color 0.2s;
+            transition: var(--transition);
+            border: 2px solid transparent;
         }
+
+        .tab-bar button:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+        }
+
         .tab-bar button.active {
-            background: #ff6699;
-            color: #fff;
+            background: var(--primary);
+            color: white;
+            border-color: var(--secondary);
         }
+
         .forum-module {
             display: none;
-            background: #f8f9fa;
+            background-color: var(--card-bg);
             border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            padding: 2rem 1.5rem;
-            margin: 0 auto;
-            min-width: 320px;
-            max-width: 700px;
-            flex-direction: column;
-            align-items: stretch;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
         }
+
         .forum-module.active {
             display: block;
-            animation: fadeIn 0.35s;
+            animation: fadeIn 0.35s ease-in-out;
         }
+
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px);}
-          to { opacity: 1; transform: none;}
+            from { 
+                opacity: 0; 
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
         }
+
         .forum-module h2 {
-            color: #ff6699;
-            margin-bottom: 1rem;
-            font-size: 1.25rem;
-            text-align: left;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
             gap: 0.5em;
         }
-        /* 评论区美观不贴边 */
+
+        .forum-module h2 i {
+            color: var(--secondary);
+        }
+
+        /* Giscus Comments Styling */
         .giscus-comments {
-            max-width: 98%;
-            margin: 0 auto !important;
+            background: #fafbfc;
             border-radius: 12px;
-            background: #fff;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
-            padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+            padding: 20px;
+            border: 1px solid var(--border);
         }
-        @media (max-width: 1100px) {
-            .forum-module { max-width: 100%; }
-            .content { padding: 1rem; }
+
+        /* Forum Guidelines */
+        .forum-guidelines {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--primary);
         }
-        @media (max-width: 600px) {
-            .content { padding: 0.5rem; }
-            .forum-module { padding: 1rem 0.2rem; min-width: 0; }
+
+        .forum-guidelines h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
         }
+
+        .forum-guidelines ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .forum-guidelines li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .forum-guidelines li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
         footer {
-            background: #333;
+            background-color: #333;
             color: white;
-            padding: 2rem;
+            padding: 30px;
             text-align: center;
-            margin-top: 3rem;
+            border-radius: 16px 16px 0 0;
         }
-        footer a { color: #99ccff; text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
+
+        .footer-text {
+            color: #f8f9fa;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .footer-link {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            margin: 0 10px;
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                position: relative;
+                left: 0;
+                transform: none;
+                width: 100%;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding: 0.5rem 0;
+                gap: 0.5rem;
+            }
+
+            .navbar {
+                flex-direction: column;
+                padding: 0.5rem;
+                align-items: flex-start;
+            }
+
+            .logo {
+                margin-bottom: 0.5rem;
+            }
+
+            body {
+                padding-top: 110px;
+            }
+
+            .tab-bar {
+                padding: 15px;
+                gap: 0.5rem;
+            }
+
+            .tab-bar button {
+                padding: 10px 16px;
+                font-size: 1rem;
+            }
+
+            .forum-module {
+                padding: 20px;
+            }
+
+            .giscus-comments {
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img src="/images/1.png" alt="Logo">
+            <img src="../images/1.png" alt="Logo">
         </div>
         <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/notes">Notes</a>
-            <a href="/courses">Courses</a>
-            <a href="/homework">Homework</a>
-            <a href="/forum" class="active">Forum</a>
-            <a href="/tools">Tools</a>
+            <a href="../">Home</a>
+            <a href="../notes">Notes</a>
+            <a href="../courses">Courses</a>
+            <a href="../homework">Homework</a>
+            <a href="../forum" class="active">Forum</a>
+            <a href="../tools">Tools</a>
         </div>
     </nav>
-    <div class="content">
-        <div class="forum-header">
-            <h1>学习交流论坛</h1>
-            <p>欢迎来到学习交流论坛！在这里你可以提问、回答、分享学习资源、编程经验和课程知识。请注意不要在本平台发布任何违反法律、社会基本道德和与学习交流无关的内容。</p>
+
+    <header>
+        <div class="container header-content">
+            <h1 class="header-title">学习交流论坛</h1>
+            <p class="header-subtitle">与同学们交流学习心得，讨论问题，分享解题思路和学习资源。</p>
         </div>
+    </header>
+
+    <main class="container">
+        <div class="intro-card">
+            <h2 class="section-title">论坛简介</h2>
+            <p>欢迎来到学习交流论坛！在这里你可以提问、回答、分享学习资源、编程经验和课程知识。</p>
+            
+            <div class="forum-guidelines">
+                <h3><i class="fas fa-info-circle"></i>论坛规则</h3>
+                <ul>
+                    <li>请保持友善和尊重的态度</li>
+                    <li>发布与学习相关的内容</li>
+                    <li>不要发布违反法律法规的内容</li>
+                    <li>遵守社会基本道德规范</li>
+                    <li>鼓励分享知识和互相帮助</li>
+                </ul>
+            </div>
+        </div>
+
         <!-- Tab切换栏 -->
         <div class="tab-bar">
-            <button class="active" data-tab="general">讨论区</button>
+            <button class="active" data-tab="general">
+                <i class="fas fa-comments"></i> 讨论区
+            </button>
         </div>
-        <!-- 四大板块 -->
+
+        <!-- 论坛模块 -->
         <section class="forum-module active" id="tab-general">
             <h2><i class="fas fa-comments"></i> 讨论区</h2>
             <div class="giscus-comments giscus-general"></div>
@@ -178,7 +436,8 @@
                 async>
             </script>
         </section>
-    </div>
+    </main>
+
     <!-- Tab切换JS -->
     <script>
         const tabs = document.querySelectorAll('.tab-bar button');
@@ -192,13 +451,15 @@
             };
         });
     </script>
+
     <footer>
-        <p>© 2024-2025 上次更新: June 8th, 2025</p>
-        <p>获取更多信息, 请访问
-            <a id="github-link" href="https://github.com/haidemath">Github</a>
-            <a id="github-link" href="https://github.com/haidemath/haidemath.github.io/discussions">社区讨论</a>
+        <p class="footer-text">© 2024-2025 Last Updated: June 27th, 2025</p>
+        <p class="footer-text">获取更多信息，请访问 
+            <a href="https://github.com/haidemath" class="footer-link">Github</a>
+            <a href="https://github.com/haidemath/haidemath.github.io/discussions" class="footer-link">社区讨论</a>
         </p>
-        <p>本项目由2023级数学2班建设, 特别感谢刘小允、孙景昱同学的支持。</p>
+        <p class="footer-text">本项目由2023级数学2班建设，特别感谢刘小允、孙景昱同学的支持。</p>
+        <p class="footer-text">获取更多信息，请访问 <a href="https://github.com/haidemath/haidemath.github.io/" class="footer-link">Github</a> 或提交 <a href="https://github.com/haidemath/haidemath.github.io/issues/new" class="footer-link">Issue</a></p>
     </footer>
 </body>
 </html>
