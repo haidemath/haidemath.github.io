@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Source Sharing Platform - Courses</title>
+    <title>Lectures | Source Sharing Platform</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -24,23 +24,19 @@
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             --transition: all 0.3s ease;
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', '微软雅黑', cursive;
         }
-
         body {
             font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--background);
             color: var(--text-dark);
             line-height: 1.6;
-            padding-top: 70px; /* Add space for fixed navbar */
+            padding-top: 70px;
         }
-
-        /* Navbar styles */
         .navbar {
             background: rgba(255, 255, 255, 0.95);
             padding: 1rem 2rem;
@@ -53,7 +49,6 @@
             align-items: center;
             justify-content: flex-start;
         }
-
         .logo {
             display: flex;
             align-items: center;
@@ -61,12 +56,10 @@
             height: 40px;
             flex-shrink: 0;
         }
-
         .logo img {
             height: 40px;
             display: block;
         }
-
         .nav-links {
             position: absolute;
             left: 50%;
@@ -76,7 +69,6 @@
             gap: 1.5rem;
             width: max-content;
         }
-
         .nav-links a {
             text-decoration: none;
             color: var(--primary);
@@ -85,24 +77,20 @@
             border-radius: 20px;
             transition: all 0.3s;
         }
-
         .nav-links a:hover {
             background: var(--primary);
             color: white;
             transform: translateY(-3px);
         }
-
         .nav-links a.active {
             background: var(--primary-light);
             color: white;
         }
-
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 0 20px;
         }
-
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -111,7 +99,6 @@
             border-radius: 0 0 20px 20px;
             box-shadow: var(--shadow);
         }
-
         header::after {
             content: "";
             position: absolute;
@@ -123,30 +110,25 @@
             background-size: cover;
             background-repeat: no-repeat;
         }
-
         .header-content {
             text-align: center;
         }
-
         .header-title {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 8px;
             letter-spacing: 1px;
         }
-
         .header-subtitle {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             opacity: 0.9;
         }
-
         main {
             margin-top: -40px;
             position: relative;
             z-index: 10;
             margin-bottom: 60px;
         }
-
         .intro-card {
             background-color: var(--card-bg);
             border-radius: 16px;
@@ -154,7 +136,6 @@
             box-shadow: var(--shadow);
             margin-bottom: 30px;
         }
-
         .section-title {
             color: var(--primary);
             font-size: 1.8rem;
@@ -162,7 +143,6 @@
             position: relative;
             padding-bottom: 8px;
         }
-
         .section-title::after {
             content: "";
             position: absolute;
@@ -173,73 +153,31 @@
             background: linear-gradient(to right, var(--primary), var(--secondary));
             border-radius: 2px;
         }
-
-        .courses-table-card {
+        .lecture-list {
             background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 30px;
+            border-radius: 12px;
             box-shadow: var(--shadow);
+            padding: 25px;
             margin-bottom: 30px;
-            overflow-x: auto;
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        .lecture-list ul {
+            list-style: none;
+            padding: 0;
         }
-
-        th, td {
-            border: 1px solid var(--border);
-            padding: 15px;
-            text-align: center;
+        .lecture-list li {
+            margin-bottom: 18px;
         }
-
-        th {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        /* Category headers */
-        tr:has(th:only-child) th {
-            background: linear-gradient(135deg, var(--secondary), var(--accent));
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9fb;
-        }
-
-        tr:hover {
-            background-color: #f1f3f4;
-            transform: scale(1.01);
-            transition: var(--transition);
-        }
-
-        /* Don't apply hover to category headers */
-        tr:has(th) {
-            background: transparent !important;
-            transform: none !important;
-        }
-
-        td a {
+        .lecture-list a {
             color: var(--primary);
-            text-decoration: none;
             font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 20px;
-            transition: var(--transition);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.2s;
         }
-
-        td a:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
+        .lecture-list a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
         }
-
         footer {
             background-color: #333;
             color: white;
@@ -247,30 +185,25 @@
             text-align: center;
             border-radius: 16px 16px 0 0;
         }
-
         .footer-text {
             color: #f8f9fa;
             font-size: 0.9rem;
             margin-bottom: 8px;
         }
-
         .footer-link {
             color: var(--primary-light);
             text-decoration: none;
             font-weight: 500;
             transition: var(--transition);
         }
-
         .footer-link:hover {
             color: var(--accent);
             text-decoration: underline;
         }
-
         @media (max-width: 768px) {
             .header-title {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
-            
             .nav-links {
                 position: relative;
                 left: 0;
@@ -281,28 +214,16 @@
                 padding: 0.5rem 0;
                 gap: 0.5rem;
             }
-
             .navbar {
                 flex-direction: column;
                 padding: 0.5rem;
                 align-items: flex-start;
             }
-
             .logo {
                 margin-bottom: 0.5rem;
             }
-
             body {
                 padding-top: 110px;
-            }
-
-            .courses-table-card {
-                padding: 20px;
-            }
-
-            th, td {
-                padding: 10px;
-                font-size: 0.9rem;
             }
         }
     </style>
@@ -314,9 +235,9 @@
         </div>
         <div class="nav-links">
             <a href="/">Home</a>
-            <a href="/courses" class="active">Courses</a>
+            <a href="/courses">Courses</a>
             <a href="/notes">Notes</a>
-            <a href="/lectures">Lectures</a>
+            <a href="/lectures" class="active">Lectures</a>
             <a href="/homework">Homework</a>
             <a href="/forum">Forum</a>
             <a href="/tools">Tools</a>
@@ -325,109 +246,31 @@
 
     <header>
         <div class="container header-content">
-            <h1 class="header-title">课程资料</h1>
-            <p class="header-subtitle">这里提供各类课程的参考书目和扩展阅读材料，助您深入学习。</p>
+            <h1 class="header-title">数值分析方法文档</h1>
+            <p class="header-subtitle">本页收录数值分析课程的主要讲义与文档，涵盖误差分析、插值、积分、线性方程组等内容。</p>
         </div>
     </header>
 
     <main class="container">
         <div class="intro-card">
-            <h2 class="section-title">简介</h2>
-            <p>此栏目中更新各类课程的资料，若有更新的资料可联系本页面作者。（建议通过校园邮箱联系）</p>
+            <h2 class="section-title">讲义章节导航</h2>
+            <p>点击下列章节可直接查看对应 Markdown 文档：</p>
         </div>
-
-        <div class="courses-table-card">
-            <h2 class="section-title">课程资料</h2>
-            <table>
-                <tr>
-                    <th colspan="2">分析</th>
-                </tr>
-                <tr>
-                    <td>数学分析</td>
-                    <td><a href="/courses/Mathematical-Analysis.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <td>微分方程</td>
-                    <td><a href="/courses/Differential-Equation.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <td>复分析</td>
-                    <td><a href="/courses/Complex-Analysis.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <td>实分析</td>
-                    <td><a href="/courses/Real-Analysis.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <td>现代分析（相关）</td>
-                    <td><a href="/courses/Modern-Analysis.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <th colspan="2">代数</th>
-                </tr>
-                <tr>
-                    <td>高等代数</td>
-                    <td><a href="/courses/Linear-Algebra.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <td>抽象代数</td>
-                    <td><a href="/courses/Abstract-Algebra.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <th colspan="2">几何</th>
-                </tr>
-                <tr>
-                    <td>解析几何</td>
-                    <td><a href="/courses/Analytic-Geometry.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <td>微分几何</td>
-                    <td><a href="/courses/Differential-Geometry.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <th colspan="2">组合数学</th>
-                </tr>
-                <tr>
-                    <td>图论</td>
-                    <td><a href="/courses/Graph-Theory.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <th colspan="2">拓扑</th>
-                </tr>
-                <tr>
-                    <td>点集拓扑</td>
-                    <td><a href="/courses/General-Topology.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <th colspan="2">统计</th>
-                </tr>
-                <tr>
-                    <td>概率统计</td>
-                    <td><a href="/courses/Probability-Statistics.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <td>随机过程</td>
-                    <td><a href="/courses/Stochastic-Process.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <th colspan="2">其他</th>
-                </tr>
-                <tr>
-                    <td>C程序设计</td>
-                    <td><a href="/courses/C-Programming.html">查看资料</a></td>
-                </tr>
-                <tr>
-                    <td>算法与数据结构分析</td>
-                    <td><a href="/courses/Algorithm-Data-Structure.html">查看资料</a></td>
-                </tr>
-            </table>
+        <div class="lecture-list">
+            <ul>
+                <li><a href="markdown/introduction.html" target="_blank"><i class="fas fa-angle-right"></i> 引言</a></li>
+                <li><a href="markdown/error-analysis.html" target="_blank"><i class="fas fa-angle-right"></i> 误差分析</a></li>
+                <li><a href="markdown/interpolation.html" target="_blank"><i class="fas fa-angle-right"></i> 插值方法</a></li>
+                <li><a href="markdown/numerical-integration.html" target="_blank"><i class="fas fa-angle-right"></i> 数值积分</a></li>
+                <li><a href="markdown/linear-systems.html" target="_blank"><i class="fas fa-angle-right"></i> 线性方程组</a></li>
+            </ul>
         </div>
     </main>
 
     <footer>
-        <p class="footer-text">Last Updated on June 27th, 2025</p>
-        <p class="footer-text">Special Thanks for <a href="http://home.ustc.edu.cn/~matchbox/real.html" class="footer-link">Page Reference.</a></p>
+        <p class="footer-text">© 2024-2025 Last Updated: June 10th, 2025</p>
         <p class="footer-text">获取更多信息，请访问 <a href="https://github.com/haidemath/haidemath.github.io/" class="footer-link">Github</a> 或提交 <a href="https://github.com/haidemath/haidemath.github.io/issues/new" class="footer-link">Issue</a></p>
+        <p class="footer-text">本项目由2023级数学2班建设, 特别感谢刘小允、孙景昱同学的支持。</p>
     </footer>
 </body>
 </html>
