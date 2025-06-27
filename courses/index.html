@@ -1,54 +1,186 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Source Sharing Platform - Courses</title>
-    <link rel="stylesheet" type="text/css" href="realmodel.css" media="all">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f0f0f0, #d0d0d0);
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+            --text-lighter: #adb5bd;
+            --border: #e9ecef;
+            --success: #38b000;
+            --warning: #ffaa00;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            color: #333;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', '微软雅黑', cursive;
         }
 
-        #wrap {
-            max-width: 800px;
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-top: 70px; /* Add space for fixed navbar */
+        }
+
+        /* Navbar styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-right: 2rem;
+            height: 40px;
+            flex-shrink: 0;
+        }
+
+        .logo img {
+            height: 40px;
+            display: block;
+        }
+
+        .nav-links {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            width: max-content;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .nav-links a.active {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .container {
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            padding: 0 20px;
         }
 
-        #header {
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 60px 0 80px;
+            position: relative;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--shadow);
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f8f9fa' fill-opacity='1' d='M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,208C1248,171,1344,117,1392,90.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .header-content {
             text-align: center;
-            background-color: #3948D2;
-            color: #fff;
-            padding: 20px;
-            border-radius: 10px 10px 0 0;
         }
 
-        #header h1 {
-            margin: 0;
-            font-size: 2.5em;
+        .header-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
         }
 
-        #header p {
-            margin: 10px 0 0;
-            font-size: 1.2em;
+        .header-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
 
-        #content {
-            padding: 20px;
+        main {
+            margin-top: -40px;
+            position: relative;
+            z-index: 10;
+            margin-bottom: 60px;
         }
 
-        h2 {
-            color: #3948D2;
-            border-bottom: 2px solid #3948D2;
-            padding-bottom: 10px;
+        .intro-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .courses-table-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            overflow-x: auto;
         }
 
         table {
@@ -58,158 +190,243 @@
         }
 
         th, td {
-            border: 1px solid #ccc;
+            border: 1px solid var(--border);
             padding: 15px;
             text-align: center;
         }
 
         th {
-            background-color: #3948D2;
-            color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
             font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Category headers */
+        tr:has(th:only-child) th {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            font-size: 1.2rem;
+            letter-spacing: 1px;
         }
 
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #f9f9fb;
         }
 
         tr:hover {
-            background-color: #f1f1f1;
+            background-color: #f1f3f4;
+            transform: scale(1.01);
+            transition: var(--transition);
         }
 
-        #footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #f0f0f0;
-            border-radius: 0 0 10px 10px;
-            margin-top: 20px;
+        /* Don't apply hover to category headers */
+        tr:has(th) {
+            background: transparent !important;
+            transform: none !important;
         }
 
-        #footer p {
-            margin: 5px 0;
-        }
-
-        #footer a {
-            color: #3948D2;
+        td a {
+            color: var(--primary);
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: var(--transition);
         }
 
-        #footer a:hover {
+        td a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .footer-text {
+            color: #f8f9fa;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .footer-link {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
             text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                position: relative;
+                left: 0;
+                transform: none;
+                width: 100%;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding: 0.5rem 0;
+                gap: 0.5rem;
+            }
+
+            .navbar {
+                flex-direction: column;
+                padding: 0.5rem;
+                align-items: flex-start;
+            }
+
+            .logo {
+                margin-bottom: 0.5rem;
+            }
+
+            body {
+                padding-top: 110px;
+            }
+
+            .courses-table-card {
+                padding: 20px;
+            }
+
+            th, td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
-<div id="wrap">
-    <div id="header">
-        <h1><strong><font face="Segoe UI">Course Materials</font></strong></h1>
-    </div>
-    <font face="仿宋">
-    <div id="content">
-        <h2><strong>简介</strong></h2>
-        <p>此栏目中更新各类课程的资料，若有更新的资料可联系本页面作者。（建议通过校园邮箱联系）</p>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="../images/1.png" alt="Logo">
+        </div>
+        <div class="nav-links">
+            <a href="../">Home</a>
+            <a href="../notes">Notes</a>
+            <a href="../courses" class="active">Courses</a>
+            <a href="../homework">Homework</a>
+            <a href="../forum">Forum</a>
+            <a href="../tools">Tools</a>
+        </div>
+    </nav>
 
-        <p>&nbsp;</p>
-        <h2><strong>课程资料</strong></h2>
-        <table>
-            <tr>
-                <th>分析</th>
-                <th>链接</th>
-            </tr>
-            <tr>
-                <td>数学分析</td>
-                <td><a href="/courses/Mathematical-Analysis.html">链接</a></td>
-            </tr>
-            <tr>
-                <td>微分方程</td>
-                <td><a href="/courses/Differential-Equation.html">链接</a></td>
-            </tr>
-            <tr>
-                <td>复分析</td>
-                <td><a href="/courses/Complex-Analysis.html">链接</a></td>
-            </tr>
-            <tr>
-                <td>实分析</td>
-                <td><a href="/courses/Real-Analysis.html">链接</a></td>
-            </tr>
-            <tr>
-                <td>现代分析（相关）</td>
-                <td><a href="/courses/Modern-Analysis.html">链接</a></td>
-            </tr>
-            <tr>
-                <th>代数</th>
-                <th>链接</th>
-            </tr>
-            <tr>
-                <td>高等代数</td>
-                <td><a href="/courses/Linear-Algebra.html">链接</a></td>
-            </tr>
-            <tr>
-                <td>抽象代数</td>
-                <td><a href="/courses/Abstract-Algebra.html">链接</a></td>
-            </tr>
-            <tr>
-                <th>几何</th>
-                <th>链接</th>
-            </tr>
-            <tr>
-                <td>解析几何</td>
-                <td><a href="/courses/Analytic-Geometry.html">链接</a></td>
-            </tr>
-            <tr>
-                <td>微分几何</th>
-                <td><a href="/courses/Differential-Geometry.html">链接</a></td>
-            </tr>
-            <tr>
-                <th>组合数学</th>
-                <th>链接</th>
-            </tr>
-            <tr>
-                <td>图论</th>
-                <td><a href="/courses/Graph-Theory.html">链接</a></td>
-            </tr>
-            <tr>
-                <th>拓扑</th>
-                <th>链接</th>
-            </tr>
-            <tr>
-                <td>点集拓扑</td>
-                <td><a href="/courses/General-Topology.html">链接</a></td>
-            </tr>
-            <tr>
-                <th>统计</th>
-                <th>链接</th>
-            </tr>
-            <tr>
-                <td>概率统计</td>
-                <td><a href="/courses/Probability-Statistics.html">链接</a></td>
-            </tr>
-            <tr>
-                <td>随机过程</td>
-                <td><a href="/courses/Stochastic-Process.html">链接</a></td>
-            </tr>
-            <tr>
-                <th>其他</th>
-                <th>链接</th>
-            </tr>
-            <tr>
-                <td>C程序设计</td>
-                <td><a href="/courses/C-Programming.html">链接</a></td>
-            </tr>
-            <tr>
-                <td>算法与数据结构分析</td>
-                <td><a href="/courses/Algorithm-Data-Structure.html">链接</a></td>
-            </tr>
-        </table>
-        </font>
-    </div>
+    <header>
+        <div class="container header-content">
+            <h1 class="header-title">课程资料</h1>
+            <p class="header-subtitle">这里提供各类课程的参考书目和扩展阅读材料，助您深入学习。</p>
+        </div>
+    </header>
 
-    <div id="footer">
-        <p>Last Updated on Feb 23rd, 2025</p>
-        <p>Special Thanks for <a href="http://home.ustc.edu.cn/~matchbox/real.html">Page Reference.</a></p>
-    </div>
-    
-</div>
+    <main class="container">
+        <div class="intro-card">
+            <h2 class="section-title">简介</h2>
+            <p>此栏目中更新各类课程的资料，若有更新的资料可联系本页面作者。（建议通过校园邮箱联系）</p>
+        </div>
+
+        <div class="courses-table-card">
+            <h2 class="section-title">课程资料</h2>
+            <table>
+                <tr>
+                    <th colspan="2">分析</th>
+                </tr>
+                <tr>
+                    <td>数学分析</td>
+                    <td><a href="/courses/Mathematical-Analysis.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <td>微分方程</td>
+                    <td><a href="/courses/Differential-Equation.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <td>复分析</td>
+                    <td><a href="/courses/Complex-Analysis.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <td>实分析</td>
+                    <td><a href="/courses/Real-Analysis.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <td>现代分析（相关）</td>
+                    <td><a href="/courses/Modern-Analysis.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <th colspan="2">代数</th>
+                </tr>
+                <tr>
+                    <td>高等代数</td>
+                    <td><a href="/courses/Linear-Algebra.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <td>抽象代数</td>
+                    <td><a href="/courses/Abstract-Algebra.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <th colspan="2">几何</th>
+                </tr>
+                <tr>
+                    <td>解析几何</td>
+                    <td><a href="/courses/Analytic-Geometry.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <td>微分几何</td>
+                    <td><a href="/courses/Differential-Geometry.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <th colspan="2">组合数学</th>
+                </tr>
+                <tr>
+                    <td>图论</td>
+                    <td><a href="/courses/Graph-Theory.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <th colspan="2">拓扑</th>
+                </tr>
+                <tr>
+                    <td>点集拓扑</td>
+                    <td><a href="/courses/General-Topology.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <th colspan="2">统计</th>
+                </tr>
+                <tr>
+                    <td>概率统计</td>
+                    <td><a href="/courses/Probability-Statistics.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <td>随机过程</td>
+                    <td><a href="/courses/Stochastic-Process.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <th colspan="2">其他</th>
+                </tr>
+                <tr>
+                    <td>C程序设计</td>
+                    <td><a href="/courses/C-Programming.html">查看资料</a></td>
+                </tr>
+                <tr>
+                    <td>算法与数据结构分析</td>
+                    <td><a href="/courses/Algorithm-Data-Structure.html">查看资料</a></td>
+                </tr>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p class="footer-text">Last Updated on June 27th, 2025</p>
+        <p class="footer-text">Special Thanks for <a href="http://home.ustc.edu.cn/~matchbox/real.html" class="footer-link">Page Reference.</a></p>
+        <p class="footer-text">获取更多信息，请访问 <a href="https://github.com/haidemath/haidemath.github.io/" class="footer-link">Github</a> 或提交 <a href="https://github.com/haidemath/haidemath.github.io/issues/new" class="footer-link">Issue</a></p>
+    </footer>
 </body>
 </html>
