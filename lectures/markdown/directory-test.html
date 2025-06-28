@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>目录加载测试 - HaideMath</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .file-list {
+            margin-top: 10px;
+        }
+        .file-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 10px;
+        }
+        .file-item strong {
+            color: #2c3e50;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .loading {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>📁 目录加载测试</h1>
+    
+    <div class="test-section">
+        <h2>1. 手动目录文件测试</h2>
+        <div id="manual-status">正在测试...</div>
+        <div id="manual-files" class="file-list"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. API 自动发现测试</h2>
+        <div id="api-status">正在测试...</div>
+        <div id="api-files" class="file-list"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. 模式匹配测试</h2>
+        <div id="pattern-status">正在测试...</div>
+        <div id="pattern-files" class="file-list"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. 综合测试</h2>
+        <button onclick="runFullTest()">运行完整测试</button>
+        <div id="full-status"></div>
+        <div id="full-files" class="file-list"></div>
+    </div>
+
+    <script src="auto-directory.js"></script>
+    <script>
+        let autoGen = new AutoDirectoryGenerator();
+
+        async function testManualDirectory() {
+            const statusEl = document.getElementById('manual-status');
+            const filesEl = document.getElementById('manual-files');
+            
+            try {
+                statusEl.innerHTML = '<div class="status info">正在测试手动目录文件...</div>';
+                
+                const files = await autoGen.loadManualDirectory();
+                
+                if (files && files.length > 0) {
+                    statusEl.innerHTML = `<div class="status success">✅ 成功加载手动目录: ${files.length} 个文件</div>`;
+                    filesEl.innerHTML = files.map(f => `
+                        <div class="file-item">
+                            <strong>${f.title}</strong><br>
+                            文件: ${f.file} | 分类: ${f.category}
+                        </div>
+                    `).join('');
+                } else {
+                    statusEl.innerHTML = '<div class="status error">❌ 手动目录文件加载失败或为空</div>';
+                }
+            } catch (error) {
+                statusEl.innerHTML = `<div class="status error">❌ 手动目录测试错误: ${error.message}</div>`;
+            }
+        }
+
+        async function testApiDiscovery() {
+            const statusEl = document.getElementById('api-status');
+            const filesEl = document.getElementById('api-files');
+            
+            try {
+                statusEl.innerHTML = '<div class="status info">正在测试API自动发现...</div>';
+                
+                const response = await fetch('./api/files');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.files) {
+                        statusEl.innerHTML = `<div class="status success">✅ API发现成功: ${data.files.length} 个文件</div>`;
+                        filesEl.innerHTML = data.files.map(f => `
+                            <div class="file-item">
+                                <strong>${f.title}</strong><br>
+                                文件: ${f.file} | 大小: ${f.size} bytes
+                            </div>
+                        `).join('');
+                    } else {
+                        statusEl.innerHTML = '<div class="status error">❌ API返回数据格式错误</div>';
+                    }
+                } else {
+                    statusEl.innerHTML = '<div class="status error">❌ API请求失败</div>';
+                }
+            } catch (error) {
+                statusEl.innerHTML = `<div class="status error">❌ API测试错误: ${error.message}</div>`;
+            }
+        }
+
+        async function testPatternMatching() {
+            const statusEl = document.getElementById('pattern-status');
+            const filesEl = document.getElementById('pattern-files');
+            
+            try {
+                statusEl.innerHTML = '<div class="status info">正在测试模式匹配...</div>';
+                
+                // 直接调用模式匹配方法
+                const originalFiles = autoGen.markdownFiles;
+                autoGen.markdownFiles = []; // 清空，测试模式匹配
+                
+                await autoGen.autoDiscoverFiles();
+                
+                if (autoGen.markdownFiles.length > 0) {
+                    statusEl.innerHTML = `<div class="status success">✅ 模式匹配成功: ${autoGen.markdownFiles.length} 个文件</div>`;
+                    filesEl.innerHTML = autoGen.markdownFiles.map(f => `
+                        <div class="file-item">
+                            <strong>${f.title}</strong><br>
+                            文件: ${f.file} | 分类: ${f.category}
+                        </div>
+                    `).join('');
+                } else {
+                    statusEl.innerHTML = '<div class="status error">❌ 模式匹配未找到文件</div>';
+                }
+                
+                // 恢复原始文件列表
+                autoGen.markdownFiles = originalFiles;
+            } catch (error) {
+                statusEl.innerHTML = `<div class="status error">❌ 模式匹配测试错误: ${error.message}</div>`;
+            }
+        }
+
+        async function runFullTest() {
+            const statusEl = document.getElementById('full-status');
+            const filesEl = document.getElementById('full-files');
+            
+            try {
+                statusEl.innerHTML = '<div class="status info">正在运行完整自动发现测试...</div>';
+                
+                const files = await autoGen.discoverMarkdownFiles();
+                
+                if (files && files.length > 0) {
+                    statusEl.innerHTML = `<div class="status success">✅ 完整测试成功: ${files.length} 个文件</div>`;
+                    filesEl.innerHTML = files.map(f => `
+                        <div class="file-item">
+                            <strong>${f.title}</strong><br>
+                            文件: ${f.file} | 分类: ${f.category} | 图标: ${f.icon}
+                        </div>
+                    `).join('');
+                } else {
+                    statusEl.innerHTML = '<div class="status error">❌ 完整测试失败，未找到任何文件</div>';
+                }
+            } catch (error) {
+                statusEl.innerHTML = `<div class="status error">❌ 完整测试错误: ${error.message}</div>`;
+            }
+        }
+
+        // 页面加载时自动运行所有测试
+        window.addEventListener('load', async () => {
+            await testManualDirectory();
+            await testApiDiscovery();
+            await testPatternMatching();
+        });
+    </script>
+</body>
+</html>

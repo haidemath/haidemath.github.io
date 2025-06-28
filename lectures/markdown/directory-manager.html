@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>目录管理工具 - HaideMath</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid #e9ecef;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .current-files {
+            background: #e8f5e8;
+            border-left: 4px solid #27ae60;
+        }
+
+        .add-file {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+        }
+
+        .file-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .file-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+
+        .file-item h3 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .file-item .file-meta {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .file-item .file-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .btn-warning:hover {
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .actions {
+            margin-top: 30px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .actions .btn {
+            margin: 0 10px;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .json-output {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-folder-open"></i> 目录管理工具</h1>
+            <p>手动维护 Markdown 文档目录，实现快速加载</p>
+        </div>
+
+        <div class="main-content">
+            <div class="section current-files">
+                <h2><i class="fas fa-list"></i> 当前文档</h2>
+                <div id="fileList" class="file-list">
+                    <div class="loading">正在加载文档列表...</div>
+                </div>
+            </div>
+
+            <div class="section add-file">
+                <h2><i class="fas fa-plus"></i> 添加新文档</h2>
+                <form id="addFileForm">
+                    <div class="form-group">
+                        <label for="fileId">文档ID</label>
+                        <input type="text" id="fileId" placeholder="例: Real-Analysis" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fileTitle">文档标题</label>
+                        <input type="text" id="fileTitle" placeholder="例: 实分析基础" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fileName">文件名</label>
+                        <input type="text" id="fileName" placeholder="例: Real-Analysis.md" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fileCategory">分类</label>
+                        <select id="fileCategory" required>
+                            <option value="">选择分类</option>
+                            <option value="实分析">实分析</option>
+                            <option value="复分析">复分析</option>
+                            <option value="代数学">代数学</option>
+                            <option value="几何学">几何学</option>
+                            <option value="概率论">概率论</option>
+                            <option value="测试文档">测试文档</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fileDescription">描述</label>
+                        <textarea id="fileDescription" rows="3" placeholder="文档的简要描述"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fileTags">标签（用逗号分隔）</label>
+                        <input type="text" id="fileTags" placeholder="例: 实分析,集合论,基础数学">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-plus"></i> 添加文档
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="refreshBtn" class="btn">
+                <i class="fas fa-sync"></i> 刷新列表
+            </button>
+            <button id="generateBtn" class="btn btn-warning">
+                <i class="fas fa-download"></i> 生成目录JSON
+            </button>
+            <button id="openViewerBtn" class="btn">
+                <i class="fas fa-eye"></i> 打开阅读器
+            </button>
+        </div>
+
+        <div id="status" class="status"></div>
+        
+        <div id="jsonOutput" class="json-output" style="display: none;"></div>
+    </div>
+
+    <script src="auto-directory.js"></script>
+    <script>
+        class DirectoryManager {
+            constructor() {
+                this.autoGenerator = new AutoDirectoryGenerator();
+                this.init();
+            }
+
+            async init() {
+                await this.loadFiles();
+                this.setupEventListeners();
+            }
+
+            async loadFiles() {
+                try {
+                    const files = await this.autoGenerator.discoverMarkdownFiles();
+                    this.displayFiles(files);
+                } catch (error) {
+                    this.showStatus('加载文件失败: ' + error.message, 'error');
+                }
+            }
+
+            displayFiles(files) {
+                const fileList = document.getElementById('fileList');
+                
+                if (files.length === 0) {
+                    fileList.innerHTML = '<div class="loading">未找到任何文档</div>';
+                    return;
+                }
+
+                fileList.innerHTML = files.map(file => `
+                    <div class="file-item">
+                        <h3><i class="${file.icon}"></i> ${file.title}</h3>
+                        <div class="file-meta">
+                            <span><i class="fas fa-file"></i> ${file.file}</span>
+                            <span><i class="fas fa-tag"></i> ${file.category}</span>
+                            <span><i class="fas fa-clock"></i> ${new Date(file.lastModified).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            setupEventListeners() {
+                // 添加文档表单
+                document.getElementById('addFileForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addFile();
+                });
+
+                // 刷新按钮
+                document.getElementById('refreshBtn').addEventListener('click', () => {
+                    this.loadFiles();
+                });
+
+                // 生成JSON按钮
+                document.getElementById('generateBtn').addEventListener('click', () => {
+                    this.generateDirectoryJson();
+                });
+
+                // 打开阅读器按钮
+                document.getElementById('openViewerBtn').addEventListener('click', () => {
+                    window.open('./viewer.html', '_blank');
+                });
+
+                // 自动填充文件名
+                document.getElementById('fileId').addEventListener('input', (e) => {
+                    const id = e.target.value;
+                    const fileNameInput = document.getElementById('fileName');
+                    if (id && !fileNameInput.value) {
+                        fileNameInput.value = id + '.md';
+                    }
+                });
+            }
+
+            addFile() {
+                const docInfo = {
+                    id: document.getElementById('fileId').value.trim(),
+                    title: document.getElementById('fileTitle').value.trim(),
+                    file: document.getElementById('fileName').value.trim(),
+                    category: document.getElementById('fileCategory').value,
+                    description: document.getElementById('fileDescription').value.trim(),
+                    tags: document.getElementById('fileTags').value.split(',').map(t => t.trim()).filter(t => t)
+                };
+
+                if (!docInfo.id || !docInfo.title || !docInfo.file || !docInfo.category) {
+                    this.showStatus('请填写所有必需字段', 'error');
+                    return;
+                }
+
+                try {
+                    this.autoGenerator.addDocumentToDirectory(docInfo);
+                    this.showStatus(`成功添加文档: ${docInfo.title}`, 'success');
+                    this.clearForm();
+                    this.loadFiles();
+                } catch (error) {
+                    this.showStatus('添加文档失败: ' + error.message, 'error');
+                }
+            }
+
+            generateDirectoryJson() {
+                try {
+                    const jsonContent = this.autoGenerator.generateDirectoryJsonContent();
+                    const output = document.getElementById('jsonOutput');
+                    output.textContent = jsonContent;
+                    output.style.display = 'block';
+                    
+                    // 创建下载链接
+                    const blob = new Blob([jsonContent], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'directory.json';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    this.showStatus('目录JSON已生成并下载', 'success');
+                } catch (error) {
+                    this.showStatus('生成JSON失败: ' + error.message, 'error');
+                }
+            }
+
+            clearForm() {
+                document.getElementById('addFileForm').reset();
+            }
+
+            showStatus(message, type = 'success') {
+                const status = document.getElementById('status');
+                status.textContent = message;
+                status.className = `status ${type}`;
+                status.style.display = 'block';
+                
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // 启动管理器
+        window.addEventListener('DOMContentLoaded', () => {
+            new DirectoryManager();
+        });
+    </script>
+</body>
+</html>
