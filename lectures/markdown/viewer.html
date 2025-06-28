@@ -375,21 +375,6 @@
     </style>
 </head>
 <body>
-    <!-- 顶部导航栏 -->
-    <nav class="navbar">
-        <div class="logo">
-            <img src="../../images/1.png" alt="Logo">
-        </div>
-        <div class="nav-links">
-            <a href="../../">Home</a>
-            <a href="../../courses">Courses</a>
-            <a href="../../notes">Notes</a>
-            <a href="../" class="active">Lectures</a>
-            <a href="../../homework">Homework</a>
-            <a href="../../forum">Forum</a>
-            <a href="../../tools">Tools</a>
-        </div>
-    </nav>
 
     <!-- 主体内容区域 -->
     <div class="main-wrapper">
@@ -432,9 +417,10 @@
                         return res.json();
                     })
                     .then(data => {
-                        // 转换 JSON 格式为内部格式
-                        markdownFiles = data.markdownFiles.map(file => {
-                            const fileName = file.path.split('/').pop().replace('.md', '');
+                        // 直接使用简单的 JSON 格式
+                        markdownFiles = data.map(file => {
+                            // 从文件路径提取文件名作为 ID
+                            const fileName = file.file.split('/').pop().replace('.md', '');
                             return {
                                 id: fileName,
                                 title: file.title,
