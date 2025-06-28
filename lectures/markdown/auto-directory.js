@@ -14,29 +14,34 @@ class AutoDirectoryGenerator {
      */
     async discoverMarkdownFiles() {
         try {
-            // 首先尝试本地环境的真实目录读取
+            // 优先从手动维护的目录文件加载（最快）
+            console.log('🚀 尝试加载手动维护的目录文件...');
+            const manualDirectory = await this.loadManualDirectory();
+            if (manualDirectory && manualDirectory.length > 0) {
+                this.markdownFiles = manualDirectory;
+                console.log(`✅ 手动目录: 成功加载 ${this.markdownFiles.length} 个文档`);
+                return this.markdownFiles;
+            }
+
+            // 回退：尝试本地环境的API发现（中等速度）
             if (this.isLocalEnvironment()) {
+                console.log('🔍 回退到API自动发现...');
                 const localFiles = await this.discoverLocalFiles();
                 if (localFiles && localFiles.length > 0) {
                     this.markdownFiles = localFiles;
+                    console.log(`✅ API发现: 成功获取 ${this.markdownFiles.length} 个文档`);
                     return this.markdownFiles;
                 }
             }
 
-            // 尝试从预定义列表加载
-            const predefinedFiles = await this.loadPredefinedDirectory();
-            if (predefinedFiles && predefinedFiles.length > 0) {
-                this.markdownFiles = predefinedFiles;
-                return this.markdownFiles;
-            }
-
-            // 如果没有预定义文件，尝试自动发现
-            console.log('正在自动发现Markdown文件...');
+            // 最后回退：模式匹配发现（最慢）
+            console.log('🔍 回退到模式匹配自动发现...');
             await this.autoDiscoverFiles();
+            console.log(`✅ 模式匹配: 最终获取 ${this.markdownFiles.length} 个文档`);
             
             return this.markdownFiles;
         } catch (error) {
-            console.error('发现文件失败:', error);
+            console.error('❌ 发现文件失败:', error);
             return [];
         }
     }
@@ -176,7 +181,45 @@ class AutoDirectoryGenerator {
     }
 
     /**
-     * 尝试加载预定义的目录文件
+     * 加载手动维护的目录文件
+     */
+    async loadManualDirectory() {
+        try {
+            const response = await fetch('./directory.json');
+            if (response.ok) {
+                const data = await response.json();
+                
+                // 验证目录文件格式
+                if (!data.files || !Array.isArray(data.files)) {
+                    console.warn('⚠️ 目录文件格式不正确');
+                    return null;
+                }
+
+                console.log(`📁 目录文件信息: ${data.title || '数学笔记目录'}`);
+                console.log(`📅 最后更新: ${data.lastUpdate || '未知'}`);
+                
+                // 处理文件列表
+                const processedFiles = data.files.map(file => ({
+                    id: file.id,
+                    title: file.title,
+                    file: file.file,
+                    lastModified: file.lastModified || new Date().toISOString(),
+                    category: file.category || '其他',
+                    icon: file.icon || this.getIconFromTitle(file.title),
+                    description: file.description || '',
+                    tags: file.tags || []
+                }));
+
+                return processedFiles;
+            }
+        } catch (error) {
+            console.log('📄 未找到手动目录文件，将尝试其他方式');
+        }
+        return null;
+    }
+
+    /**
+     * 尝试加载预定义的目录文件（旧版本兼容）
      */
     async loadPredefinedDirectory() {
         try {
@@ -193,7 +236,7 @@ class AutoDirectoryGenerator {
                 }));
             }
         } catch (error) {
-            console.log('无法加载预定义目录，将自动发现文件');
+            console.log('📄 无法加载旧版预定义目录');
         }
         return null;
     }
@@ -375,6 +418,128 @@ class AutoDirectoryGenerator {
                 category: f.category
             }))
         };
+    }
+
+    /**
+     * 获取目录管理界面数据
+     */
+    getDirectoryManagementData() {
+        return {
+            totalFiles: this.markdownFiles.length,
+            categories: [...new Set(this.markdownFiles.map(f => f.category))],
+            lastUpdate: new Date().toISOString(),
+            files: this.markdownFiles,
+            usage: {
+                manual: '手动维护模式 - 快速加载',
+                api: '本地API模式 - 自动发现',
+                pattern: '模式匹配模式 - 兼容模式'
+            }
+        };
+    }
+
+    /**
+     * 生成新的目录JSON文件内容
+     */
+    generateDirectoryJsonContent(includeAllDiscovered = false) {
+        const directoryData = {
+            title: "数学笔记目录",
+            description: "手动维护的Markdown文件目录 - 快速加载模式",
+            lastUpdate: new Date().toISOString(),
+            files: this.markdownFiles.map(file => ({
+                id: file.id,
+                title: file.title,
+                file: file.file,
+                category: file.category,
+                icon: file.icon,
+                description: file.description || `${file.title}的学习笔记`,
+                tags: file.tags || [file.category],
+                lastModified: file.lastModified
+            })),
+            categories: [
+                {
+                    id: "real-analysis",
+                    name: "实分析",
+                    icon: "fas fa-chart-line",
+                    color: "#3498db"
+                },
+                {
+                    id: "complex-analysis", 
+                    name: "复分析",
+                    icon: "fas fa-infinity",
+                    color: "#9b59b6"
+                },
+                {
+                    id: "algebra",
+                    name: "代数学", 
+                    icon: "fas fa-square-root-alt",
+                    color: "#e74c3c"
+                },
+                {
+                    id: "geometry",
+                    name: "几何学",
+                    icon: "fas fa-shapes", 
+                    color: "#f39c12"
+                },
+                {
+                    id: "probability",
+                    name: "概率论",
+                    icon: "fas fa-dice",
+                    color: "#27ae60"
+                },
+                {
+                    id: "test-docs",
+                    name: "测试文档",
+                    icon: "fas fa-flask",
+                    color: "#95a5a6"
+                }
+            ],
+            usage: {
+                note: "要添加新文档，请将文件信息添加到files数组中",
+                example: {
+                    id: "example-file",
+                    title: "示例文档标题", 
+                    file: "example-file.md",
+                    category: "实分析",
+                    icon: "fas fa-file-text",
+                    description: "文档描述",
+                    tags: ["标签1", "标签2"],
+                    lastModified: "2025-06-29T00:00:00.000Z"
+                }
+            }
+        };
+
+        return JSON.stringify(directoryData, null, 2);
+    }
+
+    /**
+     * 添加新文档到目录
+     */
+    addDocumentToDirectory(docInfo) {
+        const newDoc = {
+            id: docInfo.id || docInfo.file.replace('.md', ''),
+            title: docInfo.title,
+            file: docInfo.file,
+            category: docInfo.category || '其他',
+            icon: docInfo.icon || this.getIconFromTitle(docInfo.title),
+            description: docInfo.description || `${docInfo.title}的学习笔记`,
+            tags: docInfo.tags || [docInfo.category],
+            lastModified: docInfo.lastModified || new Date().toISOString()
+        };
+
+        // 避免重复添加
+        const existingIndex = this.markdownFiles.findIndex(f => f.id === newDoc.id);
+        if (existingIndex >= 0) {
+            this.markdownFiles[existingIndex] = newDoc;
+            console.log(`📝 更新文档: ${newDoc.title}`);
+        } else {
+            this.markdownFiles.push(newDoc);
+            console.log(`➕ 添加文档: ${newDoc.title}`);
+        }
+
+        // 重新排序
+        this.markdownFiles.sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
+        
+        return newDoc;
     }
 }
 
