@@ -1,6 +1,16 @@
 {
   "title": "GitHub Pages Markdown Site",
-  "description": "A static website to display Markdown files.",
+  "description": "A static website to display Markdown files with LaTeX-style environments.",
+  "environments": {
+    "definition": "\\begin{definition}...\\end{definition}",
+    "theorem": "\\begin{theorem}...\\end{theorem}",
+    "lemma": "\\begin{lemma}...\\end{lemma}",
+    "example": "\\begin{example}...\\end{example}",
+    "note": "\\begin{note}...\\end{note}",
+    "warning": "\\begin{warning}...\\end{warning}",
+    "algorithm": "\\begin{algorithm}...\\end{algorithm}",
+    "proof": "\\begin{proof}...\\end{proof}"
+  },
   "markdownFiles": [
     {
       "title": "Introduction",

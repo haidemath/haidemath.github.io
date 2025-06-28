@@ -501,79 +501,77 @@
                     });
             }
 
-            // 渲染数学公式
+            // 渲染数学公式和内容块样式
             function renderMath() {
                 const content = document.getElementById('content');
                 
                 // 先应用内容块样式
                 applyContentBlocks(content);
                 
-                // 然后渲染数学公式
+                // 渲染数学公式，支持更多 LaTeX 环境
                 content.innerHTML = content.innerHTML.replace(/\$\$([\s\S]+?)\$\$/g, function(_, tex) {
                     try {
-                        return '<span class="katex-block">' + katex.renderToString(tex, {displayMode: true}) + '</span>';
+                        return '<span class="katex-block">' + katex.renderToString(tex, {
+                            displayMode: true,
+                            throwOnError: false,
+                            strict: false,
+                            macros: {
+                                "\\cases": "\\begin{cases}#1\\end{cases}"
+                            }
+                        }) + '</span>';
                     } catch (e) {
-                        return '<pre>' + tex + '</pre>';
+                        console.warn('LaTeX rendering error:', e);
+                        return '<pre style="background: #ffebee; color: #c62828; padding: 1em; border-radius: 4px;">' + tex + '\n\n渲染错误: ' + e.message + '</pre>';
                     }
                 });
+                
                 content.innerHTML = content.innerHTML.replace(/\$(.+?)\$/g, function(_, tex) {
                     if (tex.trim().startsWith('$') && tex.trim().endsWith('$')) return '$' + tex + '$';
                     try {
-                        return katex.renderToString(tex, {displayMode: false});
+                        return katex.renderToString(tex, {
+                            displayMode: false,
+                            throwOnError: false,
+                            strict: false
+                        });
                     } catch (e) {
-                        return '<code>' + tex + '</code>';
+                        console.warn('Inline LaTeX rendering error:', e);
+                        return '<code style="background: #ffebee; color: #c62828;">' + tex + '</code>';
                     }
                 });
             }
 
-            // 应用内容块样式
+            // 应用内容块样式 - 支持 LaTeX 风格环境
             function applyContentBlocks(content) {
-                // 查找并包装不同类型的内容块
-                const blockTypes = [
-                    { pattern: /^(定义|Definition)[:：]/i, class: 'definition' },
-                    { pattern: /^(定理|Theorem|引理|Lemma)[:：]/i, class: 'theorem' },
-                    { pattern: /^(例子|Example|示例)[:：]/i, class: 'example' },
-                    { pattern: /^(注意|Note|注|备注)[:：]/i, class: 'note' },
-                    { pattern: /^(警告|Warning|注意事项)[:：]/i, class: 'warning' },
-                    { pattern: /^(算法|Algorithm)[:：]/i, class: 'algorithm' },
-                    { pattern: /^(证明|Proof)[:：]/i, class: 'proof' }
+                let html = content.innerHTML;
+                
+                // 定义环境类型和对应的样式类
+                const environments = [
+                    { name: 'definition', class: 'definition' },
+                    { name: 'theorem', class: 'theorem' },
+                    { name: 'lemma', class: 'theorem' },
+                    { name: 'example', class: 'example' },
+                    { name: 'note', class: 'note' },
+                    { name: 'warning', class: 'warning' },
+                    { name: 'algorithm', class: 'algorithm' },
+                    { name: 'proof', class: 'proof' }
                 ];
 
-                // 获取所有段落和标题
-                const elements = content.querySelectorAll('p, h1, h2, h3, h4, h5, h6');
-                
-                elements.forEach(element => {
-                    const text = element.textContent.trim();
-                    
-                    // 检查是否匹配任何块类型
-                    for (const blockType of blockTypes) {
-                        if (blockType.pattern.test(text)) {
-                            // 创建包装div
-                            const wrapper = document.createElement('div');
-                            wrapper.className = blockType.class;
-                            
-                            // 将当前元素移到包装div中
-                            element.parentNode.insertBefore(wrapper, element);
-                            wrapper.appendChild(element);
-                            
-                            // 查找并包含后续相关内容
-                            let nextElement = wrapper.nextElementSibling;
-                            while (nextElement && 
-                                   (nextElement.tagName === 'P' || 
-                                    nextElement.tagName === 'UL' || 
-                                    nextElement.tagName === 'OL') &&
-                                   !hasBlockTypePattern(nextElement.textContent, blockTypes)) {
-                                const temp = nextElement.nextElementSibling;
-                                wrapper.appendChild(nextElement);
-                                nextElement = temp;
-                            }
-                            break;
-                        }
-                    }
+                // 处理每种环境
+                environments.forEach(env => {
+                    // 匹配 \begin{envname}...\end{envname} 模式
+                    const beginPattern = new RegExp(`\\\\begin\\{${env.name}\\}([\\s\\S]*?)\\\\end\\{${env.name}\\}`, 'gi');
+                    html = html.replace(beginPattern, (match, content) => {
+                        // 清理内容中的多余空白
+                        const cleanContent = content.trim();
+                        return `<div class="${env.class}">${cleanContent}</div>`;
+                    });
                 });
+
+                // 应用处理后的 HTML
+                content.innerHTML = html;
             }
 
-            // 检查文本是否包含块类型模式
+            // 检查文本是否包含块类型模式（保留原有功能作为备选）
             function hasBlockTypePattern(text, blockTypes) {
                 return blockTypes.some(blockType => blockType.pattern.test(text.trim()));
             }
@@ -620,5 +618,7 @@
             initApp();
         })();
     </script>
+</body>
+</html>
 </body>
 </html>
