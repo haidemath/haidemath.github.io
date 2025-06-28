@@ -417,8 +417,16 @@
                         return res.json();
                     })
                     .then(data => {
+                        // 验证数据格式并处理
+                        if (!Array.isArray(data)) {
+                            throw new Error('directory.json 格式错误：应为数组格式');
+                        }
+                        
                         // 直接使用简单的 JSON 格式
                         markdownFiles = data.map(file => {
+                            if (!file.file || !file.title) {
+                                throw new Error('directory.json 中的文件项缺少必要字段 (file, title)');
+                            }
                             // 从文件路径提取文件名作为 ID
                             const fileName = file.file.split('/').pop().replace('.md', '');
                             return {
