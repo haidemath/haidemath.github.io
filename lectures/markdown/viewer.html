@@ -5,81 +5,619 @@
     <title>Markdown 查看器</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { max-width: 800px; margin: 40px auto; font-family: 'Noto Sans SC', 'Segoe UI', Arial, sans-serif; background: #f8f9fa; color: #222; }
-        #content { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px #0001; padding: 2em; }
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+            --text-lighter: #adb5bd;
+            --border: #e9ecef;
+            --success: #38b000;
+            --warning: #ffaa00;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        body { 
+            margin: 0; 
+            font-family: 'Noto Sans SC', 'Segoe UI', Arial, sans-serif; 
+            background: #f8f9fa; 
+            color: #222; 
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding-top: 70px;
+        }
+
+        /* 顶部导航栏样式 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-right: 2rem;
+            height: 40px;
+            flex-shrink: 0;
+        }
+
+        .logo img {
+            height: 40px;
+            display: block;
+        }
+
+        .nav-links {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            width: max-content;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .nav-links a.active {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        /* 主体内容区域 */
+        .main-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 侧边栏样式 */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e9ecef;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            background: linear-gradient(135deg, #4361ee, #7209b7);
+            color: white;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+            font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
+        }
+
+        .sidebar-nav {
+            padding: 15px 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
+        }
+
+        .nav-item:hover {
+            background: #f8f9fa;
+            color: #4361ee;
+            padding-left: 25px;
+        }
+
+        .nav-item.active {
+            background: #4361ee;
+            color: white;
+            border-left: 4px solid #7209b7;
+        }
+
+        .nav-item i {
+            margin-right: 8px;
+            width: 16px;
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .content-header {
+            background: white;
+            padding: 15px 25px;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .content-title {
+            margin: 0;
+            color: #4361ee;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .content-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+        }
+
+        #content { 
+            background: #fff; 
+            border-radius: 12px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 2em; 
+            max-width: none;
+            margin: 0;
+        }
+
         a { color: #4361ee; }
-        pre, code { background: #f4f4f4; border-radius: 4px; }
+        pre, code { background: #f4f4f4; border-radius: 4px; padding: 2px 4px; }
+        pre { padding: 1em; }
         .katex-display { margin: 1em 0; }
+
+        /* Markdown 内容样式增强 */
+        #content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        /* 定义块样式 - 蓝色背景 */
+        #content .definition {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border-left: 4px solid #2196f3;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.1);
+        }
+
+        #content .definition h3, #content .definition h4 {
+            color: #1976d2;
+            margin-top: 0;
+            margin-bottom: 0.5em;
+        }
+
+        /* 定理块样式 - 紫色背景 */
+        #content .theorem {
+            background: linear-gradient(135deg, #f3e5f5, #fce4ec);
+            border-left: 4px solid #9c27b0;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(156, 39, 176, 0.1);
+        }
+
+        #content .theorem h3, #content .theorem h4 {
+            color: #7b1fa2;
+            margin-top: 0;
+            margin-bottom: 0.5em;
+        }
+
+        /* 例子块样式 - 绿色背景 */
+        #content .example {
+            background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+            border-left: 4px solid #4caf50;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1);
+        }
+
+        #content .example h3, #content .example h4 {
+            color: #388e3c;
+            margin-top: 0;
+            margin-bottom: 0.5em;
+        }
+
+        /* 注意块样式 - 橙色背景 */
+        #content .note, #content .warning {
+            background: linear-gradient(135deg, #fff3e0, #fce4ec);
+            border-left: 4px solid #ff9800;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(255, 152, 0, 0.1);
+        }
+
+        #content .note h3, #content .note h4,
+        #content .warning h3, #content .warning h4 {
+            color: #f57c00;
+            margin-top: 0;
+            margin-bottom: 0.5em;
+        }
+
+        /* 算法块样式 - 灰色背景 */
+        #content .algorithm {
+            background: linear-gradient(135deg, #f5f5f5, #fafafa);
+            border-left: 4px solid #607d8b;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(96, 125, 139, 0.1);
+        }
+
+        #content .algorithm h3, #content .algorithm h4 {
+            color: #455a64;
+            margin-top: 0;
+            margin-bottom: 0.5em;
+        }
+
+        /* 证明块样式 - 淡紫色背景 */
+        #content .proof {
+            background: linear-gradient(135deg, #fafafa, #f3e5f5);
+            border-left: 4px solid #673ab7;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(103, 58, 183, 0.1);
+            font-style: italic;
+        }
+
+        #content .proof h3, #content .proof h4 {
+            color: #512da8;
+            margin-top: 0;
+            margin-bottom: 0.5em;
+            font-style: normal;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            body { 
+                padding-top: 110px;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                padding: 0.5rem;
+                align-items: flex-start;
+            }
+
+            .logo {
+                margin-bottom: 0.5rem;
+            }
+
+            .nav-links {
+                position: relative;
+                left: 0;
+                transform: none;
+                width: 100%;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding: 0.5rem 0;
+                gap: 0.5rem;
+            }
+
+            .main-wrapper { 
+                flex-direction: column; 
+            }
+            
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                max-height: 200px;
+                order: 2;
+            }
+            
+            .main-content { 
+                order: 1; 
+            }
+        }
+
+        /* 加载状态 */
+        .loading {
+            text-align: center;
+            padding: 2em;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
-    <div id="content">加载中...</div>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="../../images/1.png" alt="Logo">
+        </div>
+        <div class="nav-links">
+            <a href="../../">Home</a>
+            <a href="../../courses">Courses</a>
+            <a href="../../notes">Notes</a>
+            <a href="../" class="active">Lectures</a>
+            <a href="../../homework">Homework</a>
+            <a href="../../forum">Forum</a>
+            <a href="../../tools">Tools</a>
+        </div>
+    </nav>
+
+    <!-- 主体内容区域 -->
+    <div class="main-wrapper">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">
+                    <i class="fas fa-book"></i>
+                    Lecture Notes
+                </h2>
+            </div>
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <!-- 导航项将由 JavaScript 动态生成 -->
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <div class="content-header">
+                <h1 class="content-title" id="content-title">加载中...</h1>
+            </div>
+            <div class="content-body">
+                <div id="content" class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> 正在加载内容...
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script>
         (function() {
-            // 从 URL 获取要显示的 Markdown 文件
-            // 支持格式: viewer.html?md=introduction.md 或 viewer.html?md=introduction
-            const urlParams = new URLSearchParams(window.location.search);
-            let mdFile = urlParams.get('md') || urlParams.get('file');
-            
-            // 如果没有指定文件，显示使用说明
-            if (!mdFile) {
-                document.getElementById('content').innerHTML = `
-                    <h2>Markdown 查看器</h2>
-                    <p>请在 URL 中指定要查看的 Markdown 文件：</p>
-                    <p><code>viewer.html?md=文件名.md</code></p>
-                    <p>例如：<code>viewer.html?md=introduction.md</code></p>
-                `;
-                return;
-            }
-            
-            // 确保文件名以 .md 结尾
-            if (!mdFile.endsWith('.md')) {
-                mdFile += '.md';
-            }
-            
-            // 更新页面标题
-            const fileName = mdFile.replace('.md', '').replace(/-/g, ' ');
-            document.title = fileName + ' | 数值分析讲义';
-            
-            // 加载并渲染 Markdown
-            fetch(mdFile)
-                .then(res => {
-                    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-                    return res.text();
-                })
-                .then(md => {
-                    document.getElementById('content').innerHTML = marked.parse(md);
-                    document.querySelectorAll('#content').forEach(container => {
-                        // 块级公式
-                        container.innerHTML = container.innerHTML.replace(/\$\$([\s\S]+?)\$\$/g, function(_, tex) {
-                            try {
-                                return '<span class="katex-block">' + katex.renderToString(tex, {displayMode: true}) + '</span>';
-                            } catch (e) {
-                                return '<pre>' + tex + '</pre>';
-                            }
+            let markdownFiles = [];
+            let currentFile = '';
+
+            // 从 directory.json 加载文件列表
+            function loadDirectory() {
+                return fetch('../directory.json')
+                    .then(res => {
+                        if (!res.ok) throw new Error('无法加载目录文件');
+                        return res.json();
+                    })
+                    .then(data => {
+                        // 转换 JSON 格式为内部格式
+                        markdownFiles = data.markdownFiles.map(file => {
+                            const fileName = file.path.split('/').pop().replace('.md', '');
+                            return {
+                                id: fileName,
+                                title: file.title,
+                                icon: 'fas fa-file-text'
+                            };
                         });
-                        // 行内公式
-                        container.innerHTML = container.innerHTML.replace(/\$(.+?)\$/g, function(_, tex) {
-                            if (tex.trim().startsWith('$') && tex.trim().endsWith('$')) return '$' + tex + '$';
-                            try {
-                                return katex.renderToString(tex, {displayMode: false});
-                            } catch (e) {
-                                return '<code>' + tex + '</code>';
-                            }
-                        });
+                        return markdownFiles;
+                    })
+                    .catch(err => {
+                        console.error('加载目录失败:', err);
+                        // 回退到默认文件列表
+                        markdownFiles = [
+                            { id: 'introduction', title: 'Introduction', icon: 'fas fa-file-text' },
+                            { id: 'error-analysis', title: 'Error Analysis', icon: 'fas fa-file-text' },
+                            { id: 'interpolation', title: 'Interpolation', icon: 'fas fa-file-text' },
+                            { id: 'numerical-integration', title: 'Numerical Integration', icon: 'fas fa-file-text' },
+                            { id: 'linear-systems', title: 'Linear Systems', icon: 'fas fa-file-text' }
+                        ];
+                        return markdownFiles;
                     });
-                })
-                .catch((err) => {
-                    document.getElementById('content').innerHTML = `
-                        <h2>加载失败</h2>
-                        <p>无法加载文件: <code>${mdFile}</code></p>
-                        <p>错误信息: ${err.message}</p>
-                        <p>请确保文件存在且路径正确。</p>
-                    `;
+            }
+
+            // 生成侧边栏导航
+            function generateSidebar() {
+                const nav = document.getElementById('sidebar-nav');
+                if (markdownFiles.length === 0) {
+                    nav.innerHTML = '<div style="padding: 20px; color: #6c757d;">暂无可用文档</div>';
+                    return;
+                }
+                nav.innerHTML = markdownFiles.map(file => `
+                    <button class="nav-item" data-file="${file.id}" onclick="loadMarkdown('${file.id}')">
+                        <i class="${file.icon}"></i>
+                        ${file.title}
+                    </button>
+                `).join('');
+            }
+
+            // 加载 Markdown 文件
+            function loadMarkdown(fileId) {
+                const file = markdownFiles.find(f => f.id === fileId);
+                if (!file) return;
+
+                currentFile = fileId;
+                
+                // 更新 URL
+                const url = new URL(window.location);
+                url.searchParams.set('md', fileId);
+                window.history.pushState({}, '', url);
+
+                // 更新页面标题和头部标题
+                document.title = file.title + ' | Lecture Notes';
+                document.getElementById('content-title').textContent = file.title;
+
+                // 更新侧边栏激活状态
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.file === fileId);
                 });
+
+                // 显示加载状态
+                document.getElementById('content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> 正在加载内容...</div>';
+
+                // 加载 Markdown 文件
+                fetch(`${fileId}.md`)
+                    .then(res => {
+                        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                        return res.text();
+                    })
+                    .then(md => {
+                        document.getElementById('content').innerHTML = marked.parse(md);
+                        renderMath();
+                    })
+                    .catch(err => {
+                        document.getElementById('content').innerHTML = `
+                            <div style="text-align: center; padding: 2em; color: #dc3545;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h3>加载失败</h3>
+                                <p>无法加载文件: <code>${fileId}.md</code></p>
+                                <p>错误信息: ${err.message}</p>
+                            </div>
+                        `;
+                    });
+            }
+
+            // 渲染数学公式
+            function renderMath() {
+                const content = document.getElementById('content');
+                
+                // 先应用内容块样式
+                applyContentBlocks(content);
+                
+                // 然后渲染数学公式
+                content.innerHTML = content.innerHTML.replace(/\$\$([\s\S]+?)\$\$/g, function(_, tex) {
+                    try {
+                        return '<span class="katex-block">' + katex.renderToString(tex, {displayMode: true}) + '</span>';
+                    } catch (e) {
+                        return '<pre>' + tex + '</pre>';
+                    }
+                });
+                content.innerHTML = content.innerHTML.replace(/\$(.+?)\$/g, function(_, tex) {
+                    if (tex.trim().startsWith('$') && tex.trim().endsWith('$')) return '$' + tex + '$';
+                    try {
+                        return katex.renderToString(tex, {displayMode: false});
+                    } catch (e) {
+                        return '<code>' + tex + '</code>';
+                    }
+                });
+            }
+
+            // 应用内容块样式
+            function applyContentBlocks(content) {
+                // 查找并包装不同类型的内容块
+                const blockTypes = [
+                    { pattern: /^(定义|Definition)[:：]/i, class: 'definition' },
+                    { pattern: /^(定理|Theorem|引理|Lemma)[:：]/i, class: 'theorem' },
+                    { pattern: /^(例子|Example|示例)[:：]/i, class: 'example' },
+                    { pattern: /^(注意|Note|注|备注)[:：]/i, class: 'note' },
+                    { pattern: /^(警告|Warning|注意事项)[:：]/i, class: 'warning' },
+                    { pattern: /^(算法|Algorithm)[:：]/i, class: 'algorithm' },
+                    { pattern: /^(证明|Proof)[:：]/i, class: 'proof' }
+                ];
+
+                // 获取所有段落和标题
+                const elements = content.querySelectorAll('p, h1, h2, h3, h4, h5, h6');
+                
+                elements.forEach(element => {
+                    const text = element.textContent.trim();
+                    
+                    // 检查是否匹配任何块类型
+                    for (const blockType of blockTypes) {
+                        if (blockType.pattern.test(text)) {
+                            // 创建包装div
+                            const wrapper = document.createElement('div');
+                            wrapper.className = blockType.class;
+                            
+                            // 将当前元素移到包装div中
+                            element.parentNode.insertBefore(wrapper, element);
+                            wrapper.appendChild(element);
+                            
+                            // 查找并包含后续相关内容
+                            let nextElement = wrapper.nextElementSibling;
+                            while (nextElement && 
+                                   (nextElement.tagName === 'P' || 
+                                    nextElement.tagName === 'UL' || 
+                                    nextElement.tagName === 'OL') &&
+                                   !hasBlockTypePattern(nextElement.textContent, blockTypes)) {
+                                const temp = nextElement.nextElementSibling;
+                                wrapper.appendChild(nextElement);
+                                nextElement = temp;
+                            }
+                            break;
+                        }
+                    }
+                });
+            }
+
+            // 检查文本是否包含块类型模式
+            function hasBlockTypePattern(text, blockTypes) {
+                return blockTypes.some(blockType => blockType.pattern.test(text.trim()));
+            }
+
+            // 使 loadMarkdown 全局可用
+            window.loadMarkdown = loadMarkdown;
+
+            // 初始化应用
+            async function initApp() {
+                try {
+                    // 先加载目录
+                    await loadDirectory();
+                    // 生成侧边栏
+                    generateSidebar();
+                    
+                    // 从 URL 获取要显示的文件
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const initialFile = urlParams.get('md') || (markdownFiles[0] ? markdownFiles[0].id : null);
+                    
+                    if (initialFile && markdownFiles.find(f => f.id === initialFile)) {
+                        loadMarkdown(initialFile);
+                    } else {
+                        document.getElementById('content').innerHTML = `
+                            <div style="text-align: center; padding: 2em;">
+                                <h2>欢迎使用 Markdown 查看器</h2>
+                                <p>请从左侧导航选择要查看的文档</p>
+                            </div>
+                        `;
+                        document.getElementById('content-title').textContent = '选择文档';
+                    }
+                } catch (error) {
+                    console.error('初始化失败:', error);
+                    document.getElementById('content').innerHTML = `
+                        <div style="text-align: center; padding: 2em; color: #dc3545;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>初始化失败</h3>
+                            <p>无法加载应用: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+
+            // 启动应用
+            initApp();
         })();
     </script>
 </body>
