@@ -194,9 +194,26 @@
             padding: 2em; 
             max-width: none;
             margin: 0;
+            text-align: left;
         }
 
-        a { color: #4361ee; }
+        /* Markdown 内容对齐 */
+        #content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+            text-align: center;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        #content p, #content ul, #content ol, #content li {
+            text-align: left;
+        }
+
+        /* 数学公式居中显示 */
+        #content .katex-display {
+            text-align: center;
+            margin: 1.5em 0;
+        }
+
         pre, code { background: #f4f4f4; border-radius: 4px; padding: 2px 4px; }
         pre { padding: 1em; }
         .katex-display { margin: 1em 0; }
@@ -508,20 +525,26 @@
                 // 先应用内容块样式
                 applyContentBlocks(content);
                 
-                // 渲染数学公式，支持更多 LaTeX 环境
+                // 渲染数学公式，特别处理 cases 环境
                 content.innerHTML = content.innerHTML.replace(/\$\$([\s\S]+?)\$\$/g, function(_, tex) {
                     try {
-                        return '<span class="katex-block">' + katex.renderToString(tex, {
+                        // 预处理 cases 环境，确保正确格式
+                        let processedTex = tex.trim();
+                        
+                        return '<div class="katex-display">' + katex.renderToString(processedTex, {
                             displayMode: true,
                             throwOnError: false,
                             strict: false,
+                            trust: true,
                             macros: {
-                                "\\cases": "\\begin{cases}#1\\end{cases}"
+                                "\\cases": "\\begin{cases}#1\\end{cases}",
+                                "\\vdots": "\\vdots",
+                                "\\cdots": "\\cdots"
                             }
-                        }) + '</span>';
+                        }) + '</div>';
                     } catch (e) {
                         console.warn('LaTeX rendering error:', e);
-                        return '<pre style="background: #ffebee; color: #c62828; padding: 1em; border-radius: 4px;">' + tex + '\n\n渲染错误: ' + e.message + '</pre>';
+                        return '<div class="katex-display"><pre style="background: #ffebee; color: #c62828; padding: 1em; border-radius: 4px; text-align: left;">' + tex + '\n\n渲染错误: ' + e.message + '</pre></div>';
                     }
                 });
                 
@@ -531,7 +554,8 @@
                         return katex.renderToString(tex, {
                             displayMode: false,
                             throwOnError: false,
-                            strict: false
+                            strict: false,
+                            trust: true
                         });
                     } catch (e) {
                         console.warn('Inline LaTeX rendering error:', e);
@@ -618,7 +642,5 @@
             initApp();
         })();
     </script>
-</body>
-</html>
 </body>
 </html>
