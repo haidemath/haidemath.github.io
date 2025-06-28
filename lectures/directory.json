@@ -13,24 +13,8 @@
   },
   "markdownFiles": [
     {
-      "title": "Introduction",
-      "path": "markdown/introduction.md"
-    },
-    {
-      "title": "Error Analysis",
-      "path": "markdown/error-analysis.md"
-    },
-    {
-      "title": "Interpolation",
-      "path": "markdown/interpolation.md"
-    },
-    {
-      "title": "Numerical Integration",
-      "path": "markdown/numerical-integration.md"
-    },
-    {
-      "title": "Linear Systems",
-      "path": "markdown/linear-systems.md"
+      "title": "Set Theory",
+      "path": "Real-Analysis/Set-Theory.md"
     }
   ]
 }

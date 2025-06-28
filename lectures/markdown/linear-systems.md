@@ -83,10 +83,17 @@ x_1 \\ x_2 \\ x_3
 \begin{pmatrix}
 1 \\ -3 \\ 1
 \end{pmatrix}$$
+
+使用高斯消元法求解，首先构造增广矩阵：
+$$\left[\begin{array}{ccc|c}
+2 & 1 & -1 & 1 \\
+-3 & -1 & 2 & -3 \\
+-2 & 1 & 2 & 1
+\end{array}\right]$$
 \end{example}
 
 \begin{note}
-在实际计算中，直接求矩阵的逆通常不是最有效的方法，特别是对于大型稀疏矩阵。迭代方法通常更加高效。
+在实际计算中，直接求矩阵的逆通常不是最有效的方法，特别是对于大型稀疏矩阵。迭代方法通常更加高效。KaTeX 完全支持 `pmatrix`、`bmatrix`、`vmatrix` 等矩阵环境。
 \end{note}
 
 ### 5. 应用
