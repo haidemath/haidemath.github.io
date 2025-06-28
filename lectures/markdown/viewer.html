@@ -2,469 +2,1350 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Markdown 查看器</title>
+    <title>HaideMath - 学术笔记阅读器</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Computer Modern 字体 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.2/cmu-serif.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.2/cmu-sans-serif.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.2/cmu-typewriter.css">
     <style>
         :root {
-            --primary: #4361ee;
-            --primary-light: #4895ef;
-            --secondary: #7209b7;
-            --accent: #f72585;
-            --background: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-dark: #212529;
-            --text-light: #6c757d;
-            --text-lighter: #adb5bd;
-            --border: #e9ecef;
-            --success: #38b000;
-            --warning: #ffaa00;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            --transition: all 0.3s ease;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #0f172a;
+            --accent: #06b6d4;
+            --accent-light: #67e8f9;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --bg-overlay: rgba(255, 255, 255, 0.95);
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+            --text-muted: #94a3b8;
+            
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --border-dark: #94a3b8;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body { 
             margin: 0; 
-            font-family: 'Noto Sans SC', 'Segoe UI', Arial, sans-serif; 
-            background: #f8f9fa; 
-            color: #222; 
+            font-family: 'Computer Modern Serif', 'CMU Serif', 'Times New Roman', serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-size: 12pt;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--bg-overlay);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            padding: 0 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-family: 'Computer Modern Sans', 'CMU Sans Serif', 'Helvetica', sans-serif;
+        }
+
+        .header-brand i {
+            font-size: 1.5rem;
+        }
+
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: var(--radius-md);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .btn-icon:hover {
+            background: var(--bg-tertiary);
+            color: var(--primary);
+        }
+
+        .btn-icon.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* 主体布局 */
+        .app-container {
+            display: flex;
             height: 100vh;
             padding-top: 70px;
         }
 
-        /* 顶部导航栏样式 */
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1rem 2rem;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            margin-right: 2rem;
-            height: 40px;
-            flex-shrink: 0;
-        }
-
-        .logo img {
-            height: 40px;
-            display: block;
-        }
-
-        .nav-links {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            width: max-content;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--primary);
-            font-weight: bold;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            transition: all 0.3s;
-        }
-
-        .nav-links a:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-3px);
-        }
-
-        .nav-links a.active {
-            background: var(--primary-light);
-            color: white;
-        }
-
-        /* 主体内容区域 */
-        .main-wrapper {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* 侧边栏样式 */
+        /* 侧边栏 */
         .sidebar {
-            width: 280px;
-            background: #fff;
-            border-right: 1px solid #e9ecef;
-            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
-            overflow-y: auto;
-            flex-shrink: 0;
+            width: 320px;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            transform: translateX(0);
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
         }
 
         .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid #e9ecef;
-            background: linear-gradient(135deg, #4361ee, #7209b7);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
+            font-family: 'Computer Modern Sans', 'CMU Sans Serif', 'Helvetica', sans-serif;
         }
 
         .sidebar-title {
-            font-size: 1.2rem;
+            font-size: 1.125rem;
             font-weight: 600;
             margin: 0;
-            font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Computer Modern Sans', 'CMU Sans Serif', 'Helvetica', sans-serif;
         }
 
-        .sidebar-nav {
-            padding: 15px 0;
+        .sidebar-subtitle {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin: 0.25rem 0 0 0;
+            font-family: 'Computer Modern Sans', 'CMU Sans Serif', 'Helvetica', sans-serif;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .search-box {
+            margin: 0 1rem 1rem 1rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            background: var(--bg-secondary);
+            transition: var(--transition);
+            font-family: 'Computer Modern Sans', 'CMU Sans Serif', 'Helvetica', sans-serif;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         .nav-item {
             display: block;
-            padding: 12px 20px;
-            color: #495057;
-            text-decoration: none;
+            width: 100%;
+            padding: 0.75rem 1.5rem;
             border: none;
             background: none;
-            width: 100%;
             text-align: left;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.95rem;
-            font-family: '微软雅黑', 'Microsoft YaHei', sans-serif;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: 'Computer Modern Sans', 'CMU Sans Serif', 'Helvetica', sans-serif;
         }
 
         .nav-item:hover {
-            background: #f8f9fa;
-            color: #4361ee;
-            padding-left: 25px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
         }
 
         .nav-item.active {
-            background: #4361ee;
-            color: white;
-            border-left: 4px solid #7209b7;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 500;
         }
 
         .nav-item i {
-            margin-right: 8px;
             width: 16px;
+            text-align: center;
+            opacity: 0.7;
         }
 
-        /* 主内容区域 */
+        .nav-item.active i {
+            opacity: 1;
+        }
+
+        /* 主内容区 */
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            background: var(--bg-secondary);
         }
 
         .content-header {
-            background: white;
-            padding: 15px 25px;
-            border-bottom: 1px solid #e9ecef;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-light);
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .content-title {
-            margin: 0;
-            color: #4361ee;
             font-size: 1.5rem;
             font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .content-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
         }
 
         .content-body {
             flex: 1;
             overflow-y: auto;
-            padding: 25px;
+            padding: 2rem;
         }
 
-        #content { 
-            background: #fff; 
-            border-radius: 12px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            padding: 2em; 
-            max-width: none;
-            margin: 0;
+        /* 内容容器 */
+        #content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+            min-height: calc(100vh - 200px);
             text-align: left;
+            counter-reset: definition-counter theorem-counter example-counter note-counter algorithm-counter proof-counter;
+            font-family: 'Computer Modern Serif', 'CMU Serif', 'Times New Roman', serif;
+            font-size: 12pt;
+            line-height: 1.5;
         }
 
-        /* Markdown 内容对齐 */
+        /* LaTeX 风格的字体设置 */
         #content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
-            text-align: center;
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
+            font-family: 'Computer Modern Sans', 'CMU Sans Serif', 'Helvetica', sans-serif;
+            font-weight: bold;
+            line-height: 1.2;
         }
 
-        #content p, #content ul, #content ol, #content li {
-            text-align: left;
+        #content h1 { font-size: 17pt; margin: 0.8em 0 0.5em 0; }
+        #content h2 { font-size: 14pt; margin: 0.6em 0 0.4em 0; }
+        #content h3 { font-size: 12pt; margin: 0.5em 0 0.3em 0; }
+        #content h4 { font-size: 11pt; margin: 0.4em 0 0.3em 0; }
+
+        #content p {
+            font-family: 'Computer Modern Serif', 'CMU Serif', 'Times New Roman', serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            margin: 0.4em 0;
+            text-indent: 1.5em;
         }
 
-        /* 数学公式居中显示 */
-        #content .katex-display {
-            text-align: center;
-            margin: 1.5em 0;
+        #content code {
+            font-family: 'Computer Modern Typewriter', 'CMU Typewriter Text', 'Courier New', monospace;
+            font-size: 11pt;
+            background: var(--bg-tertiary);
+            padding: 0.1em 0.3em;
+            border-radius: 0.2em;
         }
 
-        pre, code { background: #f4f4f4; border-radius: 4px; padding: 2px 4px; }
-        pre { padding: 1em; }
-        .katex-display { margin: 1em 0; }
-
-        /* Markdown 内容样式增强 */
-        #content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
+        #content pre {
+            font-family: 'Computer Modern Typewriter', 'CMU Typewriter Text', 'Courier New', monospace;
+            font-size: 10pt;
+            background: var(--bg-tertiary);
+            padding: 0.8em;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            line-height: 1.4;
+            margin: 0.5em 0;
         }
 
-        /* 定义块样式 - 蓝色背景 */
-        #content .definition {
-            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
-            border-left: 4px solid #2196f3;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.1);
-        }
-
-        #content .definition h3, #content .definition h4 {
-            color: #1976d2;
-            margin-top: 0;
-            margin-bottom: 0.5em;
-        }
-
-        /* 定理块样式 - 紫色背景 */
-        #content .theorem {
-            background: linear-gradient(135deg, #f3e5f5, #fce4ec);
-            border-left: 4px solid #9c27b0;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(156, 39, 176, 0.1);
-        }
-
-        #content .theorem h3, #content .theorem h4 {
-            color: #7b1fa2;
-            margin-top: 0;
-            margin-bottom: 0.5em;
-        }
-
-        /* 例子块样式 - 绿色背景 */
-        #content .example {
-            background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
-            border-left: 4px solid #4caf50;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1);
-        }
-
-        #content .example h3, #content .example h4 {
-            color: #388e3c;
-            margin-top: 0;
-            margin-bottom: 0.5em;
-        }
-
-        /* 注意块样式 - 橙色背景 */
-        #content .note, #content .warning {
-            background: linear-gradient(135deg, #fff3e0, #fce4ec);
-            border-left: 4px solid #ff9800;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(255, 152, 0, 0.1);
-        }
-
-        #content .note h3, #content .note h4,
-        #content .warning h3, #content .warning h4 {
-            color: #f57c00;
-            margin-top: 0;
-            margin-bottom: 0.5em;
-        }
-
-        /* 算法块样式 - 灰色背景 */
-        #content .algorithm {
-            background: linear-gradient(135deg, #f5f5f5, #fafafa);
-            border-left: 4px solid #607d8b;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(96, 125, 139, 0.1);
-        }
-
-        #content .algorithm h3, #content .algorithm h4 {
-            color: #455a64;
-            margin-top: 0;
-            margin-bottom: 0.5em;
-        }
-
-        /* 证明块样式 - 淡紫色背景 */
-        #content .proof {
-            background: linear-gradient(135deg, #fafafa, #f3e5f5);
-            border-left: 4px solid #673ab7;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(103, 58, 183, 0.1);
+        #content blockquote {
+            font-family: 'Computer Modern Serif', 'CMU Serif', 'Times New Roman', serif;
             font-style: italic;
+            margin: 0.5em 2em;
+            padding-left: 1em;
+            border-left: 3px solid var(--border-medium);
         }
 
-        #content .proof h3, #content .proof h4 {
-            color: #512da8;
-            margin-top: 0;
-            margin-bottom: 0.5em;
+        /* 强制所有内容左对齐 */
+        #content * {
+            text-align: left !important;
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+
+        /* 例外：保持某些特殊元素的居中样式 */
+        #content .loading {
+            text-align: center !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        #content .loading * {
+            text-align: center !important;
+        }
+
+        /* Markdown 内容样式 */
+        #content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+            color: var(--text-primary);
+            font-weight: 600;
+            line-height: 1.3;
+            margin: 2rem 0 1rem 0;
+            text-align: left;
+        }
+
+        #content h1 {
+            font-size: 2.25rem;
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 0.5rem;
+        }
+
+        #content h2 {
+            font-size: 1.875rem;
+            color: var(--primary);
+        }
+
+        #content h3 {
+            font-size: 1.5rem;
+        }
+
+        #content h4 {
+            font-size: 1.25rem;
+        }
+
+        #content p {
+            margin: 1rem 0;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            text-align: left;
+        }
+
+        #content ul, #content ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            text-align: left;
+        }
+
+        #content li {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            text-align: left;
+        }
+
+        #content code {
+            background: var(--bg-tertiary);
+            color: var(--primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.875rem;
+        }
+
+        #content pre {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            overflow: auto;
+            margin: 1.5rem 0;
+        }
+
+        #content pre code {
+            background: none;
+            color: var(--text-primary);
+            padding: 0;
+        }
+
+        /* 数学公式样式 */
+        #content .math-display {
+            margin: 0.6em 0 !important;
+            text-align: left !important;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--accent);
+            display: block !important;
+            width: 100%;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        /* MathJax 样式调整 */
+        .MathJax {
+            text-align: left !important;
+        }
+
+        .MathJax_Display {
+            text-align: left !important;
+            margin: 0.6em 0 !important;
+        }
+
+        .MathJax svg {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        /* 强制 MathJax 左对齐 */
+        mjx-container[display="true"] {
+            text-align: left !important;
+            margin: 0.6em 0 !important;
+        }
+
+        mjx-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* 内容块样式 - 现代化设计 */
+        #content .definition {
+            background: linear-gradient(135deg, #dbeafe, #f0f9ff);
+            border: 1px solid #bfdbfe;
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin: 0.6em 0;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            text-align: left !important;
+            width: 100%;
+            display: block;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            counter-increment: definition-counter;
+            font-family: 'Computer Modern Serif', 'CMU Serif', 'Times New Roman', serif;
+            font-size: 12pt;
+            line-height: 1.5;
+        }
+
+        #content .definition * {
+            text-align: left !important;
+        }
+
+        #content .definition::before {
+            content: "定义 " counter(definition-counter);
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        #content .theorem {
+            background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+            border: 1px solid #d8b4fe;
+            border-left: 4px solid #8b5cf6;
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin: 0.6em 0;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            text-align: left !important;
+            width: 100%;
+            display: block;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            counter-increment: theorem-counter;
+        }
+
+        #content .theorem * {
+            text-align: left !important;
+        }
+
+        #content .theorem::before {
+            content: "定理 " counter(theorem-counter);
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: #8b5cf6;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        #content .example {
+            background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+            border: 1px solid #86efac;
+            border-left: 4px solid var(--success);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin: 0.6em 0;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            text-align: left !important;
+            width: 100%;
+            display: block;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            counter-increment: example-counter;
+        }
+
+        #content .example * {
+            text-align: left !important;
+        }
+
+        #content .example::before {
+            content: "例子 " counter(example-counter);
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: var(--success);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        #content .note, #content .warning {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            border: 1px solid #fde68a;
+            border-left: 4px solid var(--warning);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin: 0.6em 0;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            text-align: left !important;
+            width: 100%;
+            display: block;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            counter-increment: note-counter;
+        }
+
+        #content .note *, #content .warning * {
+            text-align: left !important;
+        }
+
+        #content .note::before {
+            content: "注意 " counter(note-counter);
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: var(--warning);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        #content .warning::before {
+            content: "警告 " counter(note-counter);
+        }
+
+        #content .algorithm {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #64748b;
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin: 0.6em 0;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            text-align: left !important;
+            width: 100%;
+            display: block;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            counter-increment: algorithm-counter;
+        }
+
+        #content .algorithm * {
+            text-align: left !important;
+        }
+
+        #content .algorithm::before {
+            content: "算法 " counter(algorithm-counter);
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: #64748b;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        #content .proof {
+            background: linear-gradient(135deg, #fefce8, #fef9c3);
+            border: 1px solid #fde047;
+            border-left: 4px solid #eab308;
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin: 0.6em 0;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            font-style: italic;
+            text-align: left !important;
+            width: 100%;
+            display: block;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            counter-increment: proof-counter;
+        }
+
+        #content .proof::before {
+            content: "证明 " counter(proof-counter);
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: #eab308;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
             font-style: normal;
         }
 
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            body { 
-                padding-top: 110px;
-            }
-            
-            .navbar {
-                flex-direction: column;
-                padding: 0.5rem;
-                align-items: flex-start;
-            }
+        /* 为所有内容块设置 LaTeX 风格字体 */
+        #content .definition, 
+        #content .theorem, 
+        #content .example, 
+        #content .note, 
+        #content .warning, 
+        #content .algorithm, 
+        #content .proof {
+            font-family: 'Computer Modern Serif', 'CMU Serif', 'Times New Roman', serif;
+            font-size: 12pt;
+            line-height: 1.5;
+        }
 
-            .logo {
-                margin-bottom: 0.5rem;
-            }
+        #content .definition p,
+        #content .theorem p,
+        #content .example p,
+        #content .note p,
+        #content .warning p,
+        #content .algorithm p,
+        #content .proof p {
+            text-indent: 0; /* 内容块内不使用首行缩进 */
+            margin: 0.3em 0;
+        }
 
-            .nav-links {
-                position: relative;
-                left: 0;
-                transform: none;
-                width: 100%;
-                overflow-x: auto;
-                justify-content: flex-start;
-                padding: 0.5rem 0;
-                gap: 0.5rem;
-            }
+        /* 证明块使用斜体，符合 LaTeX 传统 */
+        #content .proof {
+            font-style: italic;
+        }
 
-            .main-wrapper { 
-                flex-direction: column; 
-            }
-            
-            .sidebar { 
-                width: 100%; 
-                height: auto; 
-                max-height: 200px;
-                order: 2;
-            }
-            
-            .main-content { 
-                order: 1; 
-            }
+        /* 算法块使用等宽字体 */
+        #content .algorithm {
+            font-family: 'Computer Modern Typewriter', 'CMU Typewriter Text', 'Courier New', monospace;
+            font-size: 11pt;
         }
 
         /* 加载状态 */
         .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 280px;
+            }
+            
+            #content {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 1rem;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 70px;
+                height: calc(100vh - 70px);
+                z-index: 999;
+                box-shadow: var(--shadow-lg);
+            }
+            
+            .main-content {
+                width: 100%;
+            }
+            
+            .content-body {
+                padding: 1rem;
+            }
+            
+            #content {
+                padding: 1.5rem;
+                margin: 0;
+                border-radius: var(--radius-md);
+            }
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-dark);
+        }
+
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 过渡动画 */
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 通知动画 */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* 文件拖拽提示 */
+        .drop-zone {
+            border: 2px dashed var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
             text-align: center;
-            padding: 2em;
-            color: #6c757d;
+            color: var(--text-muted);
+            background: var(--bg-tertiary);
+            margin: 1rem 0;
+        }
+
+        .drop-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
         }
     </style>
 </head>
 <body>
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <a href="#" class="header-brand">
+            <i class="fas fa-graduation-cap"></i>
+            HaideMath
+        </a>
+        
+        <div class="header-actions">
+            <button class="btn-icon" id="sidebar-toggle" title="切换导航">
+                <i class="fas fa-bars"></i>
+            </button>
+            <button class="btn-icon" id="theme-toggle" title="切换主题">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="btn-icon" id="fullscreen-toggle" title="全屏阅读">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+    </header>
 
-    <!-- 主体内容区域 -->
-    <div class="main-wrapper">
-        <div class="sidebar">
+    <!-- 主体容器 -->
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h2 class="sidebar-title">
-                    <i class="fas fa-book"></i>
-                    Lecture Notes
+                    <i class="fas fa-book-open"></i>
+                    学术笔记
                 </h2>
+                <p class="sidebar-subtitle">数学分析与理论</p>
             </div>
-            <nav class="sidebar-nav" id="sidebar-nav">
-                <!-- 导航项将由 JavaScript 动态生成 -->
-            </nav>
-        </div>
+            
+            <div class="sidebar-content">
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        placeholder="搜索笔记..." 
+                        id="search-input"
+                    >
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                
+                <nav class="nav-list" id="nav-list">
+                    <!-- 导航项将由 JavaScript 动态生成 -->
+                </nav>
+            </div>
+        </aside>
 
-        <div class="main-content">
+        <!-- 主内容区 -->
+        <main class="main-content">
             <div class="content-header">
-                <h1 class="content-title" id="content-title">加载中...</h1>
-            </div>
-            <div class="content-body">
-                <div id="content" class="loading">
-                    <i class="fas fa-spinner fa-spin"></i> 正在加载内容...
+                <h1 class="content-title" id="content-title">选择笔记</h1>
+                <div class="content-meta">
+                    <span id="reading-time">预计阅读时间: --</span>
+                    <span id="last-updated">最后更新: --</span>
                 </div>
             </div>
-        </div>
+            
+            <div class="content-body">
+                <article id="content" class="loading">
+                    <i class="fas fa-book-reader"></i>
+                    <h3>欢迎使用学术笔记阅读器</h3>
+                    <p>请从左侧导航栏选择要阅读的笔记文档</p>
+                </article>
+            </div>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script>
-        (function() {
-            let markdownFiles = [];
-            let currentFile = '';
-
-            // 从 directory.json 加载文件列表
-            function loadDirectory() {
-                return fetch('../directory.json')
-                    .then(res => {
-                        if (!res.ok) throw new Error('无法加载目录文件');
-                        return res.json();
-                    })
-                    .then(data => {
-                        // 验证数据格式并处理
-                        if (!Array.isArray(data)) {
-                            throw new Error('directory.json 格式错误：应为数组格式');
-                        }
-                        
-                        // 直接使用简单的 JSON 格式
-                        markdownFiles = data.map(file => {
-                            if (!file.file || !file.title) {
-                                throw new Error('directory.json 中的文件项缺少必要字段 (file, title)');
-                            }
-                            // 从文件路径提取文件名作为 ID
-                            const fileName = file.file.split('/').pop().replace('.md', '');
-                            return {
-                                id: fileName,
-                                title: file.title,
-                                icon: 'fas fa-file-text'
-                            };
-                        });
-                        return markdownFiles;
-                    })
-                    .catch(err => {
-                        console.error('加载目录失败:', err);
-                        markdownFiles = [];
-                        throw err;
-                    });
+        // MathJax 配置
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true,
+                processEnvironments: true,
+                packages: {'[+]': ['ams', 'newcommand', 'configmacros', 'action', 'unicode']},
+                macros: {
+                    RR: "\\mathbb{R}",
+                    NN: "\\mathbb{N}",
+                    ZZ: "\\mathbb{Z}",
+                    QQ: "\\mathbb{Q}",
+                    CC: "\\mathbb{C}",
+                    FF: "\\mathbb{F}",
+                    PP: "\\mathbb{P}",
+                    EE: "\\mathbb{E}",
+                    eps: "\\varepsilon",
+                    phi: "\\varphi",
+                    emptyset: "\\varnothing",
+                    implies: "\\Rightarrow",
+                    iff: "\\Leftrightarrow"
+                },
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global',
+                displayAlign: 'left',
+                displayIndent: '0em'
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            startup: {
+                ready: () => {
+                    MathJax.startup.defaultReady();
+                    console.log('MathJax 已加载完成，支持完整的 LaTeX 语法');
+                }
+            }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script src="auto-directory.js"></script>
+    <script>
+        class MarkdownViewer {
+            constructor() {
+                this.markdownFiles = [];
+                this.currentFile = '';
+                this.sidebarCollapsed = false;
+                this.isDarkMode = false;
+                this.searchResults = [];
+                this.autoGenerator = new AutoDirectoryGenerator();
+                
+                this.init();
             }
 
-            // 生成侧边栏导航
-            function generateSidebar() {
-                const nav = document.getElementById('sidebar-nav');
-                if (markdownFiles.length === 0) {
-                    nav.innerHTML = '<div style="padding: 20px; color: #6c757d;">暂无可用文档</div>';
+            async init() {
+                try {
+                    await this.loadDirectory();
+                    this.generateSidebar();
+                    this.setupEventListeners();
+                    this.loadInitialContent();
+                    this.setupAutoRefresh();
+                } catch (error) {
+                    this.showError('初始化失败', error.message);
+                }
+            }
+
+            async loadDirectory() {
+                try {
+                    // 使用自动发现功能
+                    const files = await this.autoGenerator.discoverMarkdownFiles();
+                    
+                    this.markdownFiles = files.map(file => ({
+                        id: file.id,
+                        title: file.title,
+                        icon: file.icon || this.getFileIcon(file.title),
+                        category: file.category || this.getFileCategory(file.title),
+                        lastModified: file.lastModified,
+                        file: file.file
+                    }));
+
+                    console.log(`成功加载 ${this.markdownFiles.length} 个文档:`, this.markdownFiles.map(f => f.title));
+                    
+                    // 显示管理信息到控制台
+                    console.log('文档管理信息:', this.autoGenerator.getManagementInfo());
+                    
+                } catch (error) {
+                    console.error('加载目录失败:', error);
+                    this.markdownFiles = [];
+                    throw error;
+                }
+            }
+
+            getFileIcon(title) {
+                if (title.includes('定理') || title.includes('理论')) return 'fas fa-flask';
+                if (title.includes('例题') || title.includes('练习')) return 'fas fa-calculator';
+                if (title.includes('证明')) return 'fas fa-check-circle';
+                return 'fas fa-file-text';
+            }
+
+            getFileCategory(title) {
+                if (title.includes('分析')) return '数学分析';
+                if (title.includes('代数')) return '代数学';
+                if (title.includes('几何')) return '几何学';
+                return '其他';
+            }
+
+            generateSidebar() {
+                const navList = document.getElementById('nav-list');
+                if (this.markdownFiles.length === 0) {
+                    navList.innerHTML = `
+                        <div style="padding: 1rem; color: var(--text-muted); text-align: center;">
+                            <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+                            <p>暂无文档</p>
+                            <p style="font-size: 0.75rem;">请上传 .md 文件到当前目录</p>
+                        </div>
+                    `;
                     return;
                 }
-                nav.innerHTML = markdownFiles.map(file => `
-                    <button class="nav-item" data-file="${file.id}" onclick="loadMarkdown('${file.id}')">
-                        <i class="${file.icon}"></i>
-                        ${file.title}
-                    </button>
-                `).join('');
+
+                // 按类别分组
+                const grouped = this.markdownFiles.reduce((acc, file) => {
+                    const category = file.category;
+                    if (!acc[category]) acc[category] = [];
+                    acc[category].push(file);
+                    return acc;
+                }, {});
+
+                let html = '';
+                
+                // 添加刷新按钮
+                html += `
+                    <div style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 0.5rem;">
+                        <button onclick="viewer.refreshContent()" style="
+                            width: 100%; 
+                            padding: 0.5rem; 
+                            border: 1px solid var(--border-light); 
+                            border-radius: var(--radius-sm); 
+                            background: var(--bg-secondary); 
+                            color: var(--text-secondary); 
+                            cursor: pointer;
+                            font-size: 0.75rem;
+                            transition: var(--transition);
+                        " onmouseover="this.style.background='var(--bg-tertiary)'" onmouseout="this.style.background='var(--bg-secondary)'">
+                            <i class="fas fa-sync-alt"></i> 刷新内容 (Ctrl+R)
+                        </button>
+                    </div>
+                `;
+
+                Object.entries(grouped).forEach(([category, files]) => {
+                    html += `
+                        <div style="padding: 0.5rem 1rem; font-weight: 600; color: var(--text-tertiary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-folder" style="opacity: 0.7;"></i>
+                            ${category} (${files.length})
+                        </div>
+                    `;
+                    files.forEach(file => {
+                        const lastModified = file.lastModified ? new Date(file.lastModified).toLocaleDateString('zh-CN') : '';
+                        html += `
+                            <button class="nav-item" data-file="${file.id}" onclick="viewer.loadMarkdown('${file.id}')" title="${file.title}${lastModified ? '\n最后更新: ' + lastModified : ''}">
+                                <i class="${file.icon}"></i>
+                                <span style="flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.title}</span>
+                                ${lastModified ? `<span style="font-size: 0.6rem; opacity: 0.6;">${lastModified.split('/')[1]}/${lastModified.split('/')[2]}</span>` : ''}
+                            </button>
+                        `;
+                    });
+                });
+
+                navList.innerHTML = html;
             }
 
-            // 加载 Markdown 文件
-            function loadMarkdown(fileId) {
-                const file = markdownFiles.find(f => f.id === fileId);
+            setupEventListeners() {
+                // 侧边栏切换
+                document.getElementById('sidebar-toggle').addEventListener('click', () => {
+                    this.toggleSidebar();
+                });
+
+                // 主题切换
+                document.getElementById('theme-toggle').addEventListener('click', () => {
+                    this.toggleTheme();
+                });
+
+                // 全屏切换
+                document.getElementById('fullscreen-toggle').addEventListener('click', () => {
+                    this.toggleFullscreen();
+                });
+
+                // 搜索功能
+                const searchInput = document.getElementById('search-input');
+                searchInput.addEventListener('input', (e) => {
+                    this.searchFiles(e.target.value);
+                });
+
+                // 响应式处理
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth <= 768) {
+                        this.sidebarCollapsed = true;
+                        document.getElementById('sidebar').classList.add('collapsed');
+                    } else {
+                        this.sidebarCollapsed = false;
+                        document.getElementById('sidebar').classList.remove('collapsed');
+                    }
+                });
+
+                // 添加刷新按钮事件
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.key === 'r') {
+                        e.preventDefault();
+                        this.refreshContent();
+                    }
+                });
+            }
+
+            /**
+             * 设置自动刷新功能
+             */
+            setupAutoRefresh() {
+                // 开发模式下启用自动刷新
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    setInterval(() => {
+                        this.checkForUpdates();
+                    }, 30000); // 30秒检查一次
+                }
+            }
+
+            /**
+             * 检查内容更新
+             */
+            async checkForUpdates() {
+                try {
+                    const newFiles = await this.autoGenerator.discoverMarkdownFiles();
+                    if (newFiles.length !== this.markdownFiles.length) {
+                        console.log('检测到新的文档，正在刷新...');
+                        await this.loadDirectory();
+                        this.generateSidebar();
+                    }
+                } catch (error) {
+                    console.log('检查更新失败:', error);
+                }
+            }
+
+            /**
+             * 手动刷新内容
+             */
+            async refreshContent() {
+                try {
+                    console.log('正在刷新内容...');
+                    await this.loadDirectory();
+                    this.generateSidebar();
+                    
+                    // 如果当前有文档打开，重新加载
+                    if (this.currentFile) {
+                        await this.loadMarkdown(this.currentFile);
+                    }
+                    
+                    this.showNotification('内容已刷新', 'success');
+                } catch (error) {
+                    this.showNotification('刷新失败: ' + error.message, 'error');
+                }
+            }
+
+            /**
+             * 显示通知消息
+             */
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 80px;
+                    right: 20px;
+                    background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--error)' : 'var(--primary)'};
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: var(--radius-md);
+                    box-shadow: var(--shadow-lg);
+                    z-index: 10000;
+                    animation: slideInRight 0.3s ease-out;
+                `;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOutRight 0.3s ease-out';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+
+            toggleSidebar() {
+                this.sidebarCollapsed = !this.sidebarCollapsed;
+                const sidebar = document.getElementById('sidebar');
+                const toggleBtn = document.getElementById('sidebar-toggle');
+                
+                if (this.sidebarCollapsed) {
+                    sidebar.classList.add('collapsed');
+                    toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                }
+            }
+
+            toggleTheme() {
+                this.isDarkMode = !this.isDarkMode;
+                const toggleBtn = document.getElementById('theme-toggle');
+                
+                if (this.isDarkMode) {
+                    document.body.style.filter = 'invert(1) hue-rotate(180deg)';
+                    toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    document.body.style.filter = 'none';
+                    toggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            }
+
+            toggleFullscreen() {
+                const toggleBtn = document.getElementById('fullscreen-toggle');
+                
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                    toggleBtn.innerHTML = '<i class="fas fa-compress"></i>';
+                } else {
+                    document.exitFullscreen();
+                    toggleBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                }
+            }
+
+            searchFiles(query) {
+                const navItems = document.querySelectorAll('.nav-item');
+                const lowerQuery = query.toLowerCase();
+                
+                navItems.forEach(item => {
+                    const title = item.textContent.toLowerCase();
+                    if (title.includes(lowerQuery)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+
+            loadInitialContent() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const initialFile = urlParams.get('md') || (this.markdownFiles[0] ? this.markdownFiles[0].id : null);
+                
+                if (initialFile && this.markdownFiles.find(f => f.id === initialFile)) {
+                    this.loadMarkdown(initialFile);
+                } else {
+                    this.showWelcome();
+                }
+            }
+
+            showWelcome() {
+                document.getElementById('content').innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-book-reader" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <h2 style="color: var(--text-primary); margin-bottom: 0.5rem;">欢迎使用学术笔记阅读器</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 2rem;">选择左侧导航栏中的文档开始阅读</p>
+                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); text-align: center; min-width: 150px;">
+                                <i class="fas fa-search" style="color: var(--primary); margin-bottom: 0.5rem;"></i>
+                                <p style="margin: 0; font-size: 0.875rem;">智能搜索</p>
+                            </div>
+                            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); text-align: center; min-width: 150px;">
+                                <i class="fas fa-moon" style="color: var(--primary); margin-bottom: 0.5rem;"></i>
+                                <p style="margin: 0; font-size: 0.875rem;">深色主题</p>
+                            </div>
+                            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md); text-align: center; min-width: 150px;">
+                                <i class="fas fa-expand" style="color: var(--primary); margin-bottom: 0.5rem;"></i>
+                                <p style="margin: 0; font-size: 0.875rem;">全屏阅读</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('content-title').textContent = '学术笔记阅读器';
+            }
+
+            async loadMarkdown(fileId) {
+                const file = this.markdownFiles.find(f => f.id === fileId);
                 if (!file) return;
 
-                currentFile = fileId;
+                this.currentFile = fileId;
                 
                 // 更新 URL
                 const url = new URL(window.location);
@@ -472,7 +1353,7 @@
                 window.history.pushState({}, '', url);
 
                 // 更新页面标题和头部标题
-                document.title = file.title + ' | Lecture Notes';
+                document.title = `${file.title} | HaideMath`;
                 document.getElementById('content-title').textContent = file.title;
 
                 // 更新侧边栏激活状态
@@ -481,84 +1362,110 @@
                 });
 
                 // 显示加载状态
-                document.getElementById('content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> 正在加载内容...</div>';
+                this.showLoading();
 
-                // 加载 Markdown 文件
-                fetch(`${fileId}.md`)
-                    .then(res => {
-                        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-                        return res.text();
-                    })
-                    .then(md => {
-                        document.getElementById('content').innerHTML = marked.parse(md);
-                        renderMath();
-                    })
-                    .catch(err => {
-                        document.getElementById('content').innerHTML = `
-                            <div style="text-align: center; padding: 2em; color: #dc3545;">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <h3>加载失败</h3>
-                                <p>无法加载文件: <code>${fileId}.md</code></p>
-                                <p>错误信息: ${err.message}</p>
-                            </div>
-                        `;
-                    });
+                try {
+                    const response = await fetch(`${fileId}.md`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const markdown = await response.text();
+                    const html = marked.parse(markdown);
+                    
+                    // 添加淡入动画
+                    const content = document.getElementById('content');
+                    content.innerHTML = html;
+                    content.classList.add('fade-in');
+                    
+                    // 渲染数学公式和内容块
+                    this.renderMath();
+                    this.updateReadingTime();
+                    
+                    // 滚动到顶部
+                    content.scrollTop = 0;
+                    
+                } catch (error) {
+                    this.showError('加载失败', `无法加载文件: ${fileId}.md\n错误信息: ${error.message}`);
+                }
             }
 
-            // 渲染数学公式和内容块样式
-            function renderMath() {
+            showLoading() {
+                document.getElementById('content').innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-spinner spinner"></i>
+                        <p>正在加载内容...</p>
+                    </div>
+                `;
+            }
+
+            showError(title, message) {
+                document.getElementById('content').innerHTML = `
+                    <div class="loading" style="color: var(--error);">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--error);"></i>
+                        <h3>${title}</h3>
+                        <p style="white-space: pre-line;">${message}</p>
+                    </div>
+                `;
+            }
+
+            renderMath() {
                 const content = document.getElementById('content');
                 
                 // 先应用内容块样式
-                applyContentBlocks(content);
+                this.applyContentBlocks(content);
                 
-                // 渲染数学公式，支持矩阵环境
-                content.innerHTML = content.innerHTML.replace(/\$\$([\s\S]+?)\$\$/g, function(_, tex) {
-                    try {
-                        let processedTex = tex.trim();
-                        
-                        return '<div class="katex-display">' + katex.renderToString(processedTex, {
-                            displayMode: true,
-                            throwOnError: false,
-                            strict: false,
-                            trust: true,
-                            maxExpand: 1000,
-                            maxSize: Infinity,
-                            macros: {
-                                "\\vdots": "\\vdots",
-                                "\\cdots": "\\cdots",
-                                "\\ldots": "\\ldots",
-                                "\\ddots": "\\ddots"
-                            }
-                        }) + '</div>';
-                    } catch (e) {
-                        console.warn('LaTeX rendering error:', e);
-                        return '<div class="katex-display"><pre style="background: #ffebee; color: #c62828; padding: 1em; border-radius: 4px; text-align: left;">' + tex + '\n\n渲染错误: ' + e.message + '</pre></div>';
-                    }
+                // 使用 MathJax 渲染数学公式
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    // 清除之前的数学公式渲染
+                    window.MathJax.typesetClear([content]);
+                    
+                    // 重新渲染数学公式
+                    window.MathJax.typesetPromise([content]).then(() => {
+                        console.log('MathJax 渲染完成');
+                        this.forceLeftAlign();
+                    }).catch((err) => {
+                        console.warn('MathJax 渲染错误:', err);
+                    });
+                } else {
+                    // 如果 MathJax 还没有加载完成，等待一下再试
+                    setTimeout(() => {
+                        this.renderMath();
+                    }, 500);
+                }
+            }
+
+            /**
+             * 强制左对齐所有内容
+             */
+            forceLeftAlign() {
+                const content = document.getElementById('content');
+                
+                // 强制所有 MathJax 元素左对齐
+                const mathJaxDisplays = content.querySelectorAll('mjx-container[display="true"]');
+                mathJaxDisplays.forEach(el => {
+                    el.style.textAlign = 'left';
+                    el.style.display = 'block';
+                    el.style.margin = '0.6em 0';
                 });
-                
-                content.innerHTML = content.innerHTML.replace(/\$(.+?)\$/g, function(_, tex) {
-                    if (tex.trim().startsWith('$') && tex.trim().endsWith('$')) return '$' + tex + '$';
-                    try {
-                        return katex.renderToString(tex, {
-                            displayMode: false,
-                            throwOnError: false,
-                            strict: false,
-                            trust: true,
-                            maxExpand: 1000
-                        });
-                    } catch (e) {
-                        console.warn('Inline LaTeX rendering error:', e);
-                        return '<code style="background: #ffebee; color: #c62828;">' + tex + '</code>';
+
+                const mathJaxContainers = content.querySelectorAll('mjx-container');
+                mathJaxContainers.forEach(el => {
+                    el.style.textAlign = 'left';
+                });
+
+                // 强制所有其他元素左对齐
+                const allElements = content.querySelectorAll('*');
+                allElements.forEach(el => {
+                    if (!el.classList.contains('loading')) {
+                        el.style.textAlign = 'left';
                     }
                 });
             }
 
-            // 应用内容块样式 - 支持 LaTeX 风格环境
-            function applyContentBlocks(content) {
+            applyContentBlocks(content) {
                 let html = content.innerHTML;
                 
-                // 定义环境类型和对应的样式类
                 const environments = [
                     { name: 'definition', class: 'definition' },
                     { name: 'theorem', class: 'theorem' },
@@ -570,67 +1477,124 @@
                     { name: 'proof', class: 'proof' }
                 ];
 
-                // 处理每种环境
                 environments.forEach(env => {
-                    // 匹配 \begin{envname}...\end{envname} 模式
-                    const beginPattern = new RegExp(`\\\\begin\\{${env.name}\\}([\\s\\S]*?)\\\\end\\{${env.name}\\}`, 'gi');
-                    html = html.replace(beginPattern, (match, content) => {
-                        // 清理内容中的多余空白
+                    const pattern = new RegExp(`\\\\begin\\{${env.name}\\}([\\s\\S]*?)\\\\end\\{${env.name}\\}`, 'gi');
+                    html = html.replace(pattern, (match, content) => {
                         const cleanContent = content.trim();
                         return `<div class="${env.class}">${cleanContent}</div>`;
                     });
                 });
 
-                // 应用处理后的 HTML
                 content.innerHTML = html;
             }
 
-            // 检查文本是否包含块类型模式（保留原有功能作为备选）
-            function hasBlockTypePattern(text, blockTypes) {
-                return blockTypes.some(blockType => blockType.pattern.test(text.trim()));
+            updateReadingTime() {
+                const content = document.getElementById('content');
+                const text = content.textContent || content.innerText || '';
+                const words = text.trim().split(/\s+/).length;
+                const readingTime = Math.ceil(words / 200); // 假设每分钟阅读200字
+                
+                document.getElementById('reading-time').textContent = `预计阅读时间: ${readingTime} 分钟`;
+                
+                // 显示文件的最后修改时间
+                const currentFileData = this.markdownFiles.find(f => f.id === this.currentFile);
+                const lastModified = currentFileData?.lastModified ? 
+                    new Date(currentFileData.lastModified).toLocaleDateString('zh-CN') : 
+                    new Date().toLocaleDateString('zh-CN');
+                    
+                document.getElementById('last-updated').textContent = `最后更新: ${lastModified}`;
             }
 
-            // 使 loadMarkdown 全局可用
-            window.loadMarkdown = loadMarkdown;
-
-            // 初始化应用
-            async function initApp() {
-                try {
-                    // 先加载目录
-                    await loadDirectory();
-                    // 生成侧边栏
-                    generateSidebar();
-                    
-                    // 从 URL 获取要显示的文件
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const initialFile = urlParams.get('md') || (markdownFiles[0] ? markdownFiles[0].id : null);
-                    
-                    if (initialFile && markdownFiles.find(f => f.id === initialFile)) {
-                        loadMarkdown(initialFile);
-                    } else {
-                        document.getElementById('content').innerHTML = `
-                            <div style="text-align: center; padding: 2em;">
-                                <h2>欢迎使用 Markdown 查看器</h2>
-                                <p>请从左侧导航选择要查看的文档</p>
-                            </div>
-                        `;
-                        document.getElementById('content-title').textContent = '选择文档';
-                    }
-                } catch (error) {
-                    console.error('初始化失败:', error);
-                    document.getElementById('content').innerHTML = `
-                        <div style="text-align: center; padding: 2em; color: #dc3545;">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <h3>初始化失败</h3>
-                            <p>无法加载应用: ${error.message}</p>
-                        </div>
-                    `;
-                }
+            /**
+             * 导出当前目录配置 (开发者工具)
+             */
+            exportDirectoryConfig() {
+                const config = this.autoGenerator.generateDirectoryJson();
+                console.log('当前目录配置:');
+                console.log(config);
+                
+                // 创建下载链接
+                const blob = new Blob([config], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'directory.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                this.showNotification('目录配置已导出', 'success');
             }
 
-            // 启动应用
-            initApp();
-        })();
+            /**
+             * 获取使用帮助信息
+             */
+            getUsageHelp() {
+                return `
+GitHub Pages 使用说明：
+
+1. 文件管理：
+   - 将 .md 文件直接上传到当前目录
+   - 文件名建议使用英文和连字符，如：Real-Analysis.md
+   - 系统会自动发现并加载新文件
+
+2. 支持的文件名模式：
+   - Set-Theory.md (集合论)
+   - Real-Analysis.md (实分析)
+   - Complex-Analysis.md (复分析)
+   - Linear-Algebra.md (线性代数)
+   - 等等...
+
+3. Markdown 格式要求：
+   - 文件开头用 # 标题 定义文档标题
+   - 使用 LaTeX 语法编写数学公式：$公式$ 或 $$公式$$
+   - 支持内容块：\\begin{definition}...\\end{definition}
+
+4. 自动功能：
+   - 自动分类和图标匹配
+   - 自动计算阅读时间
+   - 响应式设计，支持移动端
+
+5. 开发者工具：
+   - 在浏览器控制台输入 viewer.exportDirectoryConfig() 导出配置
+   - 按 Ctrl+R 刷新内容
+   - 查看 console 获取文件管理信息
+                `;
+            }
+        }
+
+        // 创建全局实例
+        const viewer = new MarkdownViewer();
+        
+        // 兼容性函数
+        window.loadMarkdown = (fileId) => viewer.loadMarkdown(fileId);
+
+        // 开发者工具函数
+        window.exportConfig = () => viewer.exportDirectoryConfig();
+        window.getHelp = () => console.log(viewer.getUsageHelp());
+        window.refreshFiles = () => viewer.refreshContent();
+
+        // 显示使用说明
+        console.log(`
+🎓 HaideMath 学术笔记阅读器
+================================
+
+📁 文件管理：
+- 直接上传 .md 文件到当前目录
+- 系统自动发现和分类文档
+- 支持自动刷新内容
+
+⚡ 快捷命令：
+- Ctrl+R: 刷新内容
+- exportConfig(): 导出目录配置
+- getHelp(): 查看详细使用说明
+- refreshFiles(): 手动刷新文件列表
+
+📖 当前加载文档数: ${viewer.markdownFiles?.length || 0}
+
+输入 getHelp() 查看详细使用说明
+        `);
     </script>
 </body>
 </html>
