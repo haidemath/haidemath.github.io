@@ -25,3 +25,12 @@ $A=B$表示$A$和$B$相等, 即$\forall x, x\in A\Leftrightarrow x\in B$.
 
 若$A\subset S, B=S\backslash A$, 则称$A$是$B$的补集, 记作$A^{c}$.
 \end{definition}
+
+例如下面这些例子:
+
+\begin{example}
+$A=B^{c}$时有$A\bigcap B = \phi$
+
+$A=B^{c}$时有$A\backslash B= \phi$
+
+\end{example}
