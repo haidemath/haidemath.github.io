@@ -10,14 +10,12 @@
 
 一个线性方程组可以表示为以下形式：
 
-$$
-\begin{cases}
+$$\begin{cases}
 a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n = b_1 \\
 a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n = b_2 \\
 \vdots \\
 a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n = b_m
-\end{cases}
-$$
+\end{cases}$$
 
 其中 $a_{ij}$ 是系数，$b_i$ 是常数项。
 
@@ -53,17 +51,14 @@ $$x_i = \frac{\det(A_i)}{\det(A)}$$
 
 \begin{example}
 考虑以下线性方程组：
-$$
-\begin{cases}
+$$\begin{cases}
 2x_1 + x_2 - x_3 = 1 \\
 -3x_1 - x_2 + 2x_3 = -3 \\
 -2x_1 + x_2 + 2x_3 = 1
-\end{cases}
-$$
+\end{cases}$$
 
 我们可以写成矩阵形式：
-$$
-\begin{pmatrix}
+$$\begin{pmatrix}
 2 & 1 & -1 \\
 -3 & -1 & 2 \\
 -2 & 1 & 2
@@ -73,8 +68,7 @@ x_1 \\ x_2 \\ x_3
 \end{pmatrix} = 
 \begin{pmatrix}
 1 \\ -3 \\ 1
-\end{pmatrix}
-$$
+\end{pmatrix}$$
 \end{example}
 
 \begin{note}
