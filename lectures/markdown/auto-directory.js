@@ -14,6 +14,15 @@ class AutoDirectoryGenerator {
      */
     async discoverMarkdownFiles() {
         try {
+            // 首先尝试本地环境的真实目录读取
+            if (this.isLocalEnvironment()) {
+                const localFiles = await this.discoverLocalFiles();
+                if (localFiles && localFiles.length > 0) {
+                    this.markdownFiles = localFiles;
+                    return this.markdownFiles;
+                }
+            }
+
             // 尝试从预定义列表加载
             const predefinedFiles = await this.loadPredefinedDirectory();
             if (predefinedFiles && predefinedFiles.length > 0) {
@@ -30,6 +39,140 @@ class AutoDirectoryGenerator {
             console.error('发现文件失败:', error);
             return [];
         }
+    }
+
+    /**
+     * 检查是否为本地开发环境
+     */
+    isLocalEnvironment() {
+        return window.location.hostname === 'localhost' || 
+               window.location.hostname === '127.0.0.1' || 
+               window.location.hostname === '';
+    }
+
+    /**
+     * 在本地环境中真实读取目录内容
+     */
+    async discoverLocalFiles() {
+        try {
+            // 尝试使用增强的服务器端点
+            const response = await fetch('./api/files');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.files) {
+                    console.log(`🎉 成功从服务器API获取到 ${data.files.length} 个文件`);
+                    return this.processServerFiles(data.files);
+                }
+            }
+        } catch (error) {
+            console.log('无法从服务器API获取文件列表，使用模式匹配方法:', error.message);
+        }
+
+        // 回退到增强的模式匹配
+        return await this.enhancedAutoDiscover();
+    }
+
+    /**
+     * 处理服务器返回的文件列表
+     */
+    processServerFiles(serverFiles) {
+        return serverFiles.map(file => ({
+            id: this.getFileId(file.file),
+            title: file.title,
+            file: file.file,
+            lastModified: file.lastModified,
+            category: this.getCategoryFromTitle(file.title),
+            icon: this.getIconFromTitle(file.title),
+            content: file.preview || '',
+            size: file.size
+        })).sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
+    }
+
+    /**
+     * 从文件路径获取文件ID
+     */
+    getFileId(filePath) {
+        return filePath.replace(/^.*\//, '').replace(/\.md$/, '');
+    }
+
+    /**
+     * 增强的自动发现（扫描当前目录中所有可能的文件）
+     */
+    async enhancedAutoDiscover() {
+        console.log('🔍 使用增强扫描模式发现文件...');
+        
+        // 通过分析当前页面或已知信息获取文件列表
+        const result = [];
+        
+        // 尝试通过错误页面反向工程获取文件列表
+        const testFiles = await this.scanForExistingFiles();
+        
+        for (const file of testFiles) {
+            try {
+                const response = await fetch(`${file}.md`);
+                if (response.ok) {
+                    const content = await response.text();
+                    const title = this.extractTitleFromContent(content, file);
+                    
+                    result.push({
+                        id: file,
+                        title: title,
+                        file: `${file}.md`,
+                        lastModified: response.headers.get('Last-Modified') || new Date().toISOString(),
+                        category: this.getCategoryFromTitle(title),
+                        icon: this.getIconFromTitle(title),
+                        content: content.substring(0, 200) + '...'
+                    });
+                    
+                    console.log(`✅ 发现文件: ${file}.md - ${title}`);
+                }
+            } catch (error) {
+                // 文件不存在
+            }
+        }
+        
+        return result.sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
+    }
+
+    /**
+     * 扫描已存在的文件
+     */
+    async scanForExistingFiles() {
+        // 首先扫描当前目录中确实存在的文件
+        const definitelyExists = [];
+        const possibleFiles = [
+            'Set-Theory',
+            'MathJax-Test', 
+            'LaTeX-Test',
+            'Simple-Cases-Test',
+            'Real-Analysis',
+            'Complex-Analysis',
+            'Linear-Algebra',
+            'Abstract-Algebra',
+            'Topology',
+            'Differential-Geometry',
+            'Number-Theory',
+            'Probability-Theory',
+            'Mathematical-Statistics',
+            'Functional-Analysis',
+            'Measure-Theory',
+            'Calculus',
+            'Advanced-Calculus',
+            'Numerical-Analysis'
+        ];
+
+        // 并行检查文件存在性（提高速度）
+        const checks = possibleFiles.map(async (file) => {
+            try {
+                const response = await fetch(`${file}.md`, { method: 'HEAD' });
+                return response.ok ? file : null;
+            } catch {
+                return null;
+            }
+        });
+
+        const results = await Promise.all(checks);
+        return results.filter(file => file !== null);
     }
 
     /**
@@ -56,12 +199,19 @@ class AutoDirectoryGenerator {
     }
 
     /**
-     * 自动发现Markdown文件 (GitHub Pages限制下的方案)
+     * 自动发现Markdown文件 (改进版本)
      */
     async autoDiscoverFiles() {
-        // 常见的数学笔记文件名模式
-        const commonPatterns = [
+        // 首先尝试读取当前目录中实际存在的文件
+        const knownFiles = [
             'Set-Theory',
+            'MathJax-Test', 
+            'LaTeX-Test',
+            'Simple-Cases-Test'
+        ];
+
+        // 扩展的数学笔记文件名模式
+        const commonPatterns = [
             'Real-Analysis', 
             'Complex-Analysis',
             'Linear-Algebra',
@@ -74,10 +224,19 @@ class AutoDirectoryGenerator {
             'Functional-Analysis',
             'Measure-Theory',
             'Calculus',
-            'Advanced-Calculus'
+            'Advanced-Calculus',
+            'Numerical-Analysis',
+            'Optimization',
+            'Graph-Theory',
+            'Combinatorics',
+            'Logic',
+            'Category-Theory'
         ];
 
-        for (const pattern of commonPatterns) {
+        // 合并已知文件和常见模式
+        const allPatterns = [...new Set([...knownFiles, ...commonPatterns])];
+
+        for (const pattern of allPatterns) {
             try {
                 const response = await fetch(`${pattern}.md`);
                 if (response.ok) {
@@ -93,14 +252,19 @@ class AutoDirectoryGenerator {
                         icon: this.getIconFromTitle(title),
                         content: content.substring(0, 200) + '...' // 预览内容
                     });
+                    
+                    console.log(`✅ 发现文件: ${pattern}.md - ${title}`);
                 }
             } catch (error) {
                 // 文件不存在，忽略
+                console.log(`❌ 文件不存在: ${pattern}.md`);
             }
         }
 
         // 按标题排序
         this.markdownFiles.sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
+        
+        console.log(`📚 总共发现 ${this.markdownFiles.length} 个Markdown文件`);
     }
 
     /**

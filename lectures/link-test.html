@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>链接测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .test-link {
+            display: block;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f0f0f0;
+            text-decoration: none;
+            color: #333;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .test-link:hover {
+            background: #e0e0e0;
+        }
+        .test-link h3 {
+            margin: 0 0 0.5rem 0;
+            color: #2563eb;
+        }
+        .test-link p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lectures 链接测试</h1>
+    <p>以下是所有可用的链接测试：</p>
+    
+    <a href="markdown/viewer.html?md=Set-Theory" target="_blank" class="test-link">
+        <h3>🔢 集合论基础</h3>
+        <p>实分析中的集合论基础知识，包含集合运算、包含关系等</p>
+    </a>
+    
+    <a href="markdown/viewer.html?md=MathJax-Test" target="_blank" class="test-link">
+        <h3>🧮 MathJax 数学环境测试</h3>
+        <p>测试各种LaTeX数学环境，包括cases、矩阵、对齐等</p>
+    </a>
+    
+    <a href="markdown/viewer.html?md=LaTeX-Test" target="_blank" class="test-link">
+        <h3>📊 LaTeX 测试文档</h3>
+        <p>基础的LaTeX语法测试</p>
+    </a>
+    
+    <a href="markdown/viewer.html" target="_blank" class="test-link">
+        <h3>📖 Markdown 阅读器</h3>
+        <p>进入现代化的学术笔记阅读器界面</p>
+    </a>
+    
+    <h2>文件状态检查</h2>
+    <div id="file-status"></div>
+    
+    <script>
+        // 检查文件是否存在
+        async function checkFiles() {
+            const files = [
+                'markdown/viewer.html',
+                'markdown/Set-Theory.md',
+                'markdown/MathJax-Test.md',
+                'markdown/LaTeX-Test.md'
+            ];
+            
+            const statusDiv = document.getElementById('file-status');
+            
+            for (let file of files) {
+                try {
+                    const response = await fetch(file, { method: 'HEAD' });
+                    const status = response.ok ? '✅ 存在' : '❌ 不存在';
+                    statusDiv.innerHTML += `<p><strong>${file}</strong>: ${status}</p>`;
+                } catch (error) {
+                    statusDiv.innerHTML += `<p><strong>${file}</strong>: ❌ 无法访问</p>`;
+                }
+            }
+        }
+        
+        checkFiles();
+    </script>
+</body>
+</html>

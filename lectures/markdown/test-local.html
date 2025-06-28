@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>HaideMath - 本地测试版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ...和 viewer.html 相同的样式... */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #0f172a;
+            --accent: #06b6d4;
+            --accent-light: #67e8f9;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --bg-overlay: rgba(255, 255, 255, 0.95);
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+            --text-muted: #94a3b8;
+            
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --border-dark: #94a3b8;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body { 
+            margin: 0; 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header h1 {
+            color: var(--primary);
+            margin: 0 0 0.5rem 0;
+            font-size: 2rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .content {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe, #f0f9ff);
+            border: 1px solid #bfdbfe;
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .error-box {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border: 1px solid #fca5a5;
+            border-left: 4px solid var(--error);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+            border: 1px solid #86efac;
+            border-left: 4px solid var(--success);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--text-primary);
+        }
+
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .file-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .file-item i {
+            margin-right: 0.75rem;
+            color: var(--primary);
+        }
+
+        code {
+            background: var(--bg-tertiary);
+            color: var(--primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+        }
+
+        pre {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-graduation-cap"></i> HaideMath 本地测试</h1>
+            <p>学术笔记阅读器 - 本地开发环境</p>
+        </div>
+
+        <div class="content">
+            <h2>📁 当前文件状态</h2>
+            
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> 本地访问限制说明</h3>
+                <p>由于浏览器安全策略，直接打开HTML文件无法加载其他本地文件。有以下几种解决方案：</p>
+            </div>
+
+            <h3>🚀 推荐解决方案</h3>
+            
+            <div class="success-box">
+                <h4>方案1: 使用本地服务器 (推荐)</h4>
+                <ol>
+                    <li>双击运行 <code>start-server.bat</code> 文件</li>
+                    <li>或在命令行运行: <code>python serve.py</code></li>
+                    <li>浏览器会自动打开 <code>http://localhost:8000/viewer.html</code></li>
+                </ol>
+                <button class="btn" onclick="openLocalServer()">
+                    <i class="fas fa-rocket"></i> 启动本地服务器
+                </button>
+            </div>
+
+            <div class="info-box">
+                <h4>方案2: 在线部署</h4>
+                <ol>
+                    <li>将文件上传到GitHub仓库</li>
+                    <li>启用GitHub Pages</li>
+                    <li>访问在线地址: <code>https://your-username.github.io/your-repo/lectures/markdown/viewer.html</code></li>
+                </ol>
+            </div>
+
+            <div class="error-box">
+                <h4>⚠️ 当前检测到的问题</h4>
+                <div id="file-status">正在检查文件状态...</div>
+            </div>
+
+            <h3>📋 当前目录文件</h3>
+            <ul class="file-list">
+                <li class="file-item">
+                    <i class="fas fa-file-code"></i>
+                    <span>viewer.html - 主阅读器页面</span>
+                </li>
+                <li class="file-item">
+                    <i class="fas fa-cog"></i>
+                    <span>auto-directory.js - 自动目录生成器</span>
+                </li>
+                <li class="file-item">
+                    <i class="fas fa-file-text"></i>
+                    <span>Set-Theory.md - 集合论笔记</span>
+                </li>
+                <li class="file-item">
+                    <i class="fas fa-server"></i>
+                    <span>serve.py - 本地服务器脚本</span>
+                </li>
+                <li class="file-item">
+                    <i class="fas fa-play"></i>
+                    <span>start-server.bat - 一键启动脚本</span>
+                </li>
+            </ul>
+
+            <h3>🛠️ 快速操作</h3>
+            <a href="viewer.html" class="btn" onclick="return checkLocalAccess()">
+                <i class="fas fa-eye"></i> 尝试直接访问
+            </a>
+            
+            <button class="btn btn-secondary" onclick="showInstructions()">
+                <i class="fas fa-question-circle"></i> 查看详细说明
+            </button>
+
+            <div id="instructions" style="display: none;">
+                <h3>📖 详细使用说明</h3>
+                <pre><code>
+# 启动本地开发服务器
+python serve.py
+
+# 或者使用Python内置服务器
+python -m http.server 8000
+
+# 然后访问
+http://localhost:8000/viewer.html
+                </code></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkFileAccess() {
+            const statusDiv = document.getElementById('file-status');
+            const tests = [
+                { name: 'Set-Theory.md', type: 'Markdown文档' },
+                { name: 'auto-directory.js', type: 'JavaScript脚本' }
+            ];
+
+            let results = [];
+            let completed = 0;
+
+            tests.forEach(test => {
+                fetch(test.name)
+                    .then(response => {
+                        if (response.ok) {
+                            results.push(`✅ ${test.name} - ${test.type} (可访问)`);
+                        } else {
+                            results.push(`❌ ${test.name} - ${test.type} (${response.status})`);
+                        }
+                    })
+                    .catch(error => {
+                        results.push(`❌ ${test.name} - ${test.type} (CORS/网络错误)`);
+                    })
+                    .finally(() => {
+                        completed++;
+                        if (completed === tests.length) {
+                            statusDiv.innerHTML = results.join('<br>');
+                            
+                            if (results.every(r => r.includes('✅'))) {
+                                statusDiv.parentElement.className = 'success-box';
+                                statusDiv.innerHTML = '🎉 所有文件都可以正常访问！<br>' + results.join('<br>');
+                            }
+                        }
+                    });
+            });
+        }
+
+        function checkLocalAccess() {
+            const isFileProtocol = window.location.protocol === 'file:';
+            if (isFileProtocol) {
+                alert('⚠️ 检测到使用文件协议访问\n\n推荐使用本地服务器以获得完整功能:\n1. 运行 start-server.bat\n2. 访问 http://localhost:8000/viewer.html');
+                return true;
+            }
+            return true;
+        }
+
+        function openLocalServer() {
+            const instructions = `
+🚀 启动本地服务器步骤:
+
+1. 方法一 (Windows用户):
+   - 双击 start-server.bat 文件
+
+2. 方法二 (所有平台):
+   - 打开命令行/终端
+   - 导航到当前目录
+   - 运行: python serve.py
+
+3. 浏览器会自动打开或手动访问:
+   http://localhost:8000/viewer.html
+
+如果没有Python, 请先安装:
+https://www.python.org/downloads/
+            `;
+            alert(instructions);
+        }
+
+        function showInstructions() {
+            const instructionsDiv = document.getElementById('instructions');
+            if (instructionsDiv.style.display === 'none') {
+                instructionsDiv.style.display = 'block';
+            } else {
+                instructionsDiv.style.display = 'none';
+            }
+        }
+
+        // 页面加载时检查文件访问
+        document.addEventListener('DOMContentLoaded', checkFileAccess);
+    </script>
+</body>
+</html>
