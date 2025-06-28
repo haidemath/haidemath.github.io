@@ -32,5 +32,12 @@ $A=B$表示$A$和$B$相等, 即$\forall x, x\in A\Leftrightarrow x\in B$.
 $A=B^{c}$时有$A\bigcap B = \phi$
 
 $A=B^{c}$时有$A\backslash B= \phi$
-
 \end{example}
+
+而对于很多数量的集合, 我们可以做下面的定义:
+
+\begin{definition}
+设$\varLambda $是一集合, 则称$\{A_{\lambda}\}$是一集族, 其中$\lambda\in\varLambda$.
+
+特别的, 若$\varLambda=\{1,2,\cdots,n\}$, 则称$\{A_{1},A_{2},\cdots,A_{n}\}$是一集列.
+\end{definition}
