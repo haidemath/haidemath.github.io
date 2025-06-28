@@ -536,10 +536,12 @@
                             throwOnError: false,
                             strict: false,
                             trust: true,
+                            maxExpand: 1000,
+                            maxSize: Infinity,
                             macros: {
-                                "\\cases": "\\begin{cases}#1\\end{cases}",
                                 "\\vdots": "\\vdots",
-                                "\\cdots": "\\cdots"
+                                "\\cdots": "\\cdots",
+                                "\\ldots": "\\ldots"
                             }
                         }) + '</div>';
                     } catch (e) {
@@ -555,7 +557,8 @@
                             displayMode: false,
                             throwOnError: false,
                             strict: false,
-                            trust: true
+                            trust: true,
+                            maxExpand: 1000
                         });
                     } catch (e) {
                         console.warn('Inline LaTeX rendering error:', e);

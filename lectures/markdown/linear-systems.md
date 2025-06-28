@@ -10,14 +10,29 @@
 
 一个线性方程组可以表示为以下形式：
 
-$$\begin{cases}
-a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n = b_1 \\
-a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n = b_2 \\
-\vdots \\
-a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n = b_m
-\end{cases}$$
+$$a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n = b_1$$
+$$a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n = b_2$$
+$$\vdots$$
+$$a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n = b_m$$
 
 其中 $a_{ij}$ 是系数，$b_i$ 是常数项。
+
+或者用矩阵形式表示为：
+$$Ax = b$$
+
+其中：
+$$A = \begin{pmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{pmatrix}, \quad
+x = \begin{pmatrix}
+x_1 \\ x_2 \\ \vdots \\ x_n
+\end{pmatrix}, \quad
+b = \begin{pmatrix}
+b_1 \\ b_2 \\ \vdots \\ b_m
+\end{pmatrix}$$
 
 ### 2. 解的类型
 
@@ -51,11 +66,10 @@ $$x_i = \frac{\det(A_i)}{\det(A)}$$
 
 \begin{example}
 考虑以下线性方程组：
-$$\begin{cases}
-2x_1 + x_2 - x_3 = 1 \\
--3x_1 - x_2 + 2x_3 = -3 \\
--2x_1 + x_2 + 2x_3 = 1
-\end{cases}$$
+
+$$2x_1 + x_2 - x_3 = 1$$
+$$-3x_1 - x_2 + 2x_3 = -3$$
+$$-2x_1 + x_2 + 2x_3 = 1$$
 
 我们可以写成矩阵形式：
 $$\begin{pmatrix}
