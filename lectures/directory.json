@@ -16,5 +16,8 @@
       "title": "Set Theory",
       "path": "Real-Analysis/Set-Theory.md"
     }
+  ],
+  "navigation": [
+    { "title": "实分析 - 基础集合论", "file": "markdown/Set-Theory.md" }
   ]
 }
