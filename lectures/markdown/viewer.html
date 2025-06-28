@@ -431,15 +431,8 @@
                     })
                     .catch(err => {
                         console.error('加载目录失败:', err);
-                        // 回退到默认文件列表
-                        markdownFiles = [
-                            { id: 'introduction', title: 'Introduction', icon: 'fas fa-file-text' },
-                            { id: 'error-analysis', title: 'Error Analysis', icon: 'fas fa-file-text' },
-                            { id: 'interpolation', title: 'Interpolation', icon: 'fas fa-file-text' },
-                            { id: 'numerical-integration', title: 'Numerical Integration', icon: 'fas fa-file-text' },
-                            { id: 'linear-systems', title: 'Linear Systems', icon: 'fas fa-file-text' }
-                        ];
-                        return markdownFiles;
+                        markdownFiles = [];
+                        throw err;
                     });
             }
 
