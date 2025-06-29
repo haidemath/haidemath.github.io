@@ -4,53 +4,13 @@
   "lastUpdate": "2025-06-29T00:20:00.000Z",
   "files": [
     {
-      "id": "Set-Theory",
+      "id": "Real-Analysis-Set-Theory",
       "title": "实分析-集合论基础",
-      "file": "Set-Theory.md",
+      "file": "Real-Analysis-Set-Theory.md",
       "category": "实分析",
       "icon": "fas fa-layer-group",
       "description": "集合的基础运算、关系与集族的定义",
       "tags": ["实分析", "集合论", "基础数学"],
-      "lastModified": "2025-06-29T00:00:00.000Z"
-    },
-    {
-      "id": "DIRECTORY-GUIDE",
-      "title": "目录管理使用说明",
-      "file": "DIRECTORY-GUIDE.md",
-      "category": "使用说明",
-      "icon": "fas fa-book",
-      "description": "手动目录维护系统的使用方法和说明",
-      "tags": ["说明文档", "使用指南", "目录管理"],
-      "lastModified": "2025-06-29T00:20:00.000Z"
-    },
-    {
-      "id": "MathJax-Test",
-      "title": "MathJax 数学公式测试",
-      "file": "MathJax-Test.md",
-      "category": "测试文档",
-      "icon": "fas fa-calculator",
-      "description": "测试各种数学公式的渲染效果",
-      "tags": ["测试", "MathJax", "数学公式"],
-      "lastModified": "2025-06-29T00:00:00.000Z"
-    },
-    {
-      "id": "LaTeX-Test",
-      "title": "LaTeX 语法测试",
-      "file": "LaTeX-Test.md",
-      "category": "测试文档",
-      "icon": "fas fa-code",
-      "description": "测试各种LaTeX数学环境和语法",
-      "tags": ["测试", "LaTeX", "数学环境"],
-      "lastModified": "2025-06-29T00:00:00.000Z"
-    },
-    {
-      "id": "Simple-Cases-Test",
-      "title": "简单Cases环境测试",
-      "file": "Simple-Cases-Test.md",
-      "category": "测试文档",
-      "icon": "fas fa-list",
-      "description": "测试cases数学环境的渲染",
-      "tags": ["测试", "cases", "分段函数"],
       "lastModified": "2025-06-29T00:00:00.000Z"
     }
   ],
