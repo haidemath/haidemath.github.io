@@ -7,11 +7,11 @@
 \begin{definition}
 对于集合$A$和$B$, 我们作如下定义, 用来表示两个集合间的运算:
 
-$A\bigcup B=\left\{x|x\in A\text{或}x\in B\right\}$, 称为$A$和$B$的并集.
+$A\bigcup B=\lbrace x \mid x\in A\text{或}x\in B\rbrace$, 称为$A$和$B$的并集.
 
-$A\bigcap B=\left\{x|x\in A\text{且}x\in B\right\}$, 称为$A$和$B$的交集.
+$A\bigcap B=\lbrace x \mid x\in A\text{且}x\in B\rbrace$, 称为$A$和$B$的交集.
 
-$A\backslash B=\left\{x|x\in A\text{且}x\notin B\right\}$, 称为$A$和$B$的差集.
+$A\backslash B=\lbrace x \mid x\in A\text{且}x\notin B\rbrace$, 称为$A$和$B$的差集.
 \end{definition}
 
 类似地, 我们可以作集合相等和包含的定义:
@@ -29,17 +29,17 @@ $A=B$表示$A$和$B$相等, 即$\forall x, x\in A\Leftrightarrow x\in B$.
 例如下面这些例子:
 
 \begin{example}
-$A=B^{c}$时有$A\bigcap B = \phi$
+$A=B^{c}$时有$A\bigcap B = \emptyset$
 
-$A=B^{c}$时有$A\backslash B= \phi$
+$A=B^{c}$时有$A\backslash B= \emptyset$
 \end{example}
 
 而对于很多数量的集合, 我们可以做下面的定义:
 
 \begin{definition}
-设$\varLambda $是一集合, 则称$\left\{A_{\lambda}\right\}$是一集族, 其中$\lambda\in\varLambda$.
+设$\varLambda $是一集合, 则称$\lbrace A_{\lambda}\rbrace$是一集族, 其中$\lambda\in\varLambda$.
 
-特别的, 若$\varLambda=\left\{1,2,\cdots,n\right\}$, 则称$\left\{A_{1},A_{2},\cdots,A_{n}\right\}$是一集列.
+特别的, 若$\varLambda=\lbrace 1,2,\cdots,n\rbrace$, 则称$\lbrace A_{1},A_{2},\cdots,A_{n}\rbrace$是一集列.
 \end{definition}
 
 事实上对于这两种集合, 我们需要作一些区分, 因为在实际应用中能够用自然数集表示的集列和一般的集族具有不同的性质.

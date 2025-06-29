@@ -964,7 +964,8 @@
                 displayMath: [['$$', '$$']],
                 processEscapes: true,
                 processEnvironments: true,
-                packages: {'[+]': ['ams', 'newcommand', 'configmacros', 'action', 'unicode']},
+                processRefs: true,
+                packages: {'[+]': ['base', 'ams', 'newcommand', 'configmacros', 'action', 'unicode', 'braket']},
                 macros: {
                     RR: "\\mathbb{R}",
                     NN: "\\mathbb{N}",
@@ -995,7 +996,7 @@
             startup: {
                 ready: () => {
                     MathJax.startup.defaultReady();
-                    console.log('MathJax 已加载完成，支持完整的 LaTeX 语法');
+                    console.log('MathJax 已加载完成，支持完整的 LaTeX 语法包括花括号');
                 }
             }
         };
