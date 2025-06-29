@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>花括号测试</title>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true,
+                processEnvironments: true,
+                packages: {'[+]': ['base', 'ams', 'newcommand']}
+            }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+    <h1>花括号显示测试</h1>
+    
+    <h2>测试1: 双反斜杠</h2>
+    <p>$A = \\{x \\mid x > 0\\}$</p>
+    
+    <h2>测试2: 单反斜杠</h2>
+    <p>$B = \{x \mid x < 0\}$</p>
+    
+    <h2>测试3: lbrace rbrace</h2>
+    <p>$C = \lbrace x \mid x = 0 \rbrace$</p>
+    
+    <h2>测试4: left right</h2>
+    <p>$D = \left\{x \mid x \in \mathbb{R}\right\}$</p>
+    
+    <h2>测试5: 行间公式</h2>
+    $$E = \{1, 2, 3, 4, 5\}$$
+    
+    <h2>测试6: HTML实体</h2>
+    <p>如果LaTeX不行，可以用HTML: &#123;1, 2, 3&#125;</p>
+</body>
+</html>
