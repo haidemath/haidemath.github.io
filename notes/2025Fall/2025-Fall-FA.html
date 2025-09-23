@@ -1,0 +1,326 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>泛函分析 - 2025秋 - Source Sharing Platform</title>
+    <link rel="stylesheet" type="text/css" href="realmodel.css" media="all">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #1abc9c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --text: #333;
+            --border: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            padding: 0;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        #wrap {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #header {
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 3rem 2rem;
+            position: relative;
+        }
+
+        #header h1 {
+            margin: 0;
+            font-size: 3rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        #header p {
+            margin: 0.8rem 0 0;
+            font-size: 1.4rem;
+            opacity: 0.9;
+        }
+
+        #content {
+            padding: 2.5rem;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+            position: relative;
+        }
+
+        h2:first-child {
+            margin-top: 0;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        th, td {
+            padding: 1rem 1.2rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--secondary);
+            color: white;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 2px;
+        }
+
+        a:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .chapter-mark {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        #footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--primary);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        #footer p {
+            margin: 0.5rem 0;
+        }
+
+        #footer a {
+            color: white;
+            border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
+        }
+
+        #footer a:hover {
+            border-bottom: 1px solid white;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .note {
+            background-color: rgba(26, 188, 156, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        @media (max-width: 768px) {
+            #wrap {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            #header {
+                padding: 2rem 1rem;
+            }
+            
+            #header h1 {
+                font-size: 2rem;
+            }
+            
+            #content {
+                padding: 1.5rem;
+            }
+            
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            tr {
+                margin-bottom: 1rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            
+            td {
+                border: none;
+                position: relative;
+                padding-left: 40%;
+                text-align: right;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            td:before {
+                position: absolute;
+                left: 1rem;
+                width: 35%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+                content: attr(data-label);
+            }
+            
+            td:last-child {
+                border-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <div id="header">
+        <h1><strong><font face="华文楷体">泛函分析</font></strong></h1>
+        <p><strong><font face="华文中宋">2025秋季学期</font></strong></p>
+    </div>
+    <font face="仿宋">
+    <div id="content">
+        <h2>简介</h2>
+        <p class="intro-text">复变函数（也称为复分析）是一门研究复平面上的函数的各种性质的学科，主要内容为：复数与复变函数、解析函数、柯西积分、解析函数的泰勒展式、在圆环上解析的函数的洛朗级数、留数及应用、保形映射、调和函数等，主要研究的核心是解析函数。</p>
+
+        <h2>参考书籍</h2>
+        <div class="note">
+            <strong>以下资料均来自互联网，仅供学习使用！</strong>
+        </div>
+        <table>
+            <tr>
+                <th>名称</th>
+                <th>链接</th>
+            </tr>
+            <tr>
+                <td>复变函数论(第五版) -- 钟玉泉 -- 2022 -- 高等教育出版社</td>
+                <td><a href="https://stuouceducn-my.sharepoint.com/:b:/g/personal/sunjingyu_stu_ouc_edu_cn/EZUPEXDf449HpT3z7KLLfpwBU6rdEWymBJQszre_fsFvnQ?e=zxSnbM">PDF</a></td>
+            </tr>
+            <tr>
+                <td>复变函数论学习指导书(第五版) -- 钟玉泉 -- 2022 -- 高等教育出版社</td>
+                <td><a href="https://stuouceducn-my.sharepoint.com/:b:/g/personal/sunjingyu_stu_ouc_edu_cn/Ef8y60az_aJMt7rZoublFPMBrL7MNatF8K4oKah3AHOxCA?e=WGooik">PDF</a></td>
+            </tr>
+            <tr>
+                <td>简明复分析(第2版) -- 龚昇 -- 2006 -- 中国科学技术大学出版社</td>
+                <td><a href="https://stuouceducn-my.sharepoint.com/:b:/g/personal/sunjingyu_stu_ouc_edu_cn/EQ7bE0FklnRLol7uCoq_Ue4B742IplIi2P8LqoTuMHNR_Q?e=bs1RHL">PDF</a></td>
+            </tr>
+            <tr>
+                <td>Complex Analysis -- Stein -- 2003 -- Princeton University Press</td>
+                <td><a href="https://stuouceducn-my.sharepoint.com/:b:/g/personal/sunjingyu_stu_ouc_edu_cn/EfTCxtN5ztNDt86bhfO3fn4BqByH8Bs6DNNT7AM18s2VRg?e=CyHErj">PDF</a></td>
+            </tr>
+            <tr>
+                <td>复分析：可视化方法 -- 特里斯坦·尼达姆 -- 2021 -- 人民邮电出版社</td>
+                <td><a href="https://stuouceducn-my.sharepoint.com/:b:/g/personal/sunjingyu_stu_ouc_edu_cn/EYxxGTeK535DkB1K_sL_Vj4Bm3OUsyBORHjT-Co8WiQR-w?e=NWFgip">PDF</a></td>
+            </tr>
+        </table>
+
+        <p>&nbsp;</p>
+        <h2>课程笔记</h2>
+        <div class="note">
+            <strong>以下资料根据姚增善老师的课堂板书整理，难免有疏漏，恳请各位读者批评指正！</strong>
+        </div>
+        <table>
+            <tr>
+                <th>章节</th>
+                <th>更新日期</th>
+                <th>链接</th>
+            </tr>
+          <!--
+            <tr>
+                <td>&sect;1.1 复数</td>
+                <td>2025-02-26</td>
+                <td><a href="/notes/2025Fall/FA/§1 复数与复变函数/§1.1 复数.pdf">PDF</a></td>
+            </tr>
+          -->
+            
+        </table>
+
+        
+        <h2>课程小测</h2>
+        <div class="note">
+            <strong>两次课程小测的题目和答案。</strong>
+        </div>
+        <table>
+            <tr>
+                <td>小测（两次）</td>
+                <td><a href="/notes/2025Spring/CA/小测.pdf">PDF</a></td>
+            </tr>
+        </table>
+        
+        </font>
+    </div>
+
+    <div id="footer">
+        <p>Last Updated on September 23th, 2025</p>
+        <p>Special Thanks for <a href="http://home.ustc.edu.cn/~matchbox/real.html">Page Reference.</a></p>
+    </div>
+    
+</div>
+</body>
+</html>
