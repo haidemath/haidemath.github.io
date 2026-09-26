@@ -185,7 +185,7 @@ class AutoDirectoryGenerator {
      */
     async loadManualDirectory() {
         try {
-            const response = await fetch('./directory.json');
+            const response = await fetch('./directory.json', { cache: 'no-store' });
             if (response.ok) {
                 const data = await response.json();
                 

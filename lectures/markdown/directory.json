@@ -1,8 +1,157 @@
 {
   "title": "数学笔记目录",
   "description": "手动维护的Markdown文件目录",
-  "lastUpdate": "2025-06-29T00:20:00.000Z",
+  "lastUpdate": "2026-09-25T00:00:00.000Z",
   "files": [
+    {
+      "id": "Complex-Analysis-Notes",
+      "title": "复分析讲义 · 目录与前言",
+      "file": "converted/Complex-Analysis-Notes.md",
+      "category": "复分析 · Markdown 讲义",
+      "icon": "fas fa-book-open",
+      "description": "由原仓库 LaTeX 正文转换，点击目录阅读完整章节",
+      "lastModified": "2026-08-30T16:39:54+08:00"
+    },
+    {
+      "id": "Complex-Analysis-Notes-Chapter-1",
+      "title": "复数与复变函数",
+      "file": "converted/Complex-Analysis-Notes-01.md",
+      "category": "复分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2026-08-30T16:39:54+08:00"
+    },
+    {
+      "id": "Complex-Analysis-Notes-Chapter-2",
+      "title": "解析函数",
+      "file": "converted/Complex-Analysis-Notes-02.md",
+      "category": "复分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2026-08-30T16:39:54+08:00"
+    },
+    {
+      "id": "Complex-Analysis-Notes-Chapter-3",
+      "title": "复变函数的积分",
+      "file": "converted/Complex-Analysis-Notes-03.md",
+      "category": "复分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2026-08-30T16:39:54+08:00"
+    },
+    {
+      "id": "Complex-Analysis-Notes-Chapter-4",
+      "title": "解析函数的幂级数展开",
+      "file": "converted/Complex-Analysis-Notes-04.md",
+      "category": "复分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2026-08-30T16:39:54+08:00"
+    },
+    {
+      "id": "Complex-Analysis-Notes-Chapter-5",
+      "title": "圆环上解析函数的洛朗展式及孤立奇点",
+      "file": "converted/Complex-Analysis-Notes-05.md",
+      "category": "复分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2026-08-30T16:39:54+08:00"
+    },
+    {
+      "id": "Complex-Analysis-Notes-Chapter-6",
+      "title": "留数及其应用",
+      "file": "converted/Complex-Analysis-Notes-06.md",
+      "category": "复分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2026-08-30T16:39:54+08:00"
+    },
+    {
+      "id": "Complex-Analysis-Notes-Chapter-7",
+      "title": "保形变换",
+      "file": "converted/Complex-Analysis-Notes-07.md",
+      "category": "复分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2026-08-30T16:39:54+08:00"
+    },
+    {
+      "id": "Real-Analysis-Notes",
+      "title": "实分析讲义 · 目录与前言",
+      "file": "converted/Real-Analysis-Notes.md",
+      "category": "实分析 · Markdown 讲义",
+      "icon": "fas fa-book-open",
+      "description": "由原仓库 LaTeX 正文转换，点击目录阅读完整章节",
+      "lastModified": "2025-12-29T22:54:27+08:00"
+    },
+    {
+      "id": "Real-Analysis-Notes-Chapter-1",
+      "title": "基础集合论",
+      "file": "converted/Real-Analysis-Notes-01.md",
+      "category": "实分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2025-12-29T22:54:27+08:00"
+    },
+    {
+      "id": "Real-Analysis-Notes-Chapter-2",
+      "title": "Lebesgue测度",
+      "file": "converted/Real-Analysis-Notes-02.md",
+      "category": "实分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2025-12-29T22:54:27+08:00"
+    },
+    {
+      "id": "Real-Analysis-Notes-Chapter-3",
+      "title": "可测函数",
+      "file": "converted/Real-Analysis-Notes-03.md",
+      "category": "实分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2025-12-29T22:54:27+08:00"
+    },
+    {
+      "id": "Real-Analysis-Notes-Chapter-4",
+      "title": "Lebesgue积分",
+      "file": "converted/Real-Analysis-Notes-04.md",
+      "category": "实分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2025-12-29T22:54:27+08:00"
+    },
+    {
+      "id": "Real-Analysis-Notes-Chapter-5",
+      "title": "习题集",
+      "file": "converted/Real-Analysis-Notes-05.md",
+      "category": "实分析 · 正文章节",
+      "icon": "fas fa-bookmark",
+      "lastModified": "2025-12-29T22:54:27+08:00"
+    },
+    {
+      "id": "Complex-Analysis-Project-Catalog",
+      "title": "复分析原仓库全部文件",
+      "file": "Complex-Analysis-Notes-Catalog.md",
+      "category": "复分析 · 原仓库",
+      "icon": "fas fa-folder-open"
+    },
+    {
+      "id": "Real-Analysis-Project-Catalog",
+      "title": "实分析原仓库全部文件",
+      "file": "Real-Analysis-Notes-Catalog.md",
+      "category": "实分析 · 原仓库",
+      "icon": "fas fa-folder-open"
+    },
+    {
+      "id": "Complex-Analysis-Quiz-1",
+      "title": "复分析小测 1（原版 Markdown）",
+      "file": "imports/Complex-Analysis-Notes/26小测/小测1.md",
+      "category": "复分析 · 原仓库",
+      "icon": "fas fa-pen"
+    },
+    {
+      "id": "Complex-Analysis-Quiz-2",
+      "title": "复分析小测 2（原版 Markdown）",
+      "file": "imports/Complex-Analysis-Notes/26小测/小测2.md",
+      "category": "复分析 · 原仓库",
+      "icon": "fas fa-pen"
+    },
+    {
+      "id": "Complex-Analysis-Quiz-Answers",
+      "title": "复分析小测解答（原版 Markdown）",
+      "file": "imports/Complex-Analysis-Notes/26小测/小测解答.md",
+      "category": "复分析 · 原仓库",
+      "icon": "fas fa-check"
+    },
     {
       "id": "Real-Analysis-Set-Theory",
       "title": "实分析-集合论基础",
@@ -10,7 +159,11 @@
       "category": "实分析",
       "icon": "fas fa-layer-group",
       "description": "集合的基础运算、关系与集族的定义",
-      "tags": ["实分析", "集合论", "基础数学"],
+      "tags": [
+        "实分析",
+        "集合论",
+        "基础数学"
+      ],
       "lastModified": "2025-06-29T00:00:00.000Z"
     }
   ],

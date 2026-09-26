@@ -1,0 +1,73 @@
+{
+    "sources":  [
+                    {
+                        "repository":  "https://github.com/stonehfzs/Complex-Analysis-Notes",
+                        "commit":  "c449ee46521f41e071003c9d170c3aa3f702f720",
+                        "directory":  "Complex-Analysis-Notes",
+                        "files":  {
+                                      ".gitignore":  "cc8d04af84c98ede1af48b655e60996a37caa2d5a7de8adbebd4bbc57836dcd1",
+                                      "26小测/小测1.md":  "217098f55848de49732c726cc3191e6c2f9454febb71f86f5e446df139af9360",
+                                      "26小测/小测2.md":  "c3226fa30072fa01b5ac423bfc1ded3e2df4d85cf5e80a264c3b732a82e365c0",
+                                      "26小测/小测3.jpg":  "6682c118e11f6f75f12c16abf7cb9c00117e3dd7d70ea5d26fbead7d7f3a7e36",
+                                      "26小测/小测4.jpg":  "eee03e5ffc79c061903e5276a79f4f077f6b0117939005942f72edd9b553faa9",
+                                      "26小测/小测解答.md":  "625161d89897eb871ccba8b1c338f506603dbf9fc662ef5c0f64728c47337e02",
+                                      "Complex Analysis Notes.pdf":  "e7e6429830935774b6db89ecc64f0334072746079668f8f3beb23296a3be5cb0",
+                                      "Complex Analysis Notes.tex":  "749563543b0f36d85187bf62d97330b8d8b732d0ff4a54c6098fc1f591b080f4",
+                                      "easybase.sty":  "685915c18837e878e681b4d9842336f0c89867173772d1c70991ce7de3ce8550",
+                                      "eb-elegantbook.sty":  "a40bccdd7b596fa13932d457a482e90cfcceee932c5a7f1c84c2736f89766542",
+                                      "figure/cover.jpg":  "beb84657d9e1302611ee7df59101f3c976c6f96e558696f89f7683027576a610",
+                                      "figure/logo.jpg":  "b6c2b41ed6398976985008dc008a5c4d627e69629e9e4eac428cafce9e34fdbc",
+                                      "License":  "811a833c604f2e2f3dd28d6eb50cfc5723ddcfc3174f49d78356d13dee941b8a",
+                                      "README.md":  "830813a381bba160b8c0b02127926706d6dd38c336e447473e0691a9387edf2b",
+                                      "reference.bib":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                                      "复变函数.pdf":  "48b94da44714e70dadda6f305a9c19972132a030b26fe8868f209b6cfb7ae934",
+                                      "历年试题/25A/45b56365f1957dec0c959b54a5ce7b71.jpg":  "ea0428d5e44fc829e1e7cdef05e1e100d4fa7df317f3a07100b59a36f4d214fe",
+                                      "历年试题/25A/89dbf143a97d7115388a77dd76cc0d36.jpg":  "8f12af3d6435121c07c08cc87842aa16ce0e03efeaf72f61289da9160db8b7e6",
+                                      "历年试题/25A/9d6e03a9d12b22f528c94d4eb547c954.jpg":  "03a193c06bb9416221a5248ec162994c093010b4e8cb519cae3ab33d516dd78d",
+                                      "历年试题/25A/dab94aded11875c6a62debb2be98a1d9.jpg":  "9506d5ed407469683269f5b4b2837053a21c97435e9bc9b1f479176b99fa20a5",
+                                      "历年试题/25B/08538a25edd4eb0bfcade83c8fe251e2.jpg":  "d3dabac3fa835201fc501e791cc57f5360122237d2ab081eee0f27d0629f7034",
+                                      "历年试题/25B/3f937935dc13412d11a33f86780feee0.jpg":  "02556fe7ccc76ec147dccc9056ae2bfac8b6211c7b9e6f6cad0c8f4ee12965cb"
+                                  }
+                    },
+                    {
+                        "repository":  "https://github.com/stonehfzs/Real-Analysis-Notes",
+                        "commit":  "81f3ec6d4b639e9ee519685025680aaff24d887f",
+                        "directory":  "Real-Analysis-Notes",
+                        "files":  {
+                                      "easybase.sty":  "cbdb3a8035b6b986e146b16956637838dd52e74d7ac0f5d4116f54fb322b1af5",
+                                      "eb-elegantbook.sty":  "a40bccdd7b596fa13932d457a482e90cfcceee932c5a7f1c84c2736f89766542",
+                                      "Exams/2022.aux":  "90d554ab1d269318c6508a32c1695f2377739a51adaa69cd2e49c019e553391d",
+                                      "Exams/2022.log":  "41ac3ab7ec5a2245528c8d0c833fc181761f86fa27bf94ebf54aca5f05fed02e",
+                                      "Exams/2022.out":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                                      "Exams/2022.pdf":  "2f0e1369249df7f5d08f49eab1d361dfb2f09efd82682e9feaa4d407958c5edf",
+                                      "Exams/2022.synctex.gz":  "e074bd9114641de6516e91d45766bc028ae6af93c497dccb95a8af0f3c36ad86",
+                                      "Exams/2022.tex":  "ad716d46dcadc6bef73fc6365440104f0f3813b4f1c606fddbf8872669fe12a3",
+                                      "Exams/2022-Solution.aux":  "04a2a877baff77d2447eb855e8ac59c89ad59b8db5517e14b8b41f192e406c0f",
+                                      "Exams/2022-Solution.log":  "95f33684985a2ec483ef29bb5eb43073b43f6e7abd6a1adc198867ee60128adf",
+                                      "Exams/2022-Solution.out":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                                      "Exams/2022-Solution.pdf":  "b27eee87a29fa50738f1e1750a4a746427649a6553f360c2ea5a52ab40684a1d",
+                                      "Exams/2022-Solution.synctex.gz":  "78cb7b57a447f0d6ce051c7034dc40ce71f48819381810c8b1b79f09a567c0d9",
+                                      "Exams/2022-Solution.tex":  "c2c426a9012d4344603847db821a2c04aebd8fedf4571dafd0c52001e0eb6f90",
+                                      "Exams/2023.aux":  "90d554ab1d269318c6508a32c1695f2377739a51adaa69cd2e49c019e553391d",
+                                      "Exams/2023.log":  "a49951221ce9834437d137b5aa2477baf948f702a620f14f03266b479cc78432",
+                                      "Exams/2023.out":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                                      "Exams/2023.pdf":  "84c2b3f31112190dcb1f5cd8ec500c31853329185657da608c9380e8ba5544ba",
+                                      "Exams/2023.synctex.gz":  "47d8d44273267b4275a53941f66a88d9ee16a8dd5e83bd6e26764be9858cff04",
+                                      "Exams/2023.tex":  "2c42b77a43560ffdbfb3ef9af3fd5b4b0c15ee5fc0c27a3c7769ee87a6d51811",
+                                      "Exams/2023-Solution.aux":  "04a2a877baff77d2447eb855e8ac59c89ad59b8db5517e14b8b41f192e406c0f",
+                                      "Exams/2023-Solution.log":  "45bba5249b5080e53ea5a15926e2412d0a9d54824c8d149d4f7ac63494920b41",
+                                      "Exams/2023-Solution.out":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                                      "Exams/2023-Solution.pdf":  "f00e6d2f1df6734c99160941958a0bd5e3457c25a3df041aa8fbc972e6d6bc9e",
+                                      "Exams/2023-Solution.synctex.gz":  "de62dcf99aaf7d4ca76b899fcca741b2a0047edf23f4a5f98f12f0058c315bd6",
+                                      "Exams/2023-Solution.tex":  "d78677d82294399c8c565f9d6ae8d6cf052bae8df06c9b820af364fa308adf83",
+                                      "figure/cover.jpg":  "beb84657d9e1302611ee7df59101f3c976c6f96e558696f89f7683027576a610",
+                                      "figure/logo.jpg":  "b6c2b41ed6398976985008dc008a5c4d627e69629e9e4eac428cafce9e34fdbc",
+                                      "License":  "811a833c604f2e2f3dd28d6eb50cfc5723ddcfc3174f49d78356d13dee941b8a",
+                                      "README.md":  "24f36b2f7640747f6fb67e73dfb2286855627c39d67b082173a2d54cb167aed8",
+                                      "Real Analysis Notes.pdf":  "ee78c43160eb2ec7aad1eb885c1c2c04bce74d16234b3ea3cd4055ae0dde9e72",
+                                      "Real Analysis Notes.synctex.gz":  "38988635c0ff783dceb1221b0083fa54a6e9f28127b30e80e942bdceac72d0b9",
+                                      "Real Analysis Notes.tex":  "a4c079eb8d8f531dc4568092cbc72ccfb3420b88a1320e313d05dfffd1fb6397"
+                                  }
+                    }
+                ]
+}

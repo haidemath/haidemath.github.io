@@ -418,6 +418,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
     <nav class="navbar">
@@ -449,8 +450,8 @@
         </div>
 
         <div class="semester-tabs">
-            <button class="semester-tab active" onclick="showSemester('spring')">2025年春季学期</button>
-            <button class="semester-tab" onclick="showSemester('fall')">2025年秋季学期</button>
+            <button class="semester-tab active" onclick="showSemester('spring', this)" aria-pressed="true">2025年春季学期</button>
+            <button class="semester-tab" onclick="showSemester('fall', this)" aria-pressed="false">2025年秋季学期</button>
         </div>
 
         <!-- 春季学期内容 -->
@@ -556,9 +557,9 @@
                         <h3 class="card-title">第十周</h3>
                         <span class="card-date"><i class='bx bx-calendar'></i> 2025-05-01</span>
                     </div>
-                    <a class="card-link">
+                    <span class="card-link">
                         <i class='bx bx-party'></i> 五一假期！
-                    </a>
+                    </span>
                 </div>
                 
                 <!-- 第11-14周 -->
@@ -577,9 +578,9 @@
                         <h3 class="card-title">第十二周作业</h3>
                         <span class="card-date"><i class='bx bx-calendar'></i> 2025-05-16</span>
                     </div>
-                    <a href="#" class="card-link empty-link">
+                    <span class="card-link empty-link">
                         <i class='bx bx-time'></i> 即将上传
-                    </a>
+                    </span>
                 </div>
                 
                 <div class="homework-card">
@@ -616,9 +617,9 @@
                         <h3 class="card-title">第一周作业</h3>
                         <span class="card-date"><i class='bx bx-calendar'></i> 2025-09-05</span>
                     </div>
-                    <a href="#" class="card-link empty-link">
+                    <span class="card-link empty-link">
                         <i class='bx bx-time'></i> 尚未开放
-                    </a>
+                    </span>
                 </div>
                 
                 <div class="homework-card">
@@ -626,9 +627,9 @@
                         <h3 class="card-title">第二周作业</h3>
                         <span class="card-date"><i class='bx bx-calendar'></i> 2025-09-12</span>
                     </div>
-                    <a href="#" class="card-link empty-link">
+                    <span class="card-link empty-link">
                         <i class='bx bx-time'></i> 尚未开放
-                    </a>
+                    </span>
                 </div>
                 
                 <div class="homework-card">
@@ -636,9 +637,9 @@
                         <h3 class="card-title">第三周作业</h3>
                         <span class="card-date"><i class='bx bx-calendar'></i> 2025-09-19</span>
                     </div>
-                    <a href="#" class="card-link empty-link">
+                    <span class="card-link empty-link">
                         <i class='bx bx-time'></i> 尚未开放
-                    </a>
+                    </span>
                 </div>
                 
                 <div class="homework-card">
@@ -646,9 +647,9 @@
                         <h3 class="card-title">第四周作业</h3>
                         <span class="card-date"><i class='bx bx-calendar'></i> 2025-09-26</span>
                     </div>
-                    <a href="#" class="card-link empty-link">
+                    <span class="card-link empty-link">
                         <i class='bx bx-time'></i> 尚未开放
-                    </a>
+                    </span>
                 </div>
                 
                 <!-- 国庆节假期 -->
@@ -657,9 +658,9 @@
                         <h3 class="card-title">第五周</h3>
                         <span class="card-date"><i class='bx bx-calendar'></i> 2025-10-01</span>
                     </div>
-                    <a href="#" class="card-link empty-link">
+                    <span class="card-link empty-link">
                         <i class='bx bx-time'></i> 尚未开放
-                    </a>
+                    </span>
                 </div>
                 
                 <div class="homework-card">
@@ -667,9 +668,9 @@
                         <h3 class="card-title">第六周作业</h3>
                         <span class="card-date"><i class='bx bx-calendar'></i> 2025-10-10</span>
                     </div>
-                    <a href="#" class="card-link empty-link">
+                    <span class="card-link empty-link">
                         <i class='bx bx-time'></i> 尚未开放
-                    </a>
+                    </span>
                 </div>
                 
                 <div class="homework-card">
@@ -677,9 +678,9 @@
                         <h3 class="card-title">第七周作业</h3>
                         <span class="card-date"><i class='bx bx-calendar'></i> 2025-10-17</span>
                     </div>
-                    <a href="#" class="card-link empty-link">
+                    <span class="card-link empty-link">
                         <i class='bx bx-time'></i> 尚未开放
-                    </a>
+                    </span>
                 </div>
                 
                 <div class="homework-card">
@@ -687,29 +688,18 @@
                         <h3 class="card-title">第八周作业</h3>
                         <span class="card-date"><i class='bx bx-calendar'></i> 2025-10-24</span>
                     </div>
-                    <a href="#" class="card-link empty-link">
+                    <span class="card-link empty-link">
                         <i class='bx bx-time'></i> 尚未开放
-                    </a>
+                    </span>
                 </div>
             </div>
         </div>
     </main>
 
     <footer>
-        <p class="footer-text">© 2024-2025 Last Updated: June 10th, 2025</p>
+        <p class="footer-text">© 海德数学 · 资料持续维护</p>
         <p class="footer-text">获取更多信息，请访问 <a href="https://github.com/haidemath/haidemath.github.io/" class="footer-link">Github</a> 或提交 <a href="https://github.com/haidemath/haidemath.github.io/issues/new" class="footer-link">Issue</a></p>
         <p class="footer-text">本项目由2023级数学2班建设, 特别感谢刘小允、孙景昱同学的支持。</p>
-        <p class="footer-text">本页访问次数: <span id="visit-count">0</span> 次</p>
-
-        <script>
-        // Visit counter using localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            let visits = localStorage.getItem('visit-count') || 0;
-            visits = parseInt(visits) + 1;
-            localStorage.setItem('visit-count', visits);
-            document.getElementById('visit-count').textContent = visits;
-        });
-        </script>
     </footer>
 
     <div class="back-to-top" id="backToTop">
@@ -736,7 +726,7 @@
         });
         
         // 学期切换功能
-        function showSemester(semester) {
+        function showSemester(semester, selectedTab) {
             // 隐藏所有学期内容
             const contents = document.querySelectorAll('.semester-content');
             contents.forEach(content => {
@@ -747,14 +737,17 @@
             const tabs = document.querySelectorAll('.semester-tab');
             tabs.forEach(tab => {
                 tab.classList.remove('active');
+                tab.setAttribute('aria-pressed', 'false');
             });
             
             // 显示选中的学期内容
             document.getElementById(semester + '-semester').classList.add('active');
             
             // 高亮选中的标签页
-            event.target.classList.add('active');
+            selectedTab.classList.add('active');
+            selectedTab.setAttribute('aria-pressed', 'true');
         }
     </script>
+    <script src="../assets/site.js" defer></script>
 </body>
 </html>

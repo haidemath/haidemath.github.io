@@ -1,0 +1,209 @@
+\documentclass[UTF8]{article}
+
+\usepackage{amsmath}%数学公式宏包
+\usepackage{amssymb}%数学符号宏包
+\usepackage{amsthm}%定理证明环境宏包
+\usepackage{epstopdf}%eps转pdf宏包
+\usepackage{fancyhdr}%页眉页脚宏包
+\usepackage{gensymb}%包含\celsius,\degree,\micro,\ohm,\perthousand等命令
+\usepackage{geometry}%页面设置宏包
+\usepackage{graphicx}%插入图片宏包
+\usepackage{pgfplots}%绘制图像宏包
+\usepackage{relsize}
+\usepackage{setspace}%设置间距宏包
+\usepackage{subfigure}%子图排列宏包
+\usepackage{tikz}%绘制图像宏包
+\usepackage[colorlinks,linkcolor=blue]{hyperref}%超链接宏包
+\usepackage[heading]{ctex}
+
+%选择题分行命令
+\newcommand{\onech}[4]{\indent\makebox[92pt][l]{\qquad A. #1} \hfill\makebox[92pt][l]{B. #2} \hfill \makebox[92pt][l]{C. #3} \hfill \makebox[92pt][l]{D. #4}\\}
+\newcommand{\twoch}[4]{	\indent\makebox[110pt][l]{\qquad A. #1} \hfill\makebox[220pt][l]{B. #2}\\\indent\makebox[110pt][l]{\qquad C. #3} \hfill\makebox[220pt][l]{D. #4}\\}
+\newcommand{\fourch}[4]{\indent\makebox[262pt][l]{\qquad A. #1}\\\indent\makebox[262pt][l]{\qquad B. #2}\\\indent\makebox[262pt][l]{\qquad C. #3}\\\indent\makebox[262pt][l]{\qquad D. #4}\\}
+%罗马数字命令
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+
+%页面设置
+\geometry{a4paper,left=2cm,right=2cm,top=2cm,bottom=2cm}
+%首行缩进设置
+\setlength{\parindent}{0em}
+%行距设置
+\setlength{\baselineskip}{20pt}
+\linespread{1.75}
+%页眉页脚设置 
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\textbf{\rightmark} \qquad \thepage}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%定理证明环境设置
+\newtheorem*{theorem}{Thm}
+\newtheorem*{corollary}{Cor}
+\newtheorem*{lemma}{Lem}
+\newtheorem*{definition}{Def}
+\newtheorem*{proposition}{Prop}
+\newtheorem*{remark}{Rem}
+\newtheorem{example}{Example}
+\newtheorem{solution}{Sol}
+\newtheorem{num}{}
+
+\begin{document}
+  \begin{center}
+    \LARGE \textbf{2022春-实变函数}
+  \end{center}
+
+  \subsection*{一、填空题}
+
+  1. 设$A_{2n-1}=\left(0,\frac{1}{n}\right),A_{2n}=\left(0,2n\right)$, 则$\limsup \limits_{n \to +\infty}A_n=$\underline{\hspace{1cm}}, $\liminf \limits_{n \to +\infty}A_n=$\underline{\hspace{1cm}}.\par
+
+  \begin{solution}
+    $\limsup \limits_{n \to +\infty}A_n=\bigcap_{N=1}^{+\infty}\bigcup_{n=N}^{+\infty}A_n=\bigcap_{N=1}^{+\infty}\left(0,+\infty\right)=(0,+\infty)$.\par
+    $\liminf \limits_{n \to +\infty}A_n=\bigcup_{N=1}^{+\infty}\bigcap_{n=N}^{+\infty}A_n=\bigcup_{N=1}^{+\infty}\phi = \phi$.\par
+  \end{solution}
+  
+  2. 设$C$为Cantor集, 则$m(C)=$\underline{\hspace{1cm}}, 闭包$\overline{C}=$\underline{\hspace{1cm}}.\par
+
+  \begin{solution}
+    由于$C$是闭的零测集, 因此$m(C)=0$, 闭包$\overline{C}=C$.\par
+  \end{solution}
+
+  3. 设$E\subset \mathbb{R}^n$, 若\underline{\hspace{1cm}}, 则称$E$是闭集. 此外闭集的等价条件还有:\underline{\hspace{1cm}}.\par
+
+  \begin{solution}
+    $E$是闭集的定义: $E$的补集$E^c$是开集.\par
+    闭集的等价条件: $E$是闭集当且仅当$E$包含它的所有极限点.\par
+    事实上我们还有许多等价条件, 例如$E=\overline{E}$, $\partial E\subset E$等.\par
+  \end{solution}
+
+  4. 设$\{f_n(x)\}$是可测集$E$上几乎处处有限的实函数, 则$E\left[f_n\rightarrow 0\right]$=\underline{\hspace{1cm}}.\par
+
+  \begin{solution}
+    根据定义, $E\left[f_n\rightarrow 0\right]$表示$\forall \varepsilon >0, \exists N\in \mathbb{N}, n\geqslant N, |f_n(x)|<\varepsilon$.\par
+    于是有集合的表示形式:$\bigcap_{k=1}^{+\infty}\bigcup_{N=1}^{+\infty}\bigcap_{n=N}^{+\infty}E\left[|f_n(x)|\leqslant \frac{1}{k}\right]$.\par
+  \end{solution}
+
+  \subsection*{二、选择题}
+
+  1. 设$f:\mathbb{R}^n\rightarrow \mathbb{R}$, $A,B\subset \mathbb{R}^n$, 则下列集合关系成立的是:\par
+  \twoch{$f(A\cup B)=f(A)\cup f(B)$}{$(A\backslash B)\cup B=A$}{$(B\backslash A)\cup A\subset A$}{$f(A\cap B)=f(A)\cap f(B)$}
+
+  \begin{solution}
+    \textbf{A} 正确, $f(A\cup B)= f(A)\cup f(B)$.\par
+    \textbf{B} 错误, 当且仅当$B\subset A$时成立.\par
+    \textbf{C} 错误, $(B\backslash A)\cup A=A\cup B$.\par
+    \textbf{D} 错误, $f(A\cap B)\subset f(A)\cap f(B)$, 但不一定相等.\par
+    因此正确答案是 \textbf{A}.
+  \end{solution}
+
+  2. 设$E=\left\{(x,y)\in \mathbb{R}^2:0<x<1, y \in \mathbb{Q}\right\}$, 则下列命题成立的的是:\par
+  \twoch{$m(E)=1$}{$m(E)=0$}{$E$是$\mathbb{R}^2$中闭集}{$E$是$\mathbb{R}^2$中开集}
+
+  \begin{solution}
+    \textbf{A} 错误, $E$是$\mathbb{R}^2$中的零测集.\par
+    \textbf{B} 正确, $E$是$\mathbb{R}^2$中的零测集.\par
+    \textbf{C} 错误, $E$不是闭集, 因为它不包含所有的极限点.\par
+    \textbf{D} 错误, $E$不是开集, 因为它不包含任何开球.\par
+    因此正确答案是 \textbf{B}.
+  \end{solution}
+
+  3. 设$f(x)$是可测集$E$上的实函数, 则下列命题不成立的是:\par
+  \fourch{$f(x)$在$E$上可测当且仅当$|f(x)|$在$E$上可测}{若$f(x)$在$E$上可测, 则$f(x)$在$E$的任意子集上可测}{若$f(x)$在$E$上可测, 则$f(x)$在$E$的任意测度为零的子集上可积}{若$f(x)$在$E$上可测, 则$f(x)$在$E$上几乎处处有限}
+
+  \begin{solution}
+    \textbf{A} 错误, 可测函数可测时其绝对值也是可测的, 但反之未必, 例如$\chi_{\mathbb{Q}}-\chi_{\mathbb{R}\backslash \mathbb{Q}}$.\par
+    \textbf{B} 正确, 可测函数在任意可测子集上一定可测. 这里我们认为提及子集时即可测.\par
+    \textbf{C} 正确, 可测函数在测度为零的子集上是可积的.\par
+    \textbf{D} 正确, 可测函数在其定义域上几乎处处有限.\par
+    因此正确答案是 \textbf{A}.
+  \end{solution}
+
+  4. 设$f_k,f$均为可测集$E$上的可测函数, 当$k \to \infty$时下列命题成立的是:\par
+  \fourch{若$f_k$在$E$上几乎处处收敛到$f$, 则$f_k$在$E$上近乎一致收敛到$E$.}{若$f_k$在$E$上几乎处处收敛到$f$, 则$\lim \limits_{k \to \infty}\int_{E}f_k(x)\mathrm{d}x=\int_{E}f(x)\mathrm{d}x$.}{若$f_k$在$E$上近乎一致收敛到$f$, 则$f_k$在$E$上依测度收敛到$f$.}{若$f_k$在$E$上依测度收敛到$f$, 则$\lim \limits_{k \to \infty}\int_{E}f_k(x)\mathrm{d}x=\int_{E}f(x)\mathrm{d}x$.}
+  
+  \begin{solution}
+    \textbf{A} 错误, 几乎处处收敛不一定近乎一致收敛.\par
+    \textbf{B} 错误, 几乎处处收敛的函数序列在可测集上积分极限等于函数极限的积分, 因为在零测集上不收敛时积分值为0.\par
+    \textbf{C} 正确, 近乎一致收敛可以推出依测度收敛.\par
+    \textbf{D} 错误, 依测度收敛未必一定有积分和极限可换序.\par
+    因此正确答案是 \textbf{C}.
+  \end{solution}
+
+  5. 下列命题成立的是:\par
+  \fourch{若$E\subset \mathbb{R}^n$测度为0, 则$E$为至多可数集.}{设$E\subset \mathbb{R}^n$, 存在包含$E$的开集$G$, $m(G\backslash E)=0$}{若$G\subset \mathbb{R}^n$是开集, 则$\partial G$是零测集.}{零测集是可测集.}
+
+  \begin{solution}
+    \textbf{A} 错误, 零测集可以是不可数的, 例如Cantor集.\par
+    \textbf{B} 错误, $E$可测时才有对应结果.\par
+    \textbf{C} 错误, $\partial G$可能不是零测集, 例如$\mathbb{R}^n$中的开球的边界.\par
+    \textbf{D} 正确, 零测集是可测集.\par
+    因此正确答案是 \textbf{D}.
+  \end{solution}
+
+  \subsection*{三、解答题}
+
+  1. 定义函数$f(x)=\begin{cases}
+    x^2, & x\in \mathbb{Q} \\
+    1+x, & x\in \mathbb{R}\backslash \mathbb{Q}
+  \end{cases}$, 回答下列问题:\par
+  (1) $f(x)$在$[0,1]$上是否$R$可积? 简单说明理由.\par
+  (2) $f(x)$在$[0,1]$上是否$L$可积? 简单说明理由.\par
+
+  \begin{solution}
+    (1) $f(x)$在$[0,1]$上不是Riemann可积的. 因为$f(x)$在$[0,1]$上每一点都不连续, 不满足Riemann可积的条件.\par
+    (2) $f(x)$在$[0,1]$上是Lebesgue可积的. 因为$f(x)$在$[0,1]$上几乎处处有限, 其不连续点构成零测集.\par
+    积分计算如下:\par
+    $\int_{0}^{1}f(x)\mathrm{d}x=\int_{\mathbb{Q}}x^2\mathrm{d}x+\int_{\mathbb{R}\backslash \mathbb{Q}}(1+x)\mathrm{d}x=\int_{0}^{1}(1+x)\mathrm{d}x=\frac{3}{2}$.\par
+  \end{solution}
+    
+  2. 设$f$为可测集$E$上的可积函数, 记$E_k=E\left[|f|<\frac{1}{k}\right]$, 计算$\lim \limits_{k \to +\infty}\int_{E_k}|f(x)|\mathrm{d}x$.\par
+
+  \begin{solution}
+    考虑$\lim \limits_{k \to +\infty}\int_{E_k}|f(x)|\mathrm{d}x=\lim \limits_{k \to +\infty}\int_{E\left[|f|<\frac{1}{k}\right]}|f(x)|\mathrm{d}x=\int_{E\left[|f|=0\right]}|f(x)|\mathrm{d}x=0$.\par
+  \end{solution}
+
+  \subsection*{四、证明题}
+
+  1. 设$f(x)$是$E$上的可测函数, 证明$\forall a >0, m(E\left[f\geqslant a\right])\leqslant \mathrm{e}^{-a}\int_{E}\mathrm{e}^{f(x)}\mathrm{d}x$.\par
+
+  \begin{solution}
+    考虑证明$\forall a>0, \int_{E}\mathrm{e}^{f(x)}\mathrm{d}x\geqslant \mathrm{e}^a \cdot m(E\left[f\geqslant a\right])$.\par
+    由于$f(x)$是可测函数, 则$\mathrm{e}^{f(x)}$也是可测函数. 于是$\int_{E}\mathrm{e}^{f(x)}\mathrm{d}x\geqslant \int_{E\left[f\geqslant a\right]}\mathrm{e}^{f(x)}\mathrm{d}x\geqslant \int_{E[f\geqslant a]}\mathrm{e}^{a}\mathrm{d}x\geqslant m(E[f\geqslant a])\cdot \mathrm{e}^a$.\par
+  \end{solution}
+
+  2. 设$f(x)$是$E$上的可积函数, $\{A_k\}$是$E$的一列可测子集且$\lim_{k \to \infty}m(A_k)=0$, 证明$\lim \limits_{k \to \infty}\int_{A_k}f(x)\mathrm{d}x=0$.\par
+    
+  \begin{solution}
+    由于$f(x)$是可积函数, 则$\int_{E}|f(x)|\mathrm{d}x<+\infty$. 由$\lim \limits_{k \to \infty}m(A_k)=0$, 可知对于任意$\varepsilon >0$, 存在$N$使得当$k>N$时$m(A_k)<\varepsilon/\int_{E}|f(x)|\mathrm{d}x$.\par
+    因此有$\left|\int_{A_k}f(x)\mathrm{d}x\right|\leqslant \int_{A_k}|f(x)|\mathrm{d}x\leqslant m(A_k)\cdot \sup_{x\in E}|f(x)|<\varepsilon$, 从而$\lim \limits_{k \to \infty}\int_{A_k}f(x)\mathrm{d}x=0$.\par
+  \end{solution}
+
+  3. 设$f(x)$是$E$上的可积函数, 且对任意可测集$A\subset E$, 均有$\int_{A}f(x)\mathrm{d}x=0$. 证明$f(x)=0$ a.e. on $E$.\par
+
+  \begin{solution}
+    假设$f(x)\neq 0$在$E$上有正测度的集合$A$, 不妨设$f(x)>0$, 则$\int_{A}f(x)\mathrm{d}x$, 与条件矛盾.\par
+    因此$f(x)=0$在$E$上几乎处处成立.\par
+  \end{solution}
+
+  \subsection*{五、辨析题}
+
+  设$\{f_n\}$是可测集$E$上的非负可测函数列, 且$\{f_n\}$在$E$上几乎处处收敛到$0$.\par
+  (1) 判断$\{f_n\}$在$E$上是否依测度收敛到$0$, 并简要说明理由.\par
+  (2) 若$\int_{E} \max{f_1(x),f_2(x),\ldots,f_n(x)}\mathrm{d}x\leqslant M$, 验证$\lim \limits_{n \to \infty}\int_{E}f_n(x)\mathrm{d}x=0$.\par
+  (3) 当$\lim \limits_{n \to \infty}\int_{E}f_n(x)\mathrm{d}x=0$时判断$\{f_n\}$在$E$上是否依测度收敛到$0$, 并简要说明理由.\par
+
+  \begin{solution}
+    (1) $\{f_n\}$在$E$上不总是依测度收敛到$0$, 例如$f_n(x)=\chi_{[0,n]}(x)$在$E=\left[0,\right.\left.+\infty\right)$上几乎处处收敛到$0$, 但不依测度收敛到$0$.\par
+    (2) 要证明$\lim \limits_{n \to \infty}\int_{E}f_n(x)\mathrm{d}x=0$, 由于$\int_{E} \max{f_1(x),f_2(x),\ldots,f_n(x)}\mathrm{d}x\leqslant M$, 
+    于是有$\exists M>0, \int_{E}f_k(x)\mathrm{d}x\leqslant M$. 由有界收敛定理, $\lim \limits_{n \to \infty}\int_{E}f_n(x)\mathrm{d}x=\int_{E}\lim \limits_{n \to \infty}f_n(x)\mathrm{d}x=0$.\par
+    (3) $\{f_n\}$在$E$上依测度收敛到$0$, 下面证明这一结果:\par
+    由于$\lim \limits_{n \to \infty}\int_{E}f_n(x)\mathrm{d}x=0$, 则对于任意$\varepsilon >0$, 存在$N$使得当$n>N$时$\int_{E}f_n(x)\mathrm{d}x<\varepsilon$.\par
+    由非负性, $\int_{E}f_n(x)\mathrm{d}x\geqslant \int_{E\left[f_n\geqslant \frac{1}{k}\right]}f_n(x)\mathrm{d}x\geqslant \frac{1}{k}\cdot m\left(E\left[f_n\geqslant \frac{1}{k}\right]\right)$.\par
+    于是当$n \to \infty$时有$m\left(E\left[f_n\geqslant \frac{1}{k}\right]\right)\leqslant 0$. 从而$\{f_n\}$在$E$上依测度收敛到$0$.\par
+  \end{solution}
+
+\end{document}

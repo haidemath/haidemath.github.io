@@ -361,12 +361,6 @@
         }
 
         /* 强制所有内容左对齐 */
-        #content * {
-            text-align: left !important;
-            margin-left: 0 !important;
-            margin-right: auto !important;
-        }
-
         /* 例外：保持某些特殊元素的居中样式 */
         #content .loading {
             text-align: center !important;
@@ -885,11 +879,12 @@
             color: var(--primary);
         }
     </style>
+    <link rel="stylesheet" href="../../assets/reader.css?v=20260926-3">
 </head>
 <body>
     <!-- 顶部导航栏 -->
     <header class="header">
-        <a href="#" class="header-brand">
+        <a href="../../index.html" class="header-brand">
             <i class="fas fa-graduation-cap"></i>
             HaideMath
         </a>
@@ -956,6 +951,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
     <script>
         // MathJax 配置
         window.MathJax = {
@@ -1002,16 +998,19 @@
         };
     </script>
     <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-    <script src="auto-directory.js"></script>
+    <script src="auto-directory.js?v=20260926"></script>
     <script>
         class MarkdownViewer {
             constructor() {
                 this.markdownFiles = [];
                 this.currentFile = '';
-                this.sidebarCollapsed = false;
-                this.isDarkMode = false;
+                this.sidebarCollapsed = window.innerWidth <= 768;
+                this.isDarkMode = localStorage.getItem('reader-theme') === 'dark';
                 this.searchResults = [];
                 this.autoGenerator = new AutoDirectoryGenerator();
+                document.documentElement.dataset.theme = this.isDarkMode ? 'dark' : 'light';
+                if (this.sidebarCollapsed) document.getElementById('sidebar').classList.add('collapsed');
+                if (this.isDarkMode) document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
                 
                 this.init();
             }
@@ -1110,26 +1109,35 @@
                     </div>
                 `;
 
+                const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[char]));
                 Object.entries(grouped).forEach(([category, files]) => {
                     html += `
-                        <div style="padding: 0.5rem 1rem; font-weight: 600; color: var(--text-tertiary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.5rem;">
+                        <details class="nav-group" data-category="${escapeHtml(category)}">
+                        <summary>
                             <i class="fas fa-folder" style="opacity: 0.7;"></i>
-                            ${category} (${files.length})
-                        </div>
+                            ${escapeHtml(category)} (${files.length})
+                        </summary>
                     `;
                     files.forEach(file => {
                         const lastModified = file.lastModified ? new Date(file.lastModified).toLocaleDateString('zh-CN') : '';
                         html += `
-                            <button class="nav-item" data-file="${file.id}" onclick="viewer.loadMarkdown('${file.id}')" title="${file.title}${lastModified ? '\n最后更新: ' + lastModified : ''}">
-                                <i class="${file.icon}"></i>
-                                <span style="flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.title}</span>
+                            <button class="nav-item" data-file="${escapeHtml(file.id)}" title="${escapeHtml(file.title)}${lastModified ? '\n最后更新: ' + escapeHtml(lastModified) : ''}">
+                                <i class="${escapeHtml(file.icon)}"></i>
+                                <span style="flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(file.title)}</span>
                                 ${lastModified ? `<span style="font-size: 0.6rem; opacity: 0.6;">${lastModified.split('/')[1]}/${lastModified.split('/')[2]}</span>` : ''}
                             </button>
                         `;
                     });
+                    html += '</details>';
                 });
 
                 navList.innerHTML = html;
+                navList.querySelectorAll('.nav-item').forEach(button => {
+                    button.addEventListener('click', () => {
+                        this.loadMarkdown(button.dataset.file);
+                        if (window.innerWidth <= 768 && !this.sidebarCollapsed) this.toggleSidebar();
+                    });
+                });
             }
 
             setupEventListeners() {
@@ -1153,6 +1161,7 @@
                 searchInput.addEventListener('input', (e) => {
                     this.searchFiles(e.target.value);
                 });
+                window.addEventListener('popstate', () => this.loadInitialContent());
 
                 // 响应式处理
                 window.addEventListener('resize', () => {
@@ -1269,14 +1278,9 @@
             toggleTheme() {
                 this.isDarkMode = !this.isDarkMode;
                 const toggleBtn = document.getElementById('theme-toggle');
-                
-                if (this.isDarkMode) {
-                    document.body.style.filter = 'invert(1) hue-rotate(180deg)';
-                    toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
-                } else {
-                    document.body.style.filter = 'none';
-                    toggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
-                }
+                document.documentElement.dataset.theme = this.isDarkMode ? 'dark' : 'light';
+                localStorage.setItem('reader-theme', this.isDarkMode ? 'dark' : 'light');
+                toggleBtn.innerHTML = this.isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
             }
 
             toggleFullscreen() {
@@ -1345,12 +1349,24 @@
                 const file = this.markdownFiles.find(f => f.id === fileId);
                 if (!file) return;
 
+                // Keep Markdown entries within this directory or its controlled subdirectories.
+                const parts = file.file?.split('/');
+                const validPath = parts && parts.every(part => part && part !== '.' && part !== '..' && !/[\\?#:%]/.test(part)) &&
+                    (parts.length === 1 || (parts.length > 1 && ['imports', 'converted'].includes(parts[0]))) &&
+                    /\.md$/i.test(file.file);
+                if (!validPath) {
+                    this.showError('文件路径无效', '目录条目必须指向阅读器目录内的 Markdown 文件');
+                    return;
+                }
+                const fileUrl = new URL(file.file, window.location.href);
+
                 this.currentFile = fileId;
                 
                 // 更新 URL
                 const url = new URL(window.location);
+                if (url.searchParams.get('md') !== fileId) url.hash = '';
                 url.searchParams.set('md', fileId);
-                window.history.pushState({}, '', url);
+                if (url.href !== window.location.href) window.history.pushState({}, '', url);
 
                 // 更新页面标题和头部标题
                 document.title = `${file.title} | HaideMath`;
@@ -1360,38 +1376,175 @@
                 document.querySelectorAll('.nav-item').forEach(item => {
                     item.classList.toggle('active', item.dataset.file === fileId);
                 });
+                document.querySelectorAll('.nav-group').forEach(group => {
+                    const currentGroup = !!group.querySelector('.nav-item[data-file="' + fileId + '"]');
+                    const bookIndex = fileId === 'Complex-Analysis-Notes' || fileId === 'Real-Analysis-Notes';
+                    const chapterGroup = bookIndex && group.dataset.category === file.category.split(' · ')[0] + ' · 正文章节';
+                    group.open = currentGroup || chapterGroup;
+                });
 
                 // 显示加载状态
                 this.showLoading();
 
                 try {
-                    const response = await fetch(`${fileId}.md`);
+                    const content = document.getElementById('content');
+                    const response = await fetch(fileUrl, { cache: 'no-store' });
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                     }
                     
                     const markdown = await response.text();
-                    const html = marked.parse(markdown);
+                    if (!window.marked || !window.DOMPurify) throw new Error('阅读器依赖未能加载');
+                    const mathExpressions = [];
+                    const protectedMarkdown = markdown.replace(/\$\$[\s\S]*?\$\$|\$(?:\\.|[^$\\])+\$/g, expression => {
+                        const token = 'MATHPLACEHOLDER' + mathExpressions.length + 'END';
+                        mathExpressions.push(expression.replace(/\n(?:> )+/g, '\n'));
+                        return token;
+                    });
+                    let html = DOMPurify.sanitize(marked.parse(protectedMarkdown));
+                    html = html.replace(/MATHPLACEHOLDER(\d+)END/g, (_, index) =>
+                        mathExpressions[Number(index)].replace(/[&<>"]/g, char =>
+                            ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[char])));
                     
                     // 添加淡入动画
-                    const content = document.getElementById('content');
                     content.innerHTML = html;
+                    content.classList.remove('loading');
                     content.classList.add('fade-in');
+                    this.applyContentBlocks(content);
+                    this.organizeBookIndex(content, fileId);
+                    this.assignHeadingAnchors(content, fileId);
+                    this.organizeChapterSections(content, fileId);
+                    this.placeChapterNavigation(content, fileId);
+                    if (!fileId.includes('-Chapter-')) this.addTableOfContents(content);
+                    content.querySelectorAll('a[href], img[src]').forEach(element => {
+                        const attribute = element.tagName === 'IMG' ? 'src' : 'href';
+                        const value = element.getAttribute(attribute);
+                        if (value && !/^(?:[a-z][a-z\d+.-]*:|\/|#)/i.test(value)) {
+                            element.setAttribute(attribute, new URL(value, fileUrl).href);
+                        }
+                    });
                     
                     // 渲染数学公式和内容块
                     this.renderMath();
                     this.updateReadingTime();
                     
                     // 滚动到顶部
-                    content.scrollTop = 0;
+                    document.querySelector('.content-body').scrollTop = 0;
                     
                 } catch (error) {
-                    this.showError('加载失败', `无法加载文件: ${fileId}.md\n错误信息: ${error.message}`);
+                    this.showError('加载失败', `无法加载文件: ${file.file}\n错误信息: ${error.message}`);
                 }
             }
 
+            organizeBookIndex(content, fileId) {
+                if (!['Complex-Analysis-Notes', 'Real-Analysis-Notes'].includes(fileId)) return;
+                const preface = [...content.querySelectorAll('h2')].find(heading => heading.textContent.trim() === '前言');
+                if (!preface) return;
+                const details = document.createElement('details');
+                details.className = 'preface-outline';
+                const summary = document.createElement('summary');
+                summary.textContent = '前言';
+                details.append(summary);
+                while (preface.nextSibling) details.append(preface.nextSibling);
+                preface.replaceWith(details);
+            }
+
+            assignHeadingAnchors(content, fileId) {
+                if (!fileId.includes('-Chapter-')) return;
+                content.querySelectorAll('h3, h4, h5').forEach((heading, index) => {
+                    heading.id = 'section-' + (index + 1);
+                });
+            }
+
+            organizeChapterSections(content, fileId) {
+                if (!fileId.includes('-Chapter-')) return;
+                const headings = [...content.querySelectorAll(':scope > h3')];
+                if (headings.length) {
+                    for (const heading of headings) {
+                        const details = document.createElement('details');
+                        details.className = 'section-block';
+                        details.id = heading.id;
+                        const summary = document.createElement('summary');
+                        summary.innerHTML = heading.innerHTML;
+                        const body = document.createElement('div');
+                        body.className = 'section-content';
+                        details.append(summary, body);
+                        while (heading.nextSibling &&
+                               !['H2', 'H3'].includes(heading.nextSibling.nodeName)) {
+                            body.append(heading.nextSibling);
+                        }
+                        heading.replaceWith(details);
+                    }
+                    return;
+                }
+
+                // The exercise collection has examples without section headings.
+                let exampleNumber = 0;
+                for (const block of [...content.querySelectorAll(':scope > blockquote')]) {
+                    if (!/^例\s*$/.test(block.querySelector('strong')?.textContent.trim() || '')) continue;
+                    exampleNumber += 1;
+                    const details = document.createElement('details');
+                    details.className = 'section-block';
+                    const summary = document.createElement('summary');
+                    const preview = block.textContent.trim().replace(/^例\s*/, '').trim().replace(/\s+/g, ' ');
+                    summary.textContent = '例 ' + exampleNumber + (preview ? ' · ' + preview.slice(0, 64) : '');
+                    const body = document.createElement('div');
+                    body.className = 'section-content';
+                    details.append(summary, body);
+                    while (block.nextSibling) {
+                        const next = block.nextSibling;
+                        if (next.nodeName === 'BLOCKQUOTE' &&
+                            /^例\s*$/.test(next.querySelector('strong')?.textContent.trim() || '')) break;
+                        if (next.nodeName === 'H2') break;
+                        body.append(next);
+                    }
+                    block.replaceWith(details);
+                    body.prepend(block);
+                }
+            }
+
+            placeChapterNavigation(content, fileId) {
+                if (!fileId.includes('-Chapter-')) return;
+                const paragraphs = [...content.querySelectorAll('.section-block .section-content > p')];
+                const navigation = paragraphs.findLast(paragraph =>
+                    paragraph.textContent.includes('目录与前言') && paragraph.querySelector('a[href*="?md="]'));
+                if (navigation) {
+                    navigation.classList.add('chapter-navigation');
+                    navigation.closest('.section-block').after(navigation);
+                }
+            }
+
+            addTableOfContents(content) {
+                if (content.querySelector('.reader-toc')) return;
+                const headings = [...content.querySelectorAll('h2, h3, h4')];
+                if (headings.length < 3) return;
+                const toc = document.createElement('details');
+                toc.className = 'reader-toc';
+                const summary = document.createElement('summary');
+                summary.textContent = '本篇目录 · ' + headings.length + ' 节';
+                toc.append(summary);
+                const list = document.createElement('nav');
+                list.setAttribute('aria-label', '本篇目录');
+                for (const heading of headings) {
+                    const link = document.createElement('button');
+                    link.type = 'button';
+                    link.className = heading.tagName === 'H2' ? 'toc-chapter' :
+                        heading.tagName === 'H3' ? 'toc-section' : 'toc-subsection';
+                    link.textContent = heading.textContent;
+                    link.addEventListener('click', () => {
+                        heading.scrollIntoView({behavior: 'smooth', block: 'start'});
+                        if (window.innerWidth <= 768) toc.open = false;
+                    });
+                    list.append(link);
+                }
+                toc.append(list);
+                content.prepend(toc);
+            }
+
             showLoading() {
-                document.getElementById('content').innerHTML = `
+                const content = document.getElementById('content');
+                content.classList.add('loading');
+                content.innerHTML = `
                     <div class="loading">
                         <i class="fas fa-spinner spinner"></i>
                         <p>正在加载内容...</p>
@@ -1400,7 +1553,9 @@
             }
 
             showError(title, message) {
-                document.getElementById('content').innerHTML = `
+                const content = document.getElementById('content');
+                content.classList.add('loading');
+                content.innerHTML = `
                     <div class="loading" style="color: var(--error);">
                         <i class="fas fa-exclamation-triangle" style="color: var(--error);"></i>
                         <h3>${title}</h3>
@@ -1412,9 +1567,6 @@
             renderMath() {
                 const content = document.getElementById('content');
                 
-                // 先应用内容块样式
-                this.applyContentBlocks(content);
-                
                 // 使用 MathJax 渲染数学公式
                 if (window.MathJax && window.MathJax.typesetPromise) {
                     // 清除之前的数学公式渲染
@@ -1424,6 +1576,13 @@
                     window.MathJax.typesetPromise([content]).then(() => {
                         console.log('MathJax 渲染完成');
                         this.forceLeftAlign();
+                        const section = window.location.hash.slice(1);
+                        if (section.startsWith('section-')) {
+                            const target = document.getElementById(section);
+                            const panel = target?.matches('.section-block') ? target : target?.closest('.section-block');
+                            if (panel) panel.open = true;
+                            target?.scrollIntoView({block: 'start'});
+                        }
                     }).catch((err) => {
                         console.warn('MathJax 渲染错误:', err);
                     });
@@ -1454,13 +1613,6 @@
                     el.style.textAlign = 'left';
                 });
 
-                // 强制所有其他元素左对齐
-                const allElements = content.querySelectorAll('*');
-                allElements.forEach(el => {
-                    if (!el.classList.contains('loading')) {
-                        el.style.textAlign = 'left';
-                    }
-                });
             }
 
             applyContentBlocks(content) {

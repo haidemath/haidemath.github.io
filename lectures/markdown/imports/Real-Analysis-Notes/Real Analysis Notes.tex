@@ -1,0 +1,2378 @@
+% \documentclass[lang=cn,newtx,10pt,scheme=chinese]{elegantbook}
+\documentclass[theorem=false,mathfont=none,openany,sub3section]{easybook}
+
+\usepackage[lang=cn]{eb-elegantbook}
+\usepackage{lmodern}
+\usepackage{codehigh}
+\lstset{moreemph={nofont,thmenv}}
+
+\renewcommand{\rmdefault}{lmr}
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\ttdefault}{lmtt}
+
+\title{Real Analysis}
+\subtitle{Lecture Notes}
+\author{Stone Sun}
+%\institute{Ocean University of China}
+\date{\today}
+%\version{}
+\bioinfo{联系方式}{hefengzhishui@outlook.com}
+
+%\extrainfo{注意：Elegant系列模板自 2023 年 1 月 1 日开始，不再更新和维护！}
+
+\setcounter{tocdepth}{3}
+
+\logo{logo.jpg}
+\cover{cover.jpg}
+
+% 本文档命令
+% \usepackage{array}
+\newcommand{\ccr}[1]{\makecell{{\color{#1}\rule{1cm}{1cm}}}}
+
+% 修改标题页的橙色带
+\definecolor{customcolor}{RGB}{32,178,170}
+\colorlet{coverlinecolor}{customcolor}
+% \usepackage{cprotect}
+
+\addbibresource[location=local]{reference.bib} % 参考文献，不要删除
+
+% 定义\btocgroup和\etocgroup命令把目录风格限制在组内，使其局部生效
+\newcommand{\btocgroup}[1][toc]{\addtocontents{#1}{\string\begingroup}}
+\newcommand{\etocgroup}[1][toc]{\addtocontents{#1}{\string\endgroup}}
+%\SetTocStyle{chapter}{emph}{tocformat+ = \color{black}}
+\let\ls\lstinline
+\ebhdrset{footnotetype=flush}
+\ctexset{
+  paragraph/numbering=false,
+  paragraph/beforeskip=1explus.2ex
+  }
+\SetTocStyle{subsubsection}{sub2}{
+  tocindent=3.8em,
+  tocformat+=\color{blue}
+  }
+\UseTocStyle{subsubsection}{sub2}{toc}
+
+\begin{document}
+
+\maketitle
+\begin{center}
+谨以此篇, 献给热爱分析的你.\par
+\end{center}
+\frontmatter
+
+\begingroup
+\renewcommand{\familydefault}{\rmdefault}
+\tableofcontents
+\endgroup
+
+\newpage
+\begin{center}
+\Large
+\textbf{前言}\par
+\end{center}
+
+\hspace{2em}
+
+这是一份关于实分析(又名实变函数)的讲义, 主要涵盖了$\mathbb{R}^n$上的集合论与测度论, 同时讨论了Lebesgue可测、Lebesgue积分的基本概念和定理. 这份讲义是基于中国海洋大学的实变函数课程的讲义和笔记而写成的, 也参考了其他一些教材和讲义.\par
+值得注意的是, 这门课程在不同开课学院的所占学分和所需学时是不同的. 所以这份讲义可能更适合每周3学时的同学学习参考.\par
+这份讲义的描述角度是一位数学专业的学生, 因此我可能会采用一些更易于理解, 但不严格符合课程结构的叙述方式和顺序. 这些特性决定了这份讲义不会有太广泛的适用性.\par
+笔者曾经试图撰写过常微分方程、微积分、线性代数等课程的讲义, 但由于时间和精力的限制, 这些讲义都没有完成. 这份讲义是笔者在2025年春季学期和暑期复习这门课程时完成的, 从某种程度上来讲这既是对此前未完成的讲义的一种补偿, 也是对自己本科二年级学习生活的一份总结. 我希望在这份讲义里更多地去体现我对Lebesgue测度的理解和我对分析学的认知. 尽管这些认知可能都是浅显的, 但我仍希望这些想法能够落到具体实际, 以作纪念和方便回顾.\par
+除了上述这些想法之外, 我还希望基于此回忆一些学习时的一些有趣的理解, 作为一名可能对分析方向不太感兴趣的学生, 我的这份讲义可能不会带来任何有益的帮助, 反倒可能对基础分析概念的理解产生许多误解, 因此我更希望读者将这份讲义看作漫谈, 而非一份严谨的参考讲义, 同时我也很期待任何同学能够帮助我修正其中的任何错误.\par
+\begin{flushright}
+\text{Stone Sun}\\
+\text{\today}
+\end{flushright}
+
+\mainmatter
+
+\btocgroup
+\UseTocStyle{chapter}{emph}{toc}
+\chapter{基础集合论}
+\etocgroup
+
+\section{集合的运算}
+
+\begin{definition}
+  设$A,B$是集合, 则有如下集合间运算和关系的定义:\par
+  \begin{itemize}
+    \item
+      $A\bigcup B=\{x|x\in A\text{或}x\in B\}$, 称为$A$和$B$的并集.
+    \item
+      $A\bigcap B=\{x|x\in A\text{且}x\in B\}$, 称为$A$和$B$的交集.
+    \item
+      $A\backslash B=\{x|x\in A\text{且}x\notin B\}$, 称为$A$和$B$的差集.
+    \item
+      $A\subseteq B$表示$A$是$B$的子集, 即$\forall x\in A, x\in B$.
+    \item
+      $A=B$表示$A$和$B$相等, 即$\forall x, x\in A\Leftrightarrow x\in B$.
+    \item 
+      若$A\subset S, B=S\backslash A$, 则称$A$是$B$的补集, 记作$A^{c}$.
+  \end{itemize}
+
+\end{definition}
+针对抽象的集合, 我们有如下定义:\par
+\begin{definition}
+  设$\varLambda $是一集合, 则称$\{A_{\lambda}\}$是一集族, 其中$\lambda\in\varLambda$.\par
+  特别的, 若$\varLambda=\{1,2,\cdots,n\}$, 则称$\{A_{1},A_{2},\cdots,A_{n}\}$是一集列.\par
+\end{definition}
+
+集合的运算满足下面的定律:\par
+\begin{theorem}
+  设$A,B,C$是集合, 则下列命题成立:\par
+  \begin{itemize}
+    \item $A\cup (B\cup C)=(A\cup B)\cup C$.
+    \item $A\cap (B\cap C)=(A\cap B)\cap C$.
+    \item $A\bigcap (\bigcup_{\lambda \in \varLambda}B_{\lambda})=\bigcup_{\lambda \in \varLambda}(A\bigcap B_{\lambda})$.
+    \item $A\bigcup (\bigcap_{\lambda \in \varLambda}B_{\lambda})=\bigcap_{\lambda \in \varLambda}(A\bigcup B_{\lambda})$.
+    \item $(\bigcap_{\lambda \in \varLambda}A_{\lambda})^{c}=\bigcup_{\lambda \in \varLambda}A_{\lambda}^{c}$.
+    \item $(\bigcup_{\lambda \in \varLambda}A_{\lambda})^{c}=\bigcap_{\lambda \in \varLambda}A_{\lambda}^{c}$.
+  \end{itemize}
+\end{theorem}
+
+\begin{proof}
+  证明略.
+\end{proof}
+
+基于上面给出的集合间运算的性质, 我们作下面的特殊定义, 这些定义将会在未来某些测度论的定理中用到.\par
+\begin{definition}
+  设$\{A_n\}$是一集列, 则称集合$\underset{N=1}{\overset{\infty}{\bigcap}}\underset{n=N}{\overset{\infty}{\bigcup}}A_n$为集列$\{A_n\}$的上限集, 记作$\limsup_{n \to \infty}A_n$.\par
+  设$\{A_n\}$是一集列, 则称集合$\underset{N=1}{\overset{\infty}{\bigcup}}\underset{n=N}{\overset{\infty}{\bigcap}}A_n$为集列$\{A_n\}$的下限集, 记作$\liminf_{n \to \infty}A_n$.\par
+\end{definition}
+
+针对上限集和下限集, 我们有如下等价定义:\par
+\begin{theorem}
+  设$\{A_n\}$是一集列, 则有如下等价定义:\par
+  \begin{itemize}
+    \item $x\in \limsup_{n \to \infty}A_n\Leftrightarrow \forall N, \exists n_0\geqslant N, x\in A_{n_0}$.
+    \item $x\in \liminf_{n \to \infty}A_n\Leftrightarrow \exists N, \forall n\geqslant N, x\in A_{n}$.
+  \end{itemize}
+\end{theorem}
+\begin{proof}
+  上面的等价定义是利用命题的存在性和任意性得到的, 这种证明方法会在后续经常用到. 通俗来讲, 即: 并集表示存在性, 交集表示任意性.\par
+\end{proof}
+
+现在我们给出下面一些性质, 很好的描述了上限集和下限集在给定的集列上的关系:\par
+\begin{theorem}
+  给定$\{A_n\}$是一集列, 则下列命题成立:\par
+  \begin{itemize}
+    \item $(\limsup_{n \to \infty}A_n)^{c}=\liminf_{n \to \infty}(A_n)^{c}$.
+    \item $(\liminf_{n \to \infty}A_n)^{c}=\limsup_{n \to \infty}(A_n)^{c}$.
+    \item $\bigcap_{n}^{\infty}A_n \subset \liminf_{n \to \infty}A_n\subset \liminf_{n \to \infty}(A_n)\subset \bigcup_{n}^{\infty}A_n$.
+  \end{itemize}
+\end{theorem}
+
+\begin{proof}
+  前两个命题是利用上面给出的等价定义得到的. 这两个命题实际上解释了上限集和下限集的关系.\par
+  对于第三个命题, 首先考虑$\liminf_{n \to \infty}A_n\subset \liminf_{n \to \infty}(A_n)\subset$: 若$x\in \liminf_{n \to \infty}A_n$, 则$\exists N, \forall n\geqslant N, x\in A_n$, 这说明$x$在无穷多个$A_n$中出现, 因此$x\in \liminf_{n \to \infty}(A_n)$.\par
+  再考虑$\bigcap_{n}^{\infty}A_n \subset \liminf_{n \to \infty}A_n$: 若$x\in \bigcap_{n}^{\infty}A_n$, 则$\forall n, x\in A_n$, 因此$x\in \liminf_{n \to \infty}A_n$.\par
+  类似地我们也有$\liminf_{n \to \infty}(A_n)\subset \bigcup_{n}^{\infty}A_n$: 若$x\in \liminf_{n \to \infty}(A_n)$, 则$\exists N, \forall n\geqslant N, x\in A_n$, 因此$x\in \bigcup_{n}^{\infty}A_n$.\par
+\end{proof}
+
+\begin{definition}
+  集列$\{A_n\}$是收敛的, 当且仅当$\limsup_{n \to \infty}A_n=\liminf_{n \to \infty}A_n$. 此时记$\lim_{n \to \infty} A_n=\limsup_{n \to \infty}A_n=\liminf_{n \to \infty}A_n$为集列$\{A_n\}$的极限.\par
+\end{definition}
+
+\begin{corollary}
+  若递增集列$\{A_n\}$是收敛的, 则$\limsup_{n \to \infty}A_n=\liminf_{n \to \infty}A_n=\bigcup_{n}^{\infty}A_n$.\par
+  若递减集列$\{A_n\}$是收敛的, 则$\limsup_{n \to \infty}A_n=\liminf_{n \to \infty}A_n=\bigcap_{n}^{\infty}A_n$.\par
+\end{corollary}
+\begin{proof}
+  递增集列有$\forall n, A_n\subset A_{n+1}$, 因此$\bigcup_{n}^{\infty}A_n=\lim_{n \to \infty}A_n =\limsup_{n \to \infty}A_n=\liminf_{n \to \infty}A_n$.\par
+  递减集列有$\forall n, A_n\supset A_{n+1}$, 因此$\bigcap_{n}^{\infty}A_n=\lim_{n \to \infty}A_n =\limsup_{n \to \infty}A_n=\liminf_{n \to \infty}A_n$.\par
+\end{proof}
+
+下面我们给出一类特殊的集合, 为了定义这种集合, 我们首先定义环和$\sigma$-代数的概念.\par
+
+\begin{definition}
+  设$\mathcal{A}\subset 2^{X}$, 且满足$\forall A,B\in \mathcal{A}$, 都有$A\cup B\in \mathcal{A}$, $A\backslash B\in \mathcal{A}$, 则称$\mathcal{A}$为一个环.\par
+  若$\mathcal{A}$满足$\emptyset\in \mathcal{A}$, $\forall A\in \mathcal{A}$, $A^{c}\in \mathcal{A}$, $A_k \in \mathcal{A}, \bigcup_{k=1}^{+\infty}A_k\in \mathcal{A}$, 则称$\mathcal{A}$为一个$\sigma$-代数.\par
+  $\mathbb{R}^n$中所有包含开集的$\sigma$-代数称为Borel集.\par
+\end{definition}
+
+\newpage
+
+\section{集合的对等}
+
+\begin{definition}
+  设$A,B$是集合, 则称$A$和$B$是对等的, 当且仅当$\exists f:A\to B$, $f$是双射. 此时记$A\sim B$表示$A$和$B$是对等的.\par
+\end{definition}
+
+\begin{lemma}
+  若$A\sim B$, $C \sim D$, $A\cap C=\emptyset$, $B\cap D=\emptyset$, 则$A\cup C\sim B\cup D$.\par
+\end{lemma}
+
+\begin{proof}
+  设$f:A\to B$是双射, $g:C\to D$是双射, 则定义映射$h:A\cup C\to B\cup D$如下:
+  \begin{equation*}
+    h(x)=
+    \begin{cases}
+      f(x), & x\in A\\
+      g(x), & x\in C
+    \end{cases}
+  \end{equation*}
+  显然$h$是单射, 且对于任意$y\in B\cup D$, 存在$x\in A\cup C$, 使得$h(x)=y$, 因此$h$是满射. 因此$h$是双射, 即$A\cup C\sim B\cup D$.\par
+\end{proof}
+
+\begin{theorem}
+  若$A\sim B$, $C \sim D$, 且这两个对等关系可以用同一个映射$\phi$来表示, $C\subset A$, $D\subset B$, 则$A\backslash C\sim B\backslash D$.\par
+\end{theorem}
+
+\begin{proof}
+  $\forall x \in A\backslash C$, 令$f(x)=\phi(x)\in B$, 下证$f(x)\in B\backslash D$:\par
+  若$f(x)\in D$, 则$\exists x_0 \in C$, $f(x)= \phi(x)= \phi(x_0)$.\par
+  于是$A\backslash C\sim B\backslash D$.\par
+\end{proof}
+
+\begin{proposition}
+  对于任何映射$\phi$, 都有:\par
+  \begin{itemize}
+    \item $\phi(A\cup B) = \phi(A)\cup \phi(B)$.
+    \item $\phi(A\cap B) \subset \phi(A)\cap \phi(B)$.
+    \item $\phi^{-1}(A\cup B) = \phi^{-1}(A)\cup \phi^{-1}(B)$.
+    \item $\phi^{-1}(A\cap B) = \phi^{-1}(A)\cap \phi^{-1}(B)$.
+  \end{itemize}
+\end{proposition}
+
+\begin{remark}
+  这里不再证明上述命题, 这些命题是映射的基本性质, 其证明可以通过直接验证映射的定义来完成.\par
+\end{remark}
+
+下面我们自然会想到, 这种描述集合对等的想法是否和集合本身的性质有关, 于是有下面的定理:\par
+
+\begin{theorem}
+  (Bernstein) 若$A\sim B_0\subset B$, $B\sim A_0\subset A$, 则$A\sim B$.\par
+\end{theorem}
+
+\begin{proof}
+  为了证明这个事实, 我们需要利用一个引理, 说明集合在一个给定映射下的分解.\par
+  若有$f: X\rightarrow Y$, $g: Y\rightarrow X$, 则存在分解$X=A\cup A^{\sim}$, $Y=B\cup B^{\sim}$, 其中$f(A)= B$, $g(B^{\sim})=A^{\sim}$, $A\cap A^{\sim} = \emptyset$, $B\cap B^{\sim} = \emptyset$.\par
+  设$A\sim B_0\subset B$, 则存在$f: A\to B$是双射, $g: B_0\to A_0$是双射, 则定义映射$h: A\cup A^{\sim}\to B\cup B^{\sim}$如下:\par
+  \begin{equation*}
+    h(x)=
+    \begin{cases}
+      f(x), & x\in A\\
+      g(x), & x\in A^{\sim}
+    \end{cases}
+  \end{equation*}
+  显然$h$是单射, 且对于任意$y\in B\cup B^{\sim}$, 存在$x\in A\cup A^{\sim}$, 使得$h(x)=y$, 因此$h$是满射. 因此$h$是双射, 即$A\cup A^{\sim}\sim B\cup B^{\sim}$.\par
+  于是$A\sim B$.\par
+\end{proof}
+
+\newpage
+
+\section{集合的基数}
+
+在上面, 我们抽象讨论了集合的基数的一些性质, 现在为了更进一步分析不同的集合, 并且引入在Lebesgue测度中常用到的可列集, 我们首先作下面的这些定义:\par
+
+\begin{definition}
+  若存在$n\in \mathbb{N}$满足$A\sim M_{n}$, 则称$A$是有限集, 其中$M_{n}=\{1,2,\cdots,n\}$. 否则称为无限集.\par
+  若$\mathbb{N}$满足$A\sim \mathbb{N}$, 则称$A$是可列集.\par
+\end{definition}
+
+\begin{remark}
+  这里的可列集是指可以和自然数集$\mathbb{N}$一一对应的集合, 也就是可以被自然数标号的集合.\par
+  另一方面, 在一些实分析的参考书中, 可列集也被称为可数集, 这里的定义是一致的, 因此我们统一称之为可列集.\par
+\end{remark}
+
+\begin{theorem}
+  任何无限集都有一个可列的真子集.\par
+\end{theorem}
+
+\begin{proof}
+  由题, $\exists a_1\in A$, $A\backslash \{a_1\} \ne \emptyset$. 于是$\exists a_2 \in A\backslash \{a_1\}$,  $A\backslash \{a_1,a_2\} \ne \emptyset$.\par
+  类似地, 我们有$\exists a_k, a_k \in A\backslash \{a_1,a_2,\cdots,a_{k-1}\}$, $A\backslash \{a_1,a_2,\cdots,a_k\} \ne \emptyset$.\par
+  于是可以取$A'=\{a_1,a_2,\cdots\}$, 则$A'$是$A$的一个可列的真子集.\par
+  真子集是由永远可以再取一个元保证的.\par 
+\end{proof}
+
+在讨论下面的性质之前, 我们首先需要定义集合的基数. 通俗来解释, 这就是集合的大小.\par
+
+\begin{definition}
+  设$A,B$是集合, 则称$A$的基数为$|A|$, 定义如下:\par
+  \begin{itemize}
+    \item 若$A\sim \mathbb{N}$, 则称$|A|=\aleph_{0}$.
+    \item 若$A\sim M_n$, 则称$|A|=n$.
+  \end{itemize}
+\end{definition}
+
+\begin{remark}
+  能够从定义中很自然的得到下面的一系列性质:\par
+  \begin{itemize}
+    \item 若$A\sim B$, 则$|A|=|B|$.
+    \item 若$A\subset B$, 则$|A|\leqslant |B|$.
+  \end{itemize}
+\end{remark}
+
+\begin{theorem}
+  可列集的无限子集一定可列.\par
+\end{theorem}
+
+\begin{proof}
+  取$A= B_0\subset B$, $\phi: A\rightarrow A$, 于是有$|A|\leqslant |B|$.\par
+  设$B$可列, 于是有$|B|=\aleph_{0}$, 因此$|A|\leqslant |B|=\aleph_{0}$.\par
+  由于$\exists C\subset B$为无限的, 因此$|B|\geqslant |C|$, 下证$\exists D, |D|=\aleph_{0}$.\par
+  由于$B$是可列集, 因此可以找到一个可列的真子集$D\subset B$, 且$|D|=\aleph_{0}$.\par
+  于是$A$的无限子集$C$也是可列的, 即$|C|=\aleph_{0}$.\par
+  因此可列集的无限子集一定可列.\par 
+\end{proof}
+
+针对上面给出的定义, 我们再来讨论基数的运算:\par
+
+\begin{proposition}
+  \begin{itemize}
+    \item 若$|A|=\aleph_{0}$, $|B|=\aleph_{0}$, 则$|A\cup B|=\aleph_{0}$.
+    \item 若$|A|=\aleph_{0}$, $|B|=n$, 则$|A\cup B|=\aleph_{0}$.
+    \item 若$|A_i|=\aleph_{0}, i =1,2,\cdots, n$, 则$|\sum_{i=1}^{n}A_i|=\aleph_{0}$.
+    \item 若$|A_i|=\aleph_{0}, i =1,2,\cdots$, 则$|\sum_{i=1}^{\infty}A_i|=\aleph_{0}$.
+  \end{itemize}
+\end{proposition}
+
+下面我们讨论集合的乘积, 这事实上是由一般集合构造而成的, 我们这里给出其定义, 并相应给出其运算的性质:\par
+
+\begin{definition}
+  设$A,B$是集合, 则称$A\times B=\{(a,b)|a\in A, b\in B\}$为$A$和$B$的笛卡尔积, 又称为集合的乘积.\par
+\end{definition}
+
+\begin{proposition}
+  集合的乘积的基数具有以下性质:\par
+  \begin{itemize}
+    \item 若$|A|=n$, $|B|=m$, 则$|A\times B|=nm$.
+    \item 若$|A|=\aleph_{0}$, $|B|=\aleph_{0}$, 则$|A\times B|=\aleph_{0}$.
+    \item 若$|A|=\aleph_{0}$, $|B|=n$, 则$|A\times B|=\aleph_{0}$.
+    \item 若$|A_i|=\aleph_{0}, i =1,2,\cdots, n$, 则$|\prod_{i=1}^{n}A_i|=\aleph_{0}$.
+  \end{itemize}
+\end{proposition}
+
+\begin{remark}
+  这里的关于基数的性质和上面的性质类似, 我们都不再单独证明.\par
+\end{remark}
+
+事实上下面我们会考虑在一般的微积分中讨论的区间, 区间的基数事实上很复杂, 因为我们不能利用上面给出的任何集合来表示区间, 所以我们定义如下:\par
+
+\begin{definition}
+  区间$[0,1]$的基数为$\aleph_{1}$, 又记为$c$.\par
+\end{definition}
+
+\begin{remark}
+  事实上区间$[0,1]$的基数是$\aleph_{1}$说明了任何区间的基数都为$\aleph_{1}$, 因为任何区间都可以和$[0,1]$一一对应.\par
+\end{remark}
+
+\begin{theorem}
+  $[0,1]$不是可列集.\par
+\end{theorem}
+
+\begin{proof}
+  假设$[0,1]$是可列集, 则$[0,1]\sim \{1,2,\cdots\}$, 于是$[0,1]=\{a_1,a_2,\cdots\}$.\par
+  下面我们说明$\exists x \in [0,1]$, 但$x\ne a_k$, $\forall k\in \mathbb{N}$.\par
+  令$a_1=0.a_{11}a_{12}a_{13}\cdots$, $a_2=0.a_{21}a_{22}a_{23}\cdots$, $\cdots$, $a_k=0.a_{k1}a_{k2}a_{k3}\cdots$, $\cdots$.\par
+  作$b=0.b_{11}b_{22}b_{33}\cdots$, 其中$a_{kk}=1$时$b_{kk}=2$, $a_{kk}\ne 1$时$b_{kk}=2$.\par
+  令$b=x$, 则$b\in [0,1]$, 且$b\ne a_k$, $\forall k\in \mathbb{N}$.\par
+  于是$[0,1]$不是可列集.\par
+\end{proof}
+
+和上面的结果类似, 我们下面开始讨论基数为$\aleph_{1}$的集合的基数.\par
+
+\begin{proposition}
+  \begin{itemize}
+    \item 若$|A|=\aleph_{1}$, $|B|=\aleph_{1}$, 则$|A\cup B|=\aleph_{1}$.
+    \item 若$|A|=\aleph_{1}$, $|B|=\aleph_{0}$, 则$|A\cup B|=\aleph_{1}$.
+    \item 若$|A_i|=\aleph_{1}, i =1,2,\cdots, n$, 则$|\sum_{i=1}^{n}A_i|=\aleph_{1}$.
+    \item 若$|A_i|=\aleph_{1}, i =1,2,\cdots$, 则$|\sum_{i=1}^{\infty}A_i|=\aleph_{1}$.
+  \end{itemize}
+\end{proposition}
+
+\begin{proof}
+  对于第一个性质, 我们只需要证明两个区间的并还是区间即可, 这是显然的.\par
+  对于第二个性质, 由于$|A|=\aleph_{1}$, $|B|=\aleph_{0}$, 因此对于可列集, 可以把可列的那一部分放到不可列集中, 因此$|A\cup B|=\aleph_{1}$.\par
+  对于第三个性质和第四个性质, 我们只需要证明$[0,1]^{n}\sim [0,1]$和$[0,1]^{\infty}\sim [0,1]$即可, 这是显然的.\par
+\end{proof}
+
+上面的性质告诉我们, 实数集的基数为$\aleph_{1}$, 有理数集的基数为$\aleph_{0}$. 于是我们有下面的一系列结果.\par
+
+\begin{corollary}
+  以整数 (或有理数) 为系数的多项式全体可列.\par
+  以实数为系数的多项式全体不可列.\par
+\end{corollary}
+
+\begin{proof}
+  以整数 (或有理数) 为系数的多项式全体可以看作是$\mathbb{N}$的有限次笛卡尔积, 因此是可列的.\par
+  以实数为系数的多项式全体可以看作是$\mathbb{R}$的有限次笛卡尔积, 因此是不可列的.\par
+\end{proof}
+
+更进一步, 我们还希望讨论这两种基数之间的关系, 事实上我们有:\par
+
+\begin{theorem}
+  $2^{\aleph_{0}}=\aleph_{1}$.\par
+\end{theorem}
+
+\begin{proof}
+  设$A$是可列集, 则$A\sim \mathbb{N}$, 因此$|A|=\aleph_{0}$.\par
+  于是$2^{A}=\{f:A\to \{0,1\}\}$, $|2^{A}|=2^{\aleph_{0}}$.\par
+  而$2^{A}$的基数是$\aleph_{1}$, 因为$2^{A}$是不可列的.\par
+  因此$2^{\aleph_{0}}=\aleph_{1}$.\par
+\end{proof}
+
+\begin{theorem}
+  (Cantor) 对于任意集合$A$, 都有$|A|<|2^{A}|$.\par
+\end{theorem}
+
+\begin{proof}
+  若$|A|=n$, 则$|2^{A}|=2^{n}$, 因此$|A|<|2^{A}|$.\par
+  若$|A|=\aleph_{0}$, 则$|2^{A}|=2^{\aleph_{0}}=\aleph_{1}$, 因此$|A|<|2^{A}|$.\par
+  若$|A|>\aleph_{0}$, 假设$\exists \phi: A\to 2^{A}$.\par
+  记$A_1=\{x:x\notin \phi(x)\}$, 则$A_1\subset 2^{A}$.\par
+  由于$A_1\ne \phi(x)$, $\forall x\in A$, 因此$A_1\notin \phi(A)$.\par
+  于是$|A|<|2^{A}|$.\par
+\end{proof}
+
+\newpage
+
+\section{距离空间}
+
+下面我们讨论距离和空间, 在这之前, 我们首先定义区间. 并相应得到距离的定义.\par
+
+\begin{definition}
+  $I=\left\{x\in (x_1,\cdot, x_n): a_i<x_i<b_i,i=1,2,\cdots,n\right\}$称为开区间.\par
+  对任意区间, 都有$|l|=\prod_{i=1}^{n}(b_i-a_i)$称为区间的体积.\par
+\end{definition}
+
+在区间中任取两点, 都可以定义它们之间的距离, 于是我们有下面的定义:\par
+\begin{definition}
+  设$x=(x_1,x_2,\cdots,x_n), y=(y_1,y_2,\cdots,y_n)$是$\mathbb{R}^n$中的两点, 则称$x$和$y$之间的距离为$\rho(x,y)=\left|\sum_{i=1}^{n}(x_i-y_i)^2\right|^{\frac{1}{2}}$.\par
+\end{definition}
+
+\begin{remark}
+  虽然上面的定义是在区间中定义的, 但事实上我们知道任何两点都可以在区间中找到, 因此上面的定义是可以推广到任意两点的, 这也就随之产生了距离的定义.\par
+  另一方面, 这里我们选择的是抽象的距离, 这是因为距离在更加广泛的空间中会有不同的定义, 但它们都表示两个点在对应空间中的相对“远近”.\par
+\end{remark}
+
+\begin{proposition}
+  对空间中任意给出的三个点$x$, $y$, $z$, 其距离满足如下性质:\par
+  \begin{itemize}
+    \item (非负性) $\rho(x,y)\geqslant 0$.
+    \item (对称性) $\rho(x,y)=\rho(y,x)$.
+    \item (三角不等式) $\rho(x,y)+\rho(y,z)\geqslant \rho(x,z)$.
+    \item (自反性) $\rho(x,y)=0\Leftrightarrow x=y$.
+  \end{itemize}
+\end{proposition}
+
+\begin{proof}
+  这里的性质是欧氏距离的基本性质, 其证明可以通过直接验证距离的定义来完成, 因此不再证明.\par
+\end{proof}
+
+\begin{definition}
+  若$m \to +\infty$时$\rho(x,x_m)\to 0$, 则称点列$\{x_m\}$收敛于点$x$, 记作$\lim_{m \to +\infty}x_m= x$.\par
+\end{definition}
+
+下面给出一个关于收敛的基本定理, 事实上在一般的数学分析中适用的定理大多都可以类似得到.\par
+
+\begin{theorem}
+  若$x_m \to x$, $y_m \to y$, 则$m \to +\infty$时$\rho(x_m,y_m)\to \rho(x,y)$.\par
+\end{theorem}
+
+\begin{proof}
+  由$x_m \to x$和$y_m \to y$, 则$m \to +\infty$时$\rho(x_m,x)\to 0$和$\rho(y_m,y)\to 0$.\par
+  于是有$\rho(x_m,y_m)\leqslant \rho(x_m,x)+\rho(x,y)+\rho(y,y_m)\to \rho(x,y)$.\par
+  即$m \to +\infty$时$\rho(x_m,y_m)\to \rho(x,y)$.\par
+\end{proof}
+
+类似地, 有了距离的定义之后我们就可以定义邻域, 进而得到许多特殊的集合的定义.\par
+
+\begin{definition}
+  若$x_0\in \mathbb{R}^n$, $\forall \delta>0$, 称$x_0$的$\delta$-邻域为$O(x_0, \delta)=\{x\in \mathbb{R}^n: \rho(x,x_0)<\delta\}$.\par
+\end{definition}
+
+\begin{remark}
+  这里邻域的定义实际上表达的含义是以$x_0$为圆心, $\delta$为半径的一个开球的内部. 类似我们可以定义闭邻域, 但在实分析中很少用到.\par
+\end{remark}
+
+于是更进一步, 我们有一列数列收敛的等价表述:\par
+
+\begin{theorem}
+  $x_m \to x$当且仅当$\forall \delta >0, \exists N >0 , \forall n\geqslant N, x_n \in O(x,\delta)$.\par
+\end{theorem}
+
+\begin{proof}
+  $x_m \to x$即当$m \to +\infty$时$\rho(x_m,x)\to 0$, 因此对于任意$\delta >0$, 都存在$N>0$, 使得当$n\geqslant N$时, $\rho(x_n,x)<\delta$.\par
+  于是有$x_n \in O(x,\delta)$.\par
+\end{proof}
+
+下面我们定义一系列常用但有特殊性质的集合, 在这之前, 我们首先给出一个在实分析中常用定理的推广.\par
+
+\begin{definition}
+  若$\exists x \in \mathbb{R}^n$, $\delta >0$, 使得$A\subset O(x,\delta)$, 则称$A$为有界集.\par
+  此时对于有界集$A$, 定义其直径为$\text{diam}(A)=\sup \left\{\rho(x,y): x,y\in A\right\}$.\par
+\end{definition}
+
+\begin{theorem}
+  (Bolzano-Weierstrass) 设$A\subset \mathbb{R}^n$是有界集, 则$A$中存在一个收敛的子列.\par
+\end{theorem}
+
+\begin{proof}
+  设$A=\{x_m\}_{m=1}^{\infty}$, 则$\exists M>0$, $\forall m, \rho(x_m,0)<M$.\par
+  于是$\{x_m\}$是有界的, 因此根据一维的Bolzano-Weierstrass定理, $\{x_m\}$中存在一个收敛的子列.\par
+  即$A$中存在一个收敛的子列.\par
+\end{proof}
+
+下面我们对一个集合进行划分, 得到下面三种点的类型:\par
+
+\begin{definition}
+  $E\subset \mathbb{R}^n$, $x_0 \in \mathbb{R}^n$:\par
+  \begin{itemize}
+    \item 若$\exists O(x_0, \delta) \subset E$, 则$x_0$是$E$的内点.
+    \item 若$\exists O(x_0, \delta)$, $O(x_0,\delta)\cap E = \emptyset$, 则$x_0$是$E$的外点.
+    \item 若$\exists O(x_0, \delta)$, $O(x_0,\delta)\cap E \ne \emptyset$, $O(x_0,\delta)\cap E^{c} \ne \emptyset$, 则$x_0$是$E$的边界点.
+  \end{itemize}
+\end{definition}
+
+\begin{proposition}
+  $E$和$E^{c}$的边界点相同.\par
+\end{proposition}
+
+\begin{proof}
+  设$x_0$是$E$的边界点, 则$\exists O(x_0, \delta)$, $O(x_0,\delta)\cap E \ne \emptyset$, $O(x_0,\delta)\cap E^{c} \ne \emptyset$.\par
+  于是$x_0$也是$E^{c}$的边界点.\par
+  反之, 若$x_0$是$E^{c}$的边界点, 则同理可得$x_0$也是$E$的边界点.\par
+\end{proof}
+
+事实上, 我们还有类似的点的定义, 下面给出常用的一些点的定义:\par
+
+\begin{definition}
+  设$E\subset \mathbb{R}^n$, 则称$x_0$为$E$的聚点, 当且仅当$\forall \delta >0$, $\exists x\in E$, $x\ne x_0$, 使得$x\in O(x_0,\delta)$.\par
+  称$x_0$为$E$的孤立点, 当且仅当$\exists \delta >0$, 使得$O(x_0,\delta)\cap E=\{x_0\}$.\par
+\end{definition}
+
+\begin{remark}
+  事实上聚点的定义还有相关等价形式, 描述的内容都是当邻域范围很小时总能找到一个在这个邻域内不同于这个点的点.\par
+\end{remark}
+
+下面我们给出一些关于上面点的全体的定义, 这实际上是下面定义开集和闭集所需要的.\par
+
+\begin{definition}
+  $E$中边界点全体称为边界, 记为$\partial E$.\par
+  $E$中聚点全体称为导集, 记为$E'$.\par
+  $E\cup E'$称为闭包, 记为$\overline{E}$.\par
+\end{definition}
+
+\begin{theorem}
+  设$A,B\subset \mathbb{R}^n$, 则:\par
+  \begin{itemize}
+    \item $A\subset B \Rightarrow A'\subset B'$.
+    \item $A\subset B \Rightarrow \overline{A}\subset \overline{B}$.
+    \item $\left(A\cup B\right)'=A'\cup B'$.
+    \item $\overline{A\cup B}=\overline{A}\cup \overline{B}$.
+  \end{itemize}
+\end{theorem}
+
+\begin{proof}
+  设$A,B\subset \mathbb{R}^n$, 则$A\subset B \Rightarrow A'\subset B'$是显然的, 因为$A'$是$A$的聚点全体, 而$B'$是$B$的聚点全体, 因此$A'$中的点也一定在$B'$中.\par
+  同理, $A\subset B \Rightarrow \overline{A}\subset \overline{B}$也是显然的.\par
+  对于$\left(A\cup B\right)'=A'\cup B'$, 由于$A\cup B$的聚点是$A$和$B$的聚点的并, 因此$\left(A\cup B\right)'=A'\cup B'$.\par
+  对于$\overline{A\cup B}=\overline{A}\cup \overline{B}$, 由于$\overline{A\cup B}= (A\cup B)\cup (A\cup B)'$, 而$(A\cup B)'= A'\cup B'$, 因此$\overline{A\cup B}=\overline{A}\cup \overline{B}$.\par
+\end{proof}
+
+最后我们再给出一个定义, 用于描述集合的密集程度.\par
+
+\begin{definition}
+  若$B$中任意点的任意邻域中都有$A$中的点, 则称$A$在$B$中是稠密的.\par
+  特别地, 若$A$在$\mathbb{R}^n$中是稠密的, 则称$A$是稠密集.\par
+  若不在任何集合中稠密, 则称$A$是疏朗集.\par
+\end{definition}
+
+\begin{remark}
+  我们通过一个例子来理解稠密性: $\mathbb{Q}$在$\mathbb{R}$中是稠密的, 因为对于任意实数$x$和任意$\delta >0$, 都可以找到一个有理数$q\in \mathbb{Q}$, 使得$q\in O(x,\delta)$.\par
+  类似地, 我们也有$\mathbb{Q}$在$\mathbb{R}\backslash \mathbb{Q}$中是稠密的, $\mathbb{R}\backslash \mathbb{Q}$在$\mathbb{Q}$中也是稠密的.\par
+\end{remark}
+
+\begin{theorem}
+  $A$在$B$中稠密当且仅当$B\subset \overline{A}$.\par
+\end{theorem}
+
+\begin{proof}
+  设$A$在$B$中稠密, 则对于任意点$x\in B$, $\forall \delta >0$, $\exists y\in A$, 使得$y\in O(x,\delta)$.\par
+  于是$\forall x\in B$, $x\in \overline{A}$, 因此$B\subset \overline{A}$.\par
+  反之, 若$B\subset \overline{A}$, 则对于任意点$x\in B$, $\forall \delta >0$, $\exists y\in A$, 使得$y\in O(x,\delta)$.\par
+  因此$A$在$B$中稠密.\par
+\end{proof}
+
+\begin{definition}
+  若集合$E$的每一点都为$E$的孤立点, 则$E$为孤立集.\par
+  若集合$E$满足$E'=\emptyset$, 则$E$为离散集.\par
+\end{definition}
+
+\begin{remark}
+  可以验证, 离散集一定是孤立集, 但反之未必, 例如$\mathbb{Z}$是离散集, 但不是孤立集.\par
+\end{remark}
+
+\newpage
+
+\section{开集、闭集及其构造}
+
+上一节我们具体讨论了利用距离来定义点的类型, 以及一些特殊的集合, 现在我们利用这些点的类型来定义开集和闭集.\par
+
+\begin{definition}
+  若$E$中的全部点均为$E$的内点, 则称$E$为开集.\par
+  若$E$包含$E$的全部聚点, 则称$E$为闭集.\par
+\end{definition}
+
+\begin{remark}
+  $\emptyset$和$\mathbb{R}^n$都是既为开集又为闭集, 可以通过定义来验证.\par
+\end{remark}
+
+\begin{theorem}
+  开集有如下等价定义:\par
+  \begin{itemize}
+    \item $E$是开集当且仅当$E\cap (\partial E)=\emptyset$.
+    \item $E$是开集当且仅当$E^c$是闭集.
+  \end{itemize}
+\end{theorem}
+
+\begin{theorem}
+  闭集有如下等价定义:\par
+  \begin{itemize}
+    \item $E$是闭集当且仅当$E'\subset E$.
+    \item $E$是闭集当且仅当$E^c$是开集.
+    \item $E$是闭集当且仅当$E=\overline{E}$.
+    \item $E$是闭集当且仅当$\partial E\subset E$.
+  \end{itemize}
+\end{theorem}
+
+\begin{remark}
+  上面的结果可以根据定义自然得到, 因此这里我们不作证明.\par
+  事实上, 开集和闭集的定义是相对的, 这里我们利用距离来定义开集和闭集, 但我们还可以从拓扑的角度利用连续映射来定义开集和闭集. 在对应的条件下, 我们还可以得到相对开集和相对闭集的定义.\par
+\end{remark}
+
+下面我们讨论开集和闭集作运算后的性质:\par
+
+\begin{theorem}
+  设$A_1,A_2,\cdots A_n \subset \mathbb{R}^n$, $B_1,B_2,\cdots \subset \mathbb{R}^n$, 则:\par
+  \begin{itemize}
+    \item $A_i$均为闭集时, $\bigcup_{i=1}^{n}A_i$是闭集.
+    \item $A_i$均为开集时, $\bigcap_{i=1}^{n}A_i$是开集.
+    \item $B_i$均为闭集时, $\bigcap_{i=1}^{\infty}B_i$是闭集.
+    \item $B_i$均为开集时, $\bigcup_{i=1}^{\infty}B_i$是开集.
+  \end{itemize}
+\end{theorem}
+
+\begin{proof}
+  我们只证明针对闭集的情形, 因为开集可以根据余集得到闭集.\par
+  设$A_i$均为闭集, 则$A_i=\overline{A_i}$, 因此$\bigcup_{i=1}^{n}A_i=\overline{\bigcup_{i=1}^{n}A_i}$. 于是$\bigcup_{i=1}^{n}A_i$是闭集.\par
+  同理, 对于$B_i$均为闭集的情形, 则$\left(\bigcap_{i=1}^{\infty}B_i\right)'\subset \left(\bigcap_{i=1}^{\infty}B_i'\right)\subset \bigcap_{i=1}^{\infty}B_i$, 因此$\bigcap_{i=1}^{\infty}B_i$是闭集.\par
+\end{proof}
+
+\begin{remark}
+  上述结果中$A_i$若为可列个时未必成立, 例如$\bigcup_{k=1}^{+\infty}\left[-1+\frac{1}{k},1-\frac{1}{k}\right]=(-1,1)$和$\bigcup_{k=1}^{+\infty}\left(-1-\frac{1}{k},1+\frac{1}{k}\right)=[-1,1]$.\par
+\end{remark}
+
+我们发现, 开集和闭集都拥有许多优良的性质, 因此我们给这类集合一个新的定义, 这里具体的性质在可测集中有所体现.\par
+
+\begin{definition}
+  若$E$可表示为一列闭集的并, 则称$E$为$F_{\sigma}$集.\par
+  若$E$可表示为一列开集的交, 则称$E$为$G_{\delta}$集.\par
+\end{definition}
+
+\begin{corollary}
+  $F_{\sigma}^c$集是$G_{\delta}$集, $G_{\delta}^c$集是$F_{\sigma}$集.\par
+  $F_{\sigma}$集和$G_{\delta}$集都是Borel集.\par
+\end{corollary}
+
+\begin{proof}
+  由开集和闭集的性质可得$F_{\sigma}^c$集是$G_{\delta}$集, $G_{\delta}^c$集是$F_{\sigma}$集.\par
+  Borel集事实上是由开集和闭集通过有限次的并、交、补运算得到的集合, 因此$F_{\sigma}$集和$G_{\delta}$集都是Borel集. (可以通过验证定义得到)\par
+\end{proof}
+
+下面我们考虑在一维实空间中成立的有限覆盖定理, 这里我们有更具体和一般的表述.\par
+
+\begin{theorem}
+  有界闭集$E\subset \mathbb{R}^n$的任意开覆盖存在有限子覆盖.\par
+\end{theorem}
+
+\begin{remark}
+  这个定理的证明是不太显然的, 但它是实分析中一个非常重要的定理, 其证明可以通过紧性来完成, 我们会在泛函分析中更进一步讨论.\par
+\end{remark}
+
+下面我们来讨论开集和闭集的构造, 在讨论一般的情形前, 我们首先讨论最特殊的区间.\par
+
+\begin{definition}
+  若$(\alpha, \beta)\subset G$且$\alpha \notin G$, $\beta \notin G$, 则称$(\alpha, \beta)$为$G$的构成区间.\par
+\end{definition}
+
+\begin{lemma}
+  任意两个$G$的构成区间不交.\par
+\end{lemma}
+
+\begin{proof}
+  设$(\alpha_1, \beta_1)$和$(\alpha_2, \beta_2)$是$G$的两个构成区间, 则$\alpha_1 < \beta_1$, $\alpha_2 < \beta_2$.\par
+  假设$(\alpha_1, \beta_1)$和$(\alpha_2, \beta_2)$相交, 则$\alpha_1 < \alpha_2 < \beta_1$或$\alpha_2 < \alpha_1 < \beta_2$.\par
+  但这与$\alpha_i \notin G$和$\beta_i \notin G$矛盾.\par
+\end{proof}
+
+\begin{remark}
+  上面的引理说明了构成区间是不交的, 这也就说明了构成区间是唯一的, 因为任意一个开集都可以由一系列不交的构成区间来表示.\par
+\end{remark}
+
+\begin{theorem}
+  任意开集$G\subset \mathbb{R}$都可以表示为至多可数个不交的构成区间的并, 即$G=\bigcup_{i=1}^{\infty}(a_i,b_i)$, 其中$(a_i,b_i)$均为构成区间.\par
+\end{theorem}
+
+\begin{proof}
+  设$G$是开集, 则$G$中任意点都是内点, 因此对于任意点$x\in G$, $\exists \delta >0$, 使得$(x-\delta,x+\delta)\subset G$.\par
+  于是可以将$G$表示为所有这样的区间的并, 即$G=\bigcup_{x\in G}(x-\delta,x+\delta)$.\par
+  而由于构成区间是不交的, 因此可以将这些区间进行合并, 得到至多可数个不交的构成区间的并.\par
+  即$G=\bigcup_{i=1}^{\infty}(a_i,b_i)$, 其中$(a_i,b_i)$均为构成区间.\par
+\end{proof}
+
+于是我们可以得到闭集的构造, 事实上闭集可以看作开集的补集, 因此我们有下面的结论:\par
+
+\begin{theorem}
+  任意闭集$F\subset \mathbb{R}$都可以表示为$\mathbb{R}$和至多可数个不交的构成区间的余集的交.\par
+\end{theorem}
+
+\begin{proof}
+  由闭集的余集为开集可立即得到.\par
+\end{proof}
+
+下面我们再来讨论一般的$\mathbb{R}^n$中的开集和闭集的构造, 事实上我们可以将$\mathbb{R}^n$中的开集和闭集看作是$\mathbb{R}$中的开集和闭集的推广.\par
+
+\begin{theorem}
+  任意开集$G\subset \mathbb{R}^n$都可以表示为至多可数个开区间的并, 即$G=\bigcup_{i=1}^{\infty}I_i$, 其中$I_i$是$\mathbb{R}^n$中的开区间.\par
+\end{theorem}
+
+\begin{proof}
+  我们以二维空间为例, 高维空间类似可证.\par
+  设$G\subset \mathbb{R}^2$是开集, 则$G$中任意点都是内点, 因此对于任意点$(x,y)\in G$, $\exists \delta >0$, 使得$(x-\delta,x+\delta)\times (y-\delta,y+\delta)\subset G$.\par
+  于是可以将$G$表示为所有这样的开区间的并, 即$G=\bigcup_{(x,y)\in G}(x-\delta,x+\delta)\times (y-\delta,y+\delta)$.\par
+  而由于开区间是不交的, 因此可以将这些开区间进行合并, 得到至多可数个开区间的并.\par
+  即$G=\bigcup_{i=1}^{\infty}I_i$, 其中$I_i$是$\mathbb{R}^n$中的开区间.\par
+\end{proof}
+
+\newpage
+
+\section{Cantor集}
+
+前面我们讨论了许多关于开集和闭集的性质, 现在我们来讨论一个特殊的集合, 这个集合在Lebesgue测度意义下十分重要, 因为它体现了Lebesgue测度并不能完美解决所有Riemann积分的问题.\par
+
+\begin{definition}
+  考虑取$[0,1]$, 将其分为三段, 即$[0,\frac{1}{3}]$, $(\frac{1}{3},\frac{2}{3})$, $[\frac{2}{3},1]$, 然后去掉中间的$(\frac{1}{3},\frac{2}{3})$, 剩下的部分是$C_1=[0,\frac{1}{3}]\cup [\frac{2}{3},1]$.\par
+  然后再将$C_1$分为三段, 即$[0,\frac{1}{9}]$, $(\frac{1}{9},\frac{2}{9})$, $[\frac{2}{9},\frac{1}{3}]\cup [\frac{2}{3},\frac{7}{9}]\cup [\frac{8}{9},1]$, 然后去掉中间的$(\frac{1}{9},\frac{2}{9})\cup (\frac{2}{9},\frac{7}{9})$, 剩下的部分是$C_2=[0,\frac{1}{9}]\cup [\frac{2}{9},\frac{1}{3}]\cup [\frac{2}{3},\frac{7}{9}]\cup [\frac{8}{9},1]$.\par
+  以此类推, 我们可以得到一系列的集合$C_n$, 其中$C_n$是$C_{n-1}$去掉中间的部分后得到的集合.\par
+  最终我们定义Cantor集为$C=\bigcap_{n=1}^{\infty}C_n$, 即Cantor集是所有$C_n$的交.\par
+\end{definition}
+
+\begin{remark}
+  通过这种方法定义的集合还有很多种, 例如胖Cantor集, 其定义方法与Cantor集类似, 但去掉的部分不同. 这些集合在Lebesgue测度中有着重要的地位, 都是后面Lebesgue测度论中的典型反例.\par
+\end{remark}
+
+下面我们进一步讨论Cantor集的性质.\par
+
+\begin{proposition}
+  Cantor集$C$中的每个点都是聚点.\par
+\end{proposition}
+
+\begin{proof}
+  设$x\in C$, 则$x$是$C_n$的聚点, 因为$C_n$是由去掉中间部分后得到的集合, 而去掉的部分是开区间, 因此对于任意$\delta >0$, 都可以找到一个点在$C_n$中, 且在$x$的$\delta$邻域内.\par
+  由于$C=\bigcap_{n=1}^{\infty}C_n$, 因此$x$也是所有$C_n$的聚点, 即$x$是Cantor集中的聚点.\par
+\end{proof}
+
+\begin{corollary}
+  Cantor集是闭集.\par
+\end{corollary}
+
+\begin{proposition}
+  Cantor集是疏朗集.\par
+\end{proposition}
+
+\begin{proof}
+  假设Cantor集是不疏朗的, 则存在$\delta >0$, 使得$C$的每个点的$\delta$邻域内都有Cantor集中的点.\par
+  但由于Cantor集是由去掉中间部分后得到的集合, 其中不含任何区间, 因此对于任意点$x\in C$, $\exists \varepsilon >0$, 使得$(x-\varepsilon,x+\varepsilon)\cap C=\emptyset$.\par
+  这与假设矛盾, 因此Cantor集是疏朗集.\par
+\end{proof}
+
+
+\btocgroup
+\UseTocStyle{chapter}{emph}{toc}
+\chapter{Lebesgue测度}
+
+\etocgroup
+
+\section{外测度}
+
+在一般的微积分中, 我们会选择区间和对应的长度来衡量集合的大小, 因为我们发现这是定义和运算微积分的前提. 而对于在第一章中定义的各种不同集合, 我们也需要类似的一种方法来定义集合的大小, 这就自然考虑到下面提及的外测度和测度.\par
+
+\begin{definition}
+  设$E\subset \mathbb{R}^n$, 则称$E$的外测度为
+  \begin{equation*}
+    m^{*}(E)=\inf\left\{\sum_{i=1}^{\infty}|I_i|: E\subseteq \bigcup_{i=1}^{\infty}I_i\right\},
+  \end{equation*}
+  其中$I_i$是$\mathbb{R}^n$中的开区间, $|I_i|$是$I_i$的体积.\par
+\end{definition}
+
+\begin{example}
+  考虑两个最特殊的集合$\mathbb{R}$和$\phi$, 我们有$m^{*}(\mathbb{R})=\infty$和$m^{*}(\phi)=0$.\par
+\end{example}
+
+\begin{proposition}
+  外测度具有如下性质:\par
+  \begin{itemize}
+    \item (外测度非负性) $m^{*}(E)\geqslant 0$.
+    \item (外测度的等价定义) $m^{*}(E)=a<\infty \Leftrightarrow \forall \varepsilon >0, \exists \{I_k\}, E\subset \bigcup_{k=1}^{\infty}I_k, \sum_{k=1}^{\infty}|I_k|<a+\varepsilon$
+  \end{itemize}
+\end{proposition}
+
+\begin{proof}
+  考虑到外测度是由若干开区间的并构成的, 且开区间的体积总是非负的, 因此外测度一定非负.\par
+  根据下确界的定义, 如果$m^{*}(E)=\inf\left\{\sum_{i=1}^{\infty}|I_i|: E\subseteq \bigcup_{i=1}^{\infty}I_i\right\}$.\par
+  则$\forall \varepsilon >0$, 都存在一组开区间$\{I_k\}$, 使得$E\subset \bigcup_{k=1}^{\infty}I_k$且$\sum_{k=1}^{\infty}|I_k|<m^{*}(E)+\varepsilon$.\par
+\end{proof}
+
+\begin{corollary}
+  $\mathbb{R}^n$中可列点集的外测度为0.\par
+\end{corollary}
+
+\begin{proof}
+  首先考虑$\mathbb{R}^1$上的情形, 设$E=\{r_1,r_2,\cdots\}$, 并且首先考虑$r_1$, 此时应当有$\forall \delta >0, I_{\delta} = (p-\delta,p+\delta)\supset E$.\par
+  于是$m^{*}(\{r_1\})=\inf\left\{\sum_{i=1}^{\infty}|I_i|: E\subseteq \bigcup_{i=1}^{\infty}I_i\right\}\leqslant |I_{\delta}|=2\delta.$\par
+  令$\delta \to 0$, 则$m^{*}(\{r_1\})=0$.\par
+  对于$r_2$, 同理有$m^{*}(\{r_2\})=0$.\par
+  于是对于$\{r_1,r_2,\cdots\}$, 由于$\{r_1,r_2,\cdots\}$是可列点集, 因此可以找到一组开区间$\{I_k\}$, 使得$E\subset \bigcup_{k=1}^{\infty}I_k$且$\sum_{k=1}^{\infty}|I_k|<\varepsilon$.\par
+  而对于$\mathbb{R}^n$上的情形, 可将其看作$\mathbb{R}^1$上的可列点集的乘积, 因此同样有$m^{*}(E)=0$.\par
+\end{proof}
+
+\begin{proposition}
+  (外测度的单调性) 若$E\subset F$, 则$m^{*}(E)\leqslant m^{*}(F)$.\par
+\end{proposition}
+
+\begin{proof}
+  由外测度的定义, $\exists \{I_k\}, F\subset \bigcup_{k=1}^{\infty}I_k, \sum_{k=1}^{\infty}|I_k|<m^{*}(F)+\varepsilon$.\par
+  因为$E\subset F$, 所以$E\subset \bigcup_{k=1}^{\infty}I_k$, 因此$m^{*}(E)\leqslant m^{*}(F)$.\par
+\end{proof}
+
+\begin{corollary}
+  $m^{*}((a,b))=b-a$, $m^{*}([a,b])=b-a$.\par
+\end{corollary}
+
+\begin{proof}
+  显然$(a,b)$和$[a,b]$都可以被开区间$(a-\varepsilon,b+\varepsilon)$所覆盖, 且其体积为$b-a+2\varepsilon$, 因此当$\varepsilon \to 0$时, 有$m^{*}((a,b))=b-a$和$m^{*}([a,b])=b-a$.\par
+\end{proof}
+
+\begin{remark}
+  上述结论推广至$\mathbb{R}^n$上也是成立的, 综合上面两个推论的证明即可.\par
+  对于区间某一端点为开的情形, 结论也是成立的, 这里只需要考虑开区间的另一端即可.\par
+\end{remark}
+
+\begin{theorem}
+  (外测度的平移不变性) 设$E\subset \mathbb{R}^n$, $x+E=\{x+y:y\in E\}$, 则$m^{*}(E)=m^{*}(x+E)$.\par
+\end{theorem}
+
+\begin{proof}
+  这是很显然的, 因为对于每个满足$m^{*}(E)=\inf\left\{\sum_{i=1}^{\infty}|I_i|: E\subseteq \bigcup_{i=1}^{\infty}I_i\right\}$的开区间$I_i$, 都可以通过平移得到满足$m^{*}(x+E)=\inf\left\{\sum_{i=1}^{\infty}|J_i|: x+E\subseteq \bigcup_{i=1}^{\infty}J_i\right\}$的开区间.\par
+  而对于每个$I_i$和$J_i$, 都有$|I_i|=|J_i|$, 因此有$m^{*}(E)=m^{*}(x+E)$.\par
+\end{proof}
+
+上面讨论了外测度的各种基本性质, 在一般微积分中我们可以自然做集合的各种运算, 其长度都是良好定义的, 因此接下来我们将讨论外测度的可加性.\par
+
+\begin{theorem}
+  (外测度的次可加性) 设$E_1, \cdots, E_n\subset \mathbb{R}^n$, 则有$m^{*}\left(\bigcup_{k=1}^{\infty}E_k\right)\leqslant \sum_{k=1}^{\infty}m^{*}(E_k)$.\par
+\end{theorem}
+
+\begin{proof}
+  若$\exists E_{n_0}, m^{*}(E_{n_0})=\infty$, 则$\sum_{k=1}^{\infty}m^{*}(E_k)=\infty$, 此时显然成立.\par
+  若$\forall n, m^{*}(E_n)<\infty$, 则$\forall E_k$ 都有$\forall \varepsilon >0, \exists \{I_{k_j}\}, E_k\subset \bigcup_{k=1}^{\infty}I_{k_j}, m^{*}(E_k)\leqslant \sum_{j=1}^{\infty}|I_{k_j}|<m^{*}(E_k)+\frac{\varepsilon}{2^k}$.\par
+  于是$\sum_{k=1}^{\infty}m^{*}(E_k)+\varepsilon \geqslant m^{*}(\bigcup_{k=1}^{\infty}E_k)$. 即成立.\par
+\end{proof}
+
+\begin{theorem}
+  (外测度的分离可加性) 设$E_1, \cdots, E_n\subset \mathbb{R}^n$, 若$\forall i,j, \rho(E_i,E_j)>0$, 则有$m^{*}\left(\bigcup_{k=1}^{\infty}E_k\right)= \sum_{k=1}^{\infty}m^{*}(E_k)$.\par
+\end{theorem}
+
+\begin{proof}
+  若$\forall i,j, \rho(E_i,E_j)>0$, 则总可以把每个$E_i$都拆成若干不相交的小区间, 即$E_i=\bigcup_{k=1}^{\infty}E_{i_k}$, $E_j=\bigcup_{k=1}^{\infty}E_{j_k}$且$\left(\bigcup_{k=1}^{\infty}E_{i_k}\right)\cap \left(\bigcup_{k=1}^{\infty}E_{j_k}\right) = \phi $.\par
+  于是对于每个$E_i$, 都可以找到恰好满足$m^{*}(E_i)=\sum_{i=1}^{\infty}m^{*}(E_{i_k})$的开区间, 使得$E_i\subset \bigcup_{k=1}^{\infty}I_{i_k}$.\par
+  因此有$m^{*}\left(\bigcup_{i=1}^{\infty}E_i\right)= \sum_{i=1}^{\infty}m^{*}(E_i)$.\par
+\end{proof}
+
+\begin{remark}
+  一般情形的集合的外测度不满足可列可加性.\par
+\end{remark}
+
+\newpage
+
+\section{可测集及其测度}
+
+上一节我们提到外测度的可加性是必须满足一定条件才能成立的, 因此对于更特殊的集合, 始终满足可加性的集合就说明其存在一种良好的性质. 因此这里我们就从可加性的角度来考虑集合可测性.\par
+
+\begin{theorem}
+  设$E$和$F$是定义在$\mathbb{R}^n$上的开区间, 若$E\cap F = \phi$, 则$m^{*}(E\cup F)= m^{*}(E)+m^{*}(F)$.\par
+\end{theorem}
+
+\begin{proof}
+  首先由次可加性有$m^{*}(E\cup F)\leqslant m^{*}(E)+m^{*}(F)$. 因此下面证明另一个方向的不等式.\par
+  考虑$E\subset \bigcup_{i=1}^{\infty}(E\cap I_i)$, 其中$I_i$是开区间, 于是有$m^{*}(E)\leqslant \sum_{i=1}^{\infty}|E\cap I_i|$.\par
+  对于$F$, 也有$m^{*}(F)\leqslant \sum_{i=1}^{\infty}|F\cap J_i|$.\par
+  由于$E\cap F = \phi$, $I_i=(I_i\cap E)\cup (I_i\cap F)\cup (I_i\backslash (E\cup F))$. 因此$|I_i|\geqslant |I_i\cap E|+|I_i\cap F|$.\par
+  由外测度定义可知, $\forall \varepsilon >0, \exists \{I_i\}, m^{*}(E\cup F)\leqslant \sum_{i=1}^{\infty}|I_i|\leqslant m^{*}(E\cup F)+\varepsilon$.\par
+  于是$m^{*}(E\cup F)+\varepsilon \geqslant \sum_{i=1}^{\infty}|I_i\cap E|+|I_i\cap F|\geqslant m^{*}(E)+m^{*}(F)$.\par
+  因此有$m^{*}(E\cup F)= m^{*}(E)+m^{*}(F)$.\par
+\end{proof}
+
+\begin{remark}
+  如果考虑集合的等价表示, 上面的定理还有另一种写法.\par
+\end{remark}
+
+\begin{corollary}
+  设$E$和$F$是定义在$\mathbb{R}^n$上的开区间, 若$E\cap F = \phi$, $E\cup F=I$ 则$m^{*}(E\cup F)= m^{*}(I\cap E)+m^{*}(I\cap E^c)$.\par
+\end{corollary}
+
+\begin{corollary}
+  设$E$和$F$是定义在$\mathbb{R}^n$上的任意集合, $\exists I$是开区间, 使得$E\subset I$, $F\subset I^c$, 则$m^{*}(E\cup F)= m^{*}(E)+m^{*}(F)$.\par
+\end{corollary}
+
+\begin{proof}
+  类似地, 作$m^{*}(E)\leqslant \sum_{k=1}^{\infty}|I\cap I_k|$和$m^{*}(F)\leqslant \sum_{k=1}^{\infty}|I^c\cap I_k|$.\par
+  则由$E\cap F=\phi$, $I_k=(I_k\cap I)\cup (I_k\cap I^c)$, 此时有$|I_k|=|I_k\cap I|+|I_k\cap I^c|$.\par
+\end{proof}
+
+我们发现, 上面的定理和推论都满足可加性, 这说明这些集合具有良好的性质. 而对于一般的集合, 满足这种可加性被称为Carathéodory条件, 其定义如下:\par
+
+\begin{definition}
+  设$E\subset \mathbb{R}^n$, 则称$E$满足Carathéodory条件, 当且仅当$\forall T\subset \mathbb{R}^n, m^{*}(T)=m^{*}(T\cap E)+m^{*}(T\cap E^c)$.\par 
+\end{definition}
+
+\begin{remark}
+  上面的定义说明, 满足Carathéodory条件的集合, 在任意集合上都满足可加性. 这为下面定义可测集提供了一种方式.\par
+\end{remark}
+
+\begin{definition}
+  设$E\subset \mathbb{R}^n$, 则$E$是可测集当且仅当$E$满足Carathéodory条件.\par
+  若$E$是可测的, 则定义其测度为$m(E)=m^{*}(E)$.\par
+  记$\mathcal{M}$为所有可测集的集合, $\mathcal{M}$表示可测集族.\par
+\end{definition}
+
+\begin{remark}
+  由次可加性知, 从定义角度说明一个集合可测只需证$\forall T\subset \mathbb{R}^n, m^{*}(T)\geqslant m^{*}(T\cap E)+m^{*}(T\cap E^c)$.\par
+  另一方面, 可以发现测度是外测度的一个限制, 因此测度满足外测度的所有性质, 但反之未必.\par
+  此外, 任何集合都可以定义外测度, 但并不是所有集合都可以定义测度.\par
+\end{remark}
+
+上面这种条件是针对所有集合的可测性来分析的, 下面我们给出一些定理, 说明一些特殊的集合的可测性可以通过更简单的方法得到.\par
+
+\begin{theorem}
+  (余集的可测性) $E$可测等价于$E^c$可测.\par
+\end{theorem}
+
+\begin{proof}
+  由Carathéodory条件知, $\forall T\subset \mathbb{R}^n, m^{*}(T)=m^{*}(T\cap E)+m^{*}(T\cap E^c)$.\par
+  则有$m^{*}(T)=m^{*}(T\cap E^c)+m^{*}(T\cap E)$, 因此$E^c$满足Carathéodory条件, 即$E^c$可测. 反之亦然.\par
+\end{proof}
+
+\begin{theorem}
+  若$m^{*}(E)=0$, 则$E$是可测的.\par
+\end{theorem}
+
+\begin{proof}
+  由定义, 只需验证$\forall T\subset \mathbb{R}^n, m^{*}(T)\geqslant m^{*}(T\cap E)+m^{*}(T\cap E^c)$.\par
+  由$m^{*}(E)=0$, 有$m^{*}(T\cap E)\leqslant m^{*}(E)=0$.\par
+  再考虑$T\cap E\subset E$, $(T\cap E)\cup (T\cap E^c)=T$, 于是$m^{*}(T\cap E^c)\leqslant m^{*}(T)$.\par
+  因此有$m^{*}(T)\geqslant m^{*}(T\cap E)+m^{*}(T\cap E^c)$, 即$E$是可测的.\par
+\end{proof}
+
+\begin{corollary}
+  可列集是可测集.\par
+\end{corollary}
+
+\begin{proof}
+  由上面的定理, 外测度为0的集合可测. 而可列集的外测度为0, 因此可列集是可测集.\par
+\end{proof}
+
+\begin{theorem}
+  $E$是可测集, $A\subset E$, $B\subset E^c$当且仅当$m^{*}(A\cup B)=m^{*}(A)+m^{*}(B)$.\par
+\end{theorem}
+
+\begin{proof}
+  由Carathéodory条件知, $\forall T\subset \mathbb{R}^n, m^{*}(T)=m^{*}(T\cap E)+m^{*}(T\cap E^c)$.\par
+  由$T$的任意性, 令$A=T\cap E$, $B=T\cap E^c$, 则有$m^{*}(T)=m^{*}(A)+m^{*}(B)$.\par
+  考虑反方向, 设$T=A\cup B$, 由$E$可测, 有$m^{*}(T)=m^{*}(A\cup B)=m^{*}(A)+m^{*}(B)$.\par
+  于是有$m^{*}(T\cap E)=m^{*}(A)$, $m^{*}(T\cap E^c)=m^{*}(B)$. 即说明$E$可测.\par
+\end{proof}
+
+我们再进一步考虑可测集之间作运算, 是否有类似的结果. 事实上可测集之间的运算是封闭的, 其性质如下:\par
+
+\begin{proposition}
+  (集合运算的封闭性) 设$E,F$是可测集, 则:\par
+  \begin{itemize}
+    \item $E\cup F$是可测集.
+    \item $E\cap F$是可测集.
+    \item $E\backslash F$是可测集.
+  \end{itemize}
+\end{proposition}
+
+\begin{proof}
+  首先考虑$E\cup F$, 往证$\forall T\subset \mathbb{R}^n, m^{*}(T)=m^{*}(T\cap (E\cup F))+m^{*}(T\cap (E\cup F)^c)$.\par
+  注意到$m^{*}(T\cap (E\cup F))=m^{*}(T\cap E)+m^{*}((T\cap F)\backslash E)$, 再由$E$和$F$可测, 有$m^{*}(T)=m^{*}(T\cap E)+m^{*}(T\cap E^c)$, $m^{*}(T\cap E^c)=m^{*}(T\backslash (E\cup F))+m^{*}(T\cap (F\backslash E))$.\par
+  于是$\forall T\subset \mathbb{R}^n, m^{*}(T)=m^{*}(T\cap (E\cup F))+m^{*}(T\cap (E\cup F)^c)$.\par
+  考虑$E\cap F$, 注意到$E\cup F$已经可测, 因此取余集, $E^c$和$F^c$可测可推出$E\cap F=(E^c\cup F^c)^c$也是可测的.\par
+  对于$E\backslash F$, 注意到$E\backslash F=E\cap F^c$, 因此由上面的结论可知$E\backslash F$也是可测的.\par
+\end{proof}
+
+\begin{corollary}
+  (有限并的封闭性) 设$E_1,\cdots, E_n$是两两不交的可测集, 则:\par
+  \begin{itemize}
+    \item $m^{*}(T\cap (\bigcup_{i=1}^{n}E_i))=\sum_{i=1}^{n}m^{*}(T\cap E_i)$.
+    \item $m(\bigcup_{i=1}^{n}E_i)=\sum_{i=1}^{n}m(E_i)$.
+  \end{itemize}
+\end{corollary}
+
+\begin{proof}
+  由上面的结论, 用归纳法, $\forall T\subset \mathbb{R}^n, m^{*}(T\cap (E_1 \cup E_2))=m^{*}(T\cap E_1)+m^{*}(T\cap E_2)$. 依次作有限次可得.\par
+  对于一般情形, 取$T=\mathbb{R}^n$即可.\par
+\end{proof}
+
+\begin{corollary}
+  (可列并的封闭性) 设$E_1,\cdots, E_n,\cdots $是两两不交的可测集, 则:\par
+  \begin{itemize}
+    \item $m^{*}(T\cap (\bigcup_{i=1}^{\infty}E_i))=\sum_{i=1}^{\infty}m^{*}(T\cap E_i)$.
+    \item $m(\bigcup_{i=1}^{\infty}E_i)=\sum_{i=1}^{\infty}m(E_i)$.
+  \end{itemize}
+\end{corollary}
+
+\begin{proof}
+  考虑$\forall T\subset \mathbb{R}^n, m^{*}(T)=m^{*}(T\cap (\bigcup_{i=1}^{n}E_i))+m^{*}(T\cap (\bigcup_{i=1}^{n}E_i)^c)$.\par
+  注意到$m^{*}(T)=m^{*}(T\cap (\bigcup_{i=1}^{n}E_i))= \sum_{i=1}^{n}m^{*}(T\cap E_i)$, $m^{*}(T\cap (\bigcup_{i=1}^{n}E_i)^c)\geqslant m^{*}(T\cap (\bigcup_{i=1}^{\infty}E_i)^c)$.\par
+  于是$m^{*}(T)\geqslant \sum_{i=1}^{n}m^{*}(T\cap E_i)+m^{*}(T\cap (\bigcup_{i=1}^{\infty}E_i)^c)$.\par
+  令$n\to \infty$, 则有$m^{*}(T)\geqslant \sum_{i=1}^{\infty}m^{*}(T\cap E_i)+m^{*}(T\cap (\bigcup_{i=1}^{\infty}E_i)^c)\geqslant m^{*}(\bigcup_{i=1}^{\infty}(T\cap E_i))+m^{*}(T\cap (\bigcup_{i=1}^{\infty}E_i)^c) = m^{*}(T\cap (\bigcup_{i=1}^{\infty}E_i))+m^{*}(T\cap (\bigcup_{i=1}^{\infty}E_i)^c)$.\par
+  因此有$m^{*}(T\cap (\bigcup_{i=1}^{\infty}E_i))=\sum_{i=1}^{\infty}m^{*}(T\cap E_i)$.\par
+  对于一般情形, 取$T=\mathbb{R}^n$即可.\par
+\end{proof}
+
+这里我们进一步讨论了无穷多个可测集的性质, 更进一步, 我们还可以讨论单调集列的可测性, 并对应得到这些集列的极限的集合的测度的计算方法.\par
+
+\begin{theorem}
+  (下连续性) 设$\{E_n\}$是递增集列, 则$\lim_{n \to \infty}E_n$可测, 且$m(\bigcup_{n=1}^{\infty}E_n)=\lim_{n \to \infty}m(E_n)$.\par
+  (上连续性) 设$\{E_n\}$是递减集列, 且$\exists E_{n_0}, m(E_{n_0})<\infty$, 则$\lim_{n \to \infty}E_n$可测, 且$m(\bigcap_{n=1}^{\infty}E_n)=\lim_{n \to \infty}m(E_n)$.\par
+\end{theorem}
+
+\begin{proof}
+  先证明下连续性, 显然递增集列有$m(\bigcup_{n=1}^{\infty}E_n)=m(\lim_{n \to \infty}E_n)$.\par
+  取$F_k=E_k \backslash E_{k-1}, \forall k \geqslant 2$, $F_1=E_1$, $E_0=\phi$, 则$\{F_k\}$是两两不交的可测集, 且$\bigcup_{k=1}^{\infty}F_k=\bigcup_{n=1}^{\infty}E_n$.\par
+  于是$m(\bigcup_{n=1}^{\infty}E_n)=m(\bigcup_{k=1}^{\infty}F_k) = \sum_{k=1}^{\infty}m(F_k)=\lim_{n \to \infty} m(\bigcup_{k=1}^{n}F_k)=\lim_{n \to \infty}m(E_n)$.\par
+  对于上连续性, 我们首先构造$F_{i}=E_1\backslash E_{i}$, 则当$\exists E_{n_0}, m(E_{n_0})<\infty$时有$\{F_i\}$单增可测.\par
+  于是由下连续性可得.\par
+\end{proof}
+
+\begin{corollary}
+  设$\{E_n\}$可测, 且$\sum_{i=1}^{\infty}m(E_i)<\infty$, 则$m(\limsup_{i \to \infty} E_i)=0$.\par
+\end{corollary}
+
+\begin{proof}
+  $m(\limsup_{i \to \infty} E_i)=\lim_{k \to \infty} m(\bigcup_{i=k}^{\infty}E_i)\leqslant \sum_{i=k}^{\infty}m(E_i)$.\par
+\end{proof}
+
+\begin{remark}
+  这实际上是Borel- Cantelli引理, 其结果将在各种收敛关系的证明中用到.\par
+\end{remark}
+
+最后我们再讨论一些特殊集合的测度.\par
+
+\begin{proposition}
+  Cantor集的测度为0.\par
+\end{proposition}
+
+\begin{proof}
+  Cantor集是通过不断去掉中间的三分之一部分得到的, 因此其外测度为0. 因此测度为0.\par
+\end{proof}
+
+\newpage
+
+\section{可测集族}
+
+在讨论了一般的可测集的性质后, 我们更进一步讨论可测集族的性质. 这是一种很自然的想法, 例如讨论定义在区间上的微积分, 我们实际上是讨论了一般区间的一些性质. 因此这里我们也从区间开始研究.\par
+
+\begin{theorem}
+  $\mathbb{R}^n$上任意区间$I$可测, 且$m(I)=|I|$.\par
+\end{theorem}
+
+\begin{proof}
+  易知区间的外测度$m^{*}(I)=|I|$. 同时区间又满足测度的可加性, 因此区间可测.\par
+\end{proof}
+
+\begin{corollary}
+  $m(\mathbb{R}^n)=\infty$.\par
+\end{corollary}
+
+\begin{proof}
+  由上可知, $\mathbb{R}^n$可以被任意大的区间所覆盖, 因此其测度为无穷大.\par
+\end{proof}
+
+下面我们考虑更一般的可测集, 因此首先我们考虑用更一般的集合来定义外测度.\par
+
+\begin{lemma}
+  设$E\subset \mathbb{R}^n$, 则$m^{*}(E)=\inf\{m(G): E\subset G \}$. 其中$G$为开集.\par
+\end{lemma}
+
+\begin{proof}
+  由外测度的单调性, $m^{*}(E)\leqslant m^{*}(G)=m(G)$.\par
+  若$m^{*}(E)=\infty$, 则显然成立.\par
+  若$m^{*}(E)<\infty$, 则$\exists \{I_k\}, E\subset \bigcup_{k=1}^{\infty}I_k, m^{*}(E)\leqslant \sum_{k=1}^{\infty}|I_k|<m^{*}(E)+\varepsilon<\infty$.\par
+  此时令$G=\bigcup_{k=1}^{\infty}I_k$, 则$E\subset G$, 且$m(G)\leqslant \sum_{k=1}^{\infty}|I_k|<m^{*}(E)+\varepsilon$.\par
+  于是有$m^{*}(E)\leqslant m(G)$, 因此$m^{*}(E)=\inf\{m(G): E\subset G \}$.\par
+\end{proof}
+
+\begin{lemma}
+  开集和闭集均为可测集.\par
+\end{lemma}
+
+\begin{proof}
+  由上面的引理, 对于开集$G$, 有$m^{*}(G)=\inf\{m(H): G\subset H \}$, 其中$H$为开集.\par
+  因此$G$满足Carathéodory条件, 即$G$是可测集.\par
+  对于闭集$F$, 注意到$F^c$是开集, 因此由上面的引理知$m^{*}(F^c)=\inf\{m(G): F^c\subset G \}$, 其中$G$为开集.\par
+  因此$F^c$满足Carathéodory条件, 即$F^c$是可测集. 于是由余集的可测性知, $F$也是可测集.\par
+\end{proof}
+
+\begin{theorem}
+  Borel集是可测集.\par
+\end{theorem}
+
+\begin{proof}
+  Borel集是由开集和闭集通过有限次并、交、补运算得到的集合, 由于开集和闭集都是可测集, 因此由上面的结论知, Borel集也是可测集.\par
+\end{proof}
+
+通过上面的讨论, 我们更进一步得到Borel集和可测集的关系, 即Borel集是可测集的一个子集. 事实上, 这是一个真子集. 接下来我们给出可测集的另外一些等价定义.\par
+
+\begin{lemma}
+  以下命题等价:\par
+  \begin{itemize}
+    \item $E$是可测集.
+    \item $\forall \varepsilon>0, \exists F\subset E\subset G, m^{*}(G\backslash F)<\varepsilon $, 其中$F$为闭集, $G$为开集.
+  \end{itemize}
+\end{lemma}
+
+\begin{proof}
+  若$E$是可测集, 则$\exists F\subset E, m(E\backslash F)<\frac{\varepsilon}{2}$, 其中$F$为开集.\par
+  同理$\exists G^c\subset E^c, m(E^c\backslash G^c)=m(G\backslash E)<\frac{\varepsilon}{2}$, 其中$G^c$为开集.\par
+  于是$F\subset E\subset G$, 且$m(G\backslash F)<m(E\backslash F)+m(G\backslash E)<\varepsilon$.\par
+  反之, 若$\exists F\subset E\subset G, m^{*}(G\backslash F)<\varepsilon $, 其中$F$为闭集, $G$为开集. 下证$E$可测.\par
+  于是$\forall k>0, \exists F_k\subset E\subset G_k, m^{*}(G_k\backslash F_k)<\frac{1}{k}$. 其中$F_k$为闭集, $G_k$为开集.\par
+  $m^{*}(E\backslash F_k)\leqslant m^{*}(G_k\backslash F_k)<\frac{1}{k}$, 因此$\lim_{k \to \infty}m^{*}(E\backslash F_k)=0$.\par
+  即$m^{*}(E\cap (\bigcup_{k=1}^{\infty}F_k))=0$. $E\cap (\bigcup_{k=1}^{\infty}F_k)$可测.\par
+  又有$\bigcup_{k=1}^{\infty}F_k$可测, 于是$E$可测.\par
+\end{proof}
+
+\begin{theorem}
+  以下命题等价:\par
+  \begin{itemize}
+    \item $E$是可测集.
+    \item $\exists H\supset E, m^{*}(H\backslash E)=0$, 其中$H$为$G_{\delta}$集.
+    \item $\exists K\subset E, m^{*}(E\backslash K)=0$, 其中$K$为$F_{\sigma}$集.
+    \item $\exists K\subset E\subset H, m(H\backslash K)=0$, 其中$K$为$F_{\sigma}$集, $H$为$G_{\delta}$集.
+  \end{itemize}
+\end{theorem}
+
+\begin{proof}
+  由上面的定理, 我们已经有$E$可测当且仅当$\forall \varepsilon>0, \exists F\subset E\subset G, m^{*}(G\backslash F)<\varepsilon $, 其中$F$为闭集, $G$为开集.\par
+  首先考虑$E$可测推出$\exists H\supset E, m^{*}(H\backslash E)=0$, 其中$H$为$G_{\delta}$集.\par
+  由$E$可测, $\forall k>0, \exists F\subset E\subset G, m^{*}(G\backslash F)<\frac{1}{k} $, 其中$F$为闭集, $G$为开集.\par
+  于是$H=\bigcap_{k=1}^{\infty}G_k$是$G_{\delta}$集, 且$H\supset E$, $m^{*}(H\backslash E)\leqslant m^{*}(G_k\backslash F_k)<\frac{1}{k}$.\par
+  令$k\to \infty$, 则$m^{*}(H\backslash E)=0$. 由$H$可测知$E$可测.\par
+  类似地, 也可以得到$\exists K\subset E, m^{*}(E\backslash K)=0$, 其中$K$为$F_{\sigma}$集.\par
+  反之, 若$\exists H\supset E, m^{*}(H\backslash E)=0$, 其中$H$为$G_{\delta}$集. 下证$E$可测.\par
+  由$H$为$G_{\delta}$集, $\exists G_k\supset E, m^{*}(G_k\backslash E)<\frac{1}{k}$, 其中$G_k$为开集.\par
+  于是$E\subset G_k$, 且$m^{*}(G_k\backslash E)<\frac{1}{k}$. 令$k \to \infty$, 则$m^{*}(H\backslash E)=0$. 由$H$可测知$E$可测.\par
+  类似地, 也可以得到$\exists K\subset E, m^{*}(E\backslash K)=0$, 其中$K$为$F_{\sigma}$集.\par
+  下证$E$可测当且仅当$\exists K\subset E\subset H, m(H\backslash K)=0$, 其中$K$为$F_{\sigma}$集, $H$为$G_{\delta}$集.\par
+  考虑$E$可测有$\exists H\supset E, m^{*}(H\backslash E)=0$, 其中$H$为$G_{\delta}$集. $\exists K\subset E, m^{*}(E\backslash K)=0$, 其中$K$为$F_{\sigma}$集.\par
+  于是有$m^{*}(H\backslash K)\leqslant m^{*}(H\backslash E)+m^{*}(E\backslash K)=0+0=0$. 由$H$为$G_{\delta}$集, $K$为$F_{\sigma}$集, 则$m(H\backslash K)=0$.\par
+  下证反方向的命题, 设$\exists K\subset E\subset H, m(H\backslash K)=0$, 其中$K$为$F_{\sigma}$集, $H$为$G_{\delta}$集.\par
+  考虑$m^{*}(H\backslash E)\leqslant m^{*}(H\backslash K)=0$, $m^{*}(E\backslash K)\leqslant m^{*}(H\backslash K)=0$.\par
+  又有$H$为$G_{\delta}$集, $K$为$F_{\sigma}$集, 于是有$E$可测.\par
+\end{proof}
+
+更进一步讨论, 我们有关于可测集族的更显然的性质.\par
+
+\begin{theorem}
+  可测集族构成$\sigma$-代数.\par
+\end{theorem}
+
+\begin{proof}
+  可测集族具有封闭性: 设$E,F$是可测集, 则$E\cup F$, $E\cap F$和$E\backslash F$都是可测集.\par
+  再考虑可测集族的补运算, 由余集的可测性知, 若$E$是可测集, 则$E^c$也是可测集.\par
+  最后考虑可测集族的可列并和交运算, 由上面的定理知, 可测集族在有限并和交下封闭. 因此在可列并和交下也封闭.\par
+  综上所述, 可测集族在补、并、交下封闭, 因此构成$\sigma$-代数.\par
+\end{proof}
+
+\newpage
+
+\section{不可测集}
+
+上面所有的讨论都是围绕可测集展开的, 下面我们考虑这样的定义方式是否会导致一些不可测集的出现. 然而在实际问题中, 我们发现尽管不可测集总是存在的, 但其总是不如可测集出现的频繁, 更进一步, 我们还需要讨论不可测集和可测集的数量的比较.\par
+
+\begin{theorem}
+  (Vitali集) $\mathbb{R}$上存在不可测集.\par
+\end{theorem}
+
+\begin{proof}
+  首先考虑$\mathbb{R}$上的开区间$E=(0,1)$, 我们下面构造$A\subset E$, 使得$A$不可测.\par
+  对于$x,y \in E$, 若$x-y \in \mathbb{Q}$, 则称$x$和$y$是等价的.\par
+  下面我们将$E$上所有点进行分类, 所有有同一等价关系的点集中任取一点, 记为$A$, 则$A$是不可测的.\par
+  事实上, 根据可测集的推论可知, 不可测集的外测度一定大于0, 即$\exists x\in \left(A-A\right)\cap \mathbb{Q}, x\ne 0$.\par
+  于是$\exists y,z \in A, y-z=x, y\ne z$, 与$A$的构成矛盾.\par
+  因此$A$是不可测集.\par
+  类似地, 在$\mathbb{R}$上也可以构造类似的可测集.\par
+\end{proof}
+
+\begin{remark}
+  事实上这种可测集的构造是很常见的, 而且这种构造方法可以推广到$\mathbb{R}^n$上, 例如在$\mathbb{R}^2$上, 我们可以考虑所有点的笛卡尔积, 然后将其划分为等价类, 每个等价类中取一个点, 形成一个不可测集.\par
+  这种不可测集的构造方法被称为Vitali集, 它的存在说明Lebesgue测度并不能解决全部的不可积函数问题.\par
+\end{remark}
+
+下面我们进一步讨论不可测集的性质, 以及在Lebesgue测度下不可测体现的集合的具体性质.\par
+
+\begin{proposition}
+  若$V$不可测, 则$\exists \varepsilon >0, A\supset V, B\supset V^c$, 使得$m(A\cap B)=\varepsilon$.\par
+\end{proposition}
+
+\begin{proof}
+  由Vitali集的构造知, $\exists A\supset V, B\supset V^c$, 使得$A$和$B$都是可测集.\par
+  由于$V$不可测, 则$m(A\cap B)=m(A)+m(B)-m(A\cup B)>0$. 因此存在$\varepsilon >0$, 使得$m(A\cap B)=\varepsilon$.\par
+\end{proof}
+
+\begin{remark}
+  上面的结果说明不可测集的不良性质可以表述为不可测集本身和其余集中的点无法通过一种方法分割, 这也和Carathéodory条件的想法是类似的.\par
+\end{remark}
+
+\begin{proposition}
+  $\mathbb{R}^n$上不可测集全体的基数为$2^{\aleph_0}$.\par
+\end{proposition}
+
+\begin{proof}
+  由Cantor定理知, $\mathbb{R}^n$的基数为$2^{\aleph_0}$.\par
+  而不可测集的构造方法是通过将$\mathbb{R}^n$上的点划分为等价类, 每个等价类中取一个点, 形成一个不可测集.\par
+  由于$\mathbb{R}^n$上的点的个数是$2^{\aleph_0}$, 因此不可测集的个数也是$2^{\aleph_0}$.\par
+\end{proof}
+
+\begin{remark}
+  上面的结果说明不可测集和可测集的个数是相同的.\par
+\end{remark}
+
+\newpage
+
+\section{乘积测度}
+
+在讨论了可测集和不可测集的性质后, 我们进一步考虑乘积测度的问题. 乘积测度本身具有非常广泛的应用, 能够解决有限维空间中作笛卡尔积后形成的集合的测度问题.\par
+
+\begin{theorem}
+  设$A\subset \mathbb{R}^p, B\subset \mathbb{R}^q$是可测集, 则$A\times B$是可测集, 且$m(A\times B)=m(A)m(B)$.\par
+\end{theorem}
+
+\begin{proof}
+  我们首先考虑$A,B$均为区间的情形, 此时有$A=\left(\right.a_1,b_1\left.\right]\times \cdots \times \left(\right.a_p,b_p\left.\right]$, $B=\left(\right.a_{p+1},b_{p+1}\left.\right]\times \cdots \times \left(\right.a_{p+q},b_{p+q}\left.\right]$.\par
+  于是$A\times B=\left(\right.a_1,b_1\left.\right]\times \cdots \times \left(\right.a_p,b_p\left.\right]\times \left(\right.a_{p+1},b_{p+1}\left.\right]\times \cdots \times \left(\right.a_{p+q},b_{p+q}\left.\right]$.\par
+  由区间的测度可知, $m(A\times B)=|\left(a_1,b_1\right]| \cdots |\left(a_p,b_p \right]| \cdot |\left(a_{p+1},b_{p+1}\right]| \cdots |\left(a_{p+q},b_{p+q}\right]| = \prod_{i=1}^{p+q}(b_i-a_i)$.\par
+  下面考虑$A$和$B$均为开集, 此时有$A=\bigcup_{i=1}^{\infty}I_i$, $B=\bigcup_{j=1}^{\infty}J_j$, 其中$I_i$和$J_j$均为开区间.\par
+  于是$A\times B=\bigcup_{i=1}^{\infty}\bigcup_{j=1}^{\infty}(I_i\times J_j)$.\par
+  由于开区间的乘积仍然是开集, 因此$A\times B$是开集.\par
+  由开集的测度可知, $m(A\times B)=\sum_{i=1}^{\infty}\sum_{j=1}^{\infty}m(I_i\times J_j)$.\par
+  由于$A$和$B$均为可测集, 因此$A\times B$也是可测集.\par
+  由$I_i\times J_j$不交可知, $m(A\times B)=\sum_{i=1}^{\infty}\sum_{j=1}^{\infty}m(I_i)m(J_j)$.\par
+  因此$A\times B$也是可测集.\par
+  进一步, 若$A$和$B$均为有界$G_{\delta}$集, 则$A\times B$也是有界$G_{\delta}$集.\par
+  此时$A=\bigcap_{k=1}^{\infty}A_k$, $B=\bigcap_{l=1}^{\infty}B_l$, 其中$G_k$和$H_l$均为单减开集列.\par
+  考虑$\bigcap_{k=1}^{\infty}A_k \times \bigcap_{l=1}^{\infty}B_l = \bigcup_{k=1,l=1}^{\infty}(A_k \times B_l)$.\par
+  由$A, B$有界, $A_k, B_l$也是有界的, 考虑$m(A\times B)=m\left(\bigcap_{k=1,l=1}^{\infty}(A_k\times B_l)\right)\leqslant m\left(\bigcap_{k=1}^{\infty}(A_k\times B_k)\right)=\lim_{k \to \infty}m(A_k \times B_k)$.\par
+  考虑$A_k, B_l$均有界, 于是$\lim_{k \to \infty}m(A_k \times B_k)=\lim_{k \to \infty}m(A_k)\times \lim_{k \to \infty}m(B_k)=m(A)\times m(B)$.\par
+  另一方面, 我们有$m(A\times B)\leqslant m(\inf (A_k\times B_l))=m(A)\times m(B)$.\par
+  于是$m(A\times B)=m(A)\times m(B)$.\par
+  最后考虑$A$和$B$均为有界可测集, 此时$\exists H_A\supset A, H_B\supset B, m(H_A\backslash A)=0, m(H_B\backslash B)=0$, 其中$H_A$和$H_B$均为$G_{\delta}$集.\par
+  下面我们有$H_A\times H_B = (A\times B)\cup ((H_A\backslash A)\times B) \cup (A\times (H_B\backslash B)) \cup ((H_A\backslash A)\times (H_B\backslash B))$.\par
+  记$F=H_A\backslash A, E=H_B\backslash B$, 则$F$和$E$均为可测集.\par
+  由上可知$m(H_A\times H_B)=m(H_A)\times m(H_B)=m(A)\times m(B)$, $m(H_A\times H_B)=m(A)\times m(B)$.\par
+  因此$m(A\times B)=m(H_A\times H_B)-m(F\times B)-m(A\times E)-m(F\times E)$.\par
+  由于$F$和$E$均为可测集, 且$m(F\times B)=m(F)m(B)$, $m(A\times E)=m(A)m(E)$, $m(F\times E)=m(F)m(E)$.\par
+  于是$m(A\times B)=m(H_A\times H_B)-m(F)m(B)-m(A)m(E)-m(F)m(E)$.\par
+  由于$m(H_A\backslash A)=0, m(H_B\backslash B)=0$,
+  因此$m(F)=m(H_A\backslash A)=0, m(E)=m(H_B\backslash B)=0$.\par
+  于是$m(A\times B)=m(H_A\times H_B)-0-0-0=m(H_A\times H_B)=m(A)m(B)$. 即$m(A\times B)=m(A)m(B)$.\par
+  最后考虑一般的情形, 此时考虑$\mathbb{R}^{p+q}=\bigcup_{k=1}^{\infty}\left((-k,k)\times (-k,k)\right)$.\par
+  由于$A$和$B$均为可测集, 于是$(A\times B)\cap \mathbb{R}^{p+q}=(A\times B)\cap (\bigcup_{k=1}^{\infty} I_k)=\bigcup_{k=1}^{\infty} (A\cap I_{A_k})\times \bigcup_{k=1}^{\infty} (B\cap I_{B_k})$.\par
+  其中$I_k=(-k,k)\times (-k,k)$, $I_{A_k}=A\cap I_k$, $I_{B_k}=B\cap I_k$.\par
+  于是$\lim_{k \to \infty}m((A\times B)\cap I_k)=\lim_{k \to \infty}m(A\cap I_{A_k})\times \lim_{k \to \infty}m(B\cap I_{B_k})=m(A)\times m(B)$.\par
+\end{proof}
+
+乘积测度的结果有许多明显的推论, 我们这里仅讨论最显然的一个例子.\par
+
+\begin{corollary}
+  设$A=\prod_{i=1}^{n}A_i$, 若$\exists A_i, m(A_i)=0$, 则$m(A)=0$.\par
+\end{corollary}
+
+\begin{proof}
+  由乘积测度的结果知, $m(A)=\prod_{i=1}^{n}m(A_i)$.\par
+  若$\exists A_i, m(A_i)=0$, 则$\prod_{i=1}^{n}m(A_i)=0$, 因此$m(A)=0$.\par
+\end{proof}
+
+\begin{remark}
+  上面的推论仅对有限维空间成立, 在无限维空间中, 乘积测度的性质会有所不同.\par
+\end{remark}
+
+\btocgroup
+\UseTocStyle{chapter}{emph}{toc}
+\chapter{可测函数}
+\etocgroup
+
+\section{可测函数的定义和性质}
+
+在研究可测函数的性质之前, 我们首先考虑广义实函数的定义:\par
+
+\begin{definition}
+  $f:A\rightarrow \mathbb{R}\cup\{-\infty,+\infty\}=\overline{\mathbb{R} }$称为定义在$A$上的广义实函数.\par
+\end{definition}
+
+类似地, 我们也有广义实函数的有界性的定义:\par
+
+\begin{definition}
+  设$f:A\rightarrow \overline{\mathbb{R} }$是定义在$A$上的广义实函数, 则称$f$是有界的, 当且仅当$\exists M>0, \forall x\in A, |f(x)|<M$.\par
+\end{definition}
+
+\begin{remark}
+  值得注意的是, 有界性和函数有限并不完全一致, 例如$f(x)=\frac{1}{x}$在$A=(0,1)$上是有界的, 但不是有限的. 另一方面, $f(x)=\chi_{(0,1)}$在$A=(0,1)$上是有限的, 但不是有界的.\par
+\end{remark}
+
+事实上, 我们可以给出函数有限的分析定义:\par
+
+\begin{definition}
+  设$f:A\rightarrow \overline{\mathbb{R} }$是定义在$A$上的广义实函数, 则称$f$是有限的, 当且仅当$\forall x\in A, f(x)\in \mathbb{R}$.\par
+\end{definition}
+
+而对于广义实函数的连续性, 我们也类似地给出定义:\par
+
+\begin{definition}
+  设$f$在$E$上有限, 则称$f$在$x_0\in E$处是连续的, 当且仅当$ \forall \varepsilon >0, \exists \delta_{x_0,\varepsilon} >0, \forall x\in E, \rho(x,x_0)<\delta$时有$ |f(x)-f(x_0)|<\varepsilon$.\par
+  若$f$在$E$上每一点都是连续的, 则称$f$在$E$上是连续的.\par
+  设$f$在$E$上有限, 则称$f$在$E$上是一致连续的, 当且仅当$ \forall \varepsilon >0, \exists \delta_{\varepsilon} >0, \forall x\in E, \rho(x,x_0)<\delta$时有$ |f(x)-f(x_0)|<\varepsilon, \forall x_0 \in E$.\par
+\end{definition}
+
+\begin{remark}
+  在抽象集合中讨论连续性时, 我们必须要指定讨论的集合范围, 因为在不同的集合上, 同一个函数可能会有不同的连续性. 因此为了方便讨论, 我们下面定义特征函数和简单函数.\par
+\end{remark}
+
+\begin{theorem}
+  若$E$,$F$为闭集, $f\in C(E)$, $f\in C(F)$, 则$f\in C(E \cup F)$.\par
+\end{theorem}
+
+\begin{proof}
+  若$x_0\in E\cup F$, 则$\forall \varepsilon >0, \exists \delta_{1} >0$, 使得$\forall x\in E, \rho(x,x_0)<\delta_{1}$时有$|f(x)-f(x_0)|<\varepsilon$.\par
+  同理, $\forall \varepsilon >0, \exists \delta_{2} >0$, 使得$\forall x\in F, \rho(x,x_0)<\delta_{2}$时有$|f(x)-f(x_0)|<\varepsilon$.\par
+  于是取$\delta = \min\{\delta_{1},\delta_{2}\}$, 则$\forall x\in E\cup F, \rho(x,x_0)<\delta$时有$|f(x)-f(x_0)|<\varepsilon$.\par
+  若$x_0\in E\backslash F$, 则$\forall \varepsilon >0, \exists \delta_{1} >0$, 使得$\forall x\in E, \rho(x,x_0)<\delta_{1}$时有$|f(x)-f(x_0)|<\varepsilon$.\par
+  同时有$\exists \delta_{3} >0$, 使得$O(x_0,\delta_{3})\subset F^c$.\par
+  于是取$\delta = \min\{\delta_{1},\delta_{3}\}$, 则$\forall x\in E\cup F, \rho(x,x_0)<\delta$时有$x\in E\backslash F$且$\rho(x,x_0)<\delta_{1}$,$|f(x)-f(x_0)|<\varepsilon$.\par
+  对于$x_0\in F\backslash E$, 类似可证.\par
+\end{proof}
+
+\begin{definition}
+  设$E$是集合, 则称$E$的特征函数为$\chi_E(x)=\begin{cases}
+    1, & x\in E \\
+    0, & x\notin E
+  \end{cases}$.\par
+  设$E_i$是一集列, 则称$E_i$的简单函数为$f(x)=\sum_{i=1}^{n}c_i\chi_{E_i}(x)$, 其中$c_i\in \mathbb{R}$, 且$E_i$互不交.\par
+  特别地, 若$E_i$均为区间, 则称$f$是阶梯函数.\par
+\end{definition}
+
+根据上面的讨论, 我们有一类特殊的例子来表示广义实函数的连续性:\par
+
+\begin{example}
+  $f=\chi_{\mathbb{Q}}(x)$在$\mathbb{Q}$上是连续的, 但在$\mathbb{R}$上是处处不连续的.\par
+\end{example}
+
+基于此我们给出可测函数的定义:\par
+
+\begin{definition}
+  设$E$是集合, $f$是定义在$E$上的广义实函数, 则称$f$在$E$上是可测的, 当且仅当$\forall a\in \mathbb{R}, E[f> a]$是可测集.\par
+  若$f$在$E$上是可测的, 则称$f$是$E$上的可测函数, 记为$f\in \mathcal{M}(E)$.\par
+\end{definition}
+
+\begin{theorem}
+  下面函数均为可测函数:\par
+  \begin{itemize}
+    \item 可测集的特征函数.\par
+    \item 简单函数.\par
+    \item 可测集上的连续函数.\par
+    \item 可测集上的单调函数.\par
+    \item 零测集上的函数.\par
+  \end{itemize}
+\end{theorem}
+
+\begin{proof}
+  对于可测集的特征函数, 由定义可知, $\forall a\in \mathbb{R}, E[\chi_E > a] = E$或$E^c$, 因此是可测的.\par
+  对于简单函数, 设$f(x)=\sum_{i=1}^{n}c_i\chi_{E_i}(x)$, 则$\forall a\in \mathbb{R}, E[f>a]=\bigcup_{c_i>a}E_i$, 因此是可测的.\par
+  对于可测集上的连续函数, 由连续函数的性质知, $\forall a\in \mathbb{R}, E[f>a]$是开集或闭集, 因此是可测的.\par
+  对于可测集上的单调函数, 类似地, $\forall a\in \mathbb{R}, E[f>a]$是开集或闭集, 因此是可测的.\par
+  对于零测集上的函数, 由于零测集上的函数在几乎处处上是常数函数, 因此也是可测的.\par
+\end{proof}
+
+事实上可测函数还有一些等价的定义, 我们下面来证明这些定义是等价的.\par
+
+\begin{theorem}
+  设$f$是定义在$E$上的广义实函数, 则下列命题等价:\par
+  \begin{itemize}
+    \item $f$在$E$上是可测的.
+    \item $\forall a\in \mathbb{R}, E[f>a]$是可测集.
+    \item $\forall a\in \mathbb{R}, E[f\geqslant a]$是可测集.
+    \item $\forall a\in \mathbb{R}, E[f<a]$是可测集.
+    \item $\forall a\in \mathbb{R}, E[f\leqslant a]$是可测集.
+  \end{itemize}
+\end{theorem}
+
+\begin{proof}
+  由定义知, $f$在$E$上是可测的当且仅当$\forall a\in \mathbb{R}, E[f>a]$是可测集.\par
+  首先考虑$E[f\leqslant a]$是$E[f>a]$的余集, 因此$E[f\leqslant a]$的可测性和$E[f>a]$是等价的.\par
+  下面考虑$E[f<a]=\bigcup_{k=1}^{\infty}E[f\leqslant a-\frac{1}{k}]$, 而对于每个$a\in \mathbb{R}$, $E[f\leqslant a-\frac{1}{k}]$是可测集, 因此$\bigcup_{k=1}^{\infty}E[f\leqslant a-\frac{1}{k}]$也是可测集.\par
+  于是类似地, 由$E[f\geqslant a]$是$E[f<a]$的可测性是等价的知$E[f\geqslant a]$可测也是成立的.\par
+\end{proof}
+
+下面我们利用可测函数的定义来讨论一些初等和基本的性质.\par
+
+\begin{proposition}
+  若$f$在$E$上是可测的, 则$\forall a\in \overline{\mathbb{R}}, E[f=a]$可测.\par
+\end{proposition}
+
+\begin{proof}
+  对于$a \in \mathbb{R}$, 我们有$E[f\geqslant a]\cap E[f\leqslant a]=E[f=a]$, 于是可测.\par
+  对于$a = +\infty$, 则$E[f=+\infty]=\bigcap_{n=1}^{\infty}E[f\geqslant n]$, 由于$E[f\geqslant n]$是可测集, 因此$E[f=+\infty]$也是可测的.\par
+  对于$a = -\infty$, 则$E[f=-\infty]=\bigcap_{n=1}^{\infty}E[f\leqslant -n]$, 由于$E[f\leqslant -n]$是可测集, 因此$E[f=-\infty]$也是可测的.\par
+\end{proof}
+
+\begin{remark}
+  上面的结果是充分的, 但不是必要的. 即$\forall a \in \mathbb{R}, E[f=a]$可测不蕴含$f$在$E$上是可测的.\par
+\end{remark}
+
+\begin{proposition}
+  $f\in \mathcal{M}(E)$当且仅当$\forall E_1\subset E, f\in \mathcal{M}(E_1)$, 其中$E_1$可测.\par
+\end{proposition}
+
+\begin{proof}
+  由于$\forall a \in \mathbb{R}$, $E_1[f>a]=E_1\cap E[f>a]$可测, 因此$E_1[f>a]$可测.\par
+\end{proof}
+
+\begin{proposition}
+  记$E=\bigcup_{i=1}^{\infty}E_i$, $\{E_i\}$互不交可测, 则$f\in \mathcal{M}(E)\Leftrightarrow f\in \mathcal{M}(E_i), \forall i$.\par
+\end{proposition}
+
+\begin{proof}
+  由$E=\bigcup_{i=1}^{\infty}E_i$, $\forall a \in \mathbb{R}$, 有$E[f>a]=\bigcup_{i=1}^{\infty}E_i[f>a]$, 由于$\{E_i\}$互不交可测, 因此$E[f>a]$是可测的当且仅当$\forall i, E_i[f>a]$是可测的.\par
+\end{proof}
+
+\begin{remark}
+  上面的结果说明了可测函数具有良好的性质, 即可测函数在可测集上的限制仍然是可测的.\par
+\end{remark}
+
+\begin{theorem}
+  若$\{f_n\}\in \mathcal{M}(E)$, 则$\sup \{f_n\}$, $\inf \{f_n\}$, $\limsup_{n \to \infty} f_n$, $\liminf_{n \to \infty} f_n$, $\lim_{n \to \infty} f_n$均在$E$上可测.\par
+\end{theorem}
+
+\begin{proof}
+  事实上我们只需要证明$\sup \{f_n\}$和$\inf \{f_n\}$在$E$上可测, 上下极限事实上是由$\sup \{f_n\}$和$\inf \{f_n\}$来定义的, 因此其可测性在上下确界可测时自然成立.\par
+  首先考虑$\sup \{f_n\}$, 由定义知, $\forall a \in \mathbb{R}, E[\sup \{f_n\}\leqslant a]=\bigcap_{n=1}^{\infty}E[f_n\leqslant a]$, 由于$\{f_n\}\in \mathcal{M}(E)$, 因此$E[\sup \{f_n\}\leqslant a]$也是可测的.\par
+  类似地, 我们有$E[\inf \{f_n\}\geqslant a]=\bigcap_{n=1}^{\infty}E[f_n\geqslant a]$, 其可测性显然.\par
+  于是$\sup \{f_n\}$和$\inf \{f_n\}$在$E$上均可测.\par
+  由于$\limsup_{n \to \infty} f_n = \inf_{N\geqslant 1} \sup_{n\geqslant N} \{f_n\}$, $\liminf_{n \to \infty} f_n = \sup_{N\geqslant 1} \inf_{n\geqslant N} \{f_n\}$.\par
+  其可测性显然, 因为$\sup$和$\inf$的可测性已经证明.\par
+  最后考虑$\lim_{n \to \infty} f_n$存在时有$\lim_{n \to \infty} f_n = \limsup_{n \to \infty} f_n = \liminf_{n \to \infty} f_n$, 由于$\limsup_{n \to \infty} f_n$和$\liminf_{n \to \infty} f_n$均在$E$上可测. 因此其可测性也显然.\par
+\end{proof}
+
+\begin{remark}
+  上面的结果事实上反映了可测函数列的极限的可测性, 即可测函数列的极限仍然是可测函数.\par
+  同时注意到这里我们选择的证明方式是利用可测函数的等价定义构造可测集的可列交得到的, 这和我们证明可测函数的等价定义时的想法是类似的.\par
+\end{remark}
+
+下面我们考虑简单函数列和可测函数的关系, 这里我们首先考虑连续函数列的情形.\par
+
+\begin{lemma}
+  连续函数列的极限在可测集上可测.\par
+\end{lemma}
+
+\begin{proof}
+  设$f_n$是定义在$E$上的连续函数列, 且$f_n\to f$, 则$\forall a\in \mathbb{R}$, $E[f_n>a]$是开集, 因此是可测的.\par
+  由于$\bigcap_{k=1}^{\infty}E[f_n> a]=E[f>a]$, 因此$E[f>a]$也是可测的.\par
+  于是$f$在$E$上是可测的.\par
+\end{proof}
+
+\begin{corollary}
+  简单函数列的极限在可测集上可测.\par
+\end{corollary}
+
+\begin{proof}
+  设$f_n$是定义在$E$上的简单函数列, 且$f_n\to f$, 则$\forall a\in \mathbb{R}$, $E[f_n>a]$是可测集, 因此是可测的.\par
+  由于$\bigcap_{k=1}^{\infty}E[f_n> a]=E[f>a]$, 因此$E[f>a]$也是可测的.\par
+  于是$f$在$E$上是可测的.\par
+\end{proof}
+
+下面考虑简单函数列的极限, 我们有下面的结果:\par
+
+\begin{theorem}
+  设$f\geqslant 0$, $f\in \mathcal{M}(E)$, 则$\exists \{\phi_n\}$, $\phi_n$为$E$上单增简单函数列满足$\lim_{n \to \infty} \phi_n = f$.\par
+\end{theorem}
+
+\begin{proof}
+  $\forall n \in \mathbb{N}$, 将$[0,+\infty]$拆成若干小区间: $[0,\frac{1}{2^n}), [\frac{1}{2^n}, \frac{2}{2^n}), \cdots, [\frac{(n2^n-1)}{2^n},n),[n,+\infty]$.
+  同时也有$E=E[0\leqslant f<\frac{1}{2^n}]\cup E[\frac{1}{2^n}\leqslant f<\frac{2}{2^n}]\cup \cdots \cup E[\frac{(n2^n-1)}{2^n}\leqslant f<n]\cup E[f\geqslant n]$.\par
+  于是我们可以定义$\phi_n(x)=\sum_{k=0}^{n} \frac{k}{2^n}\chi_{E[\frac{k}{2^n}\leqslant f<\frac{k+1}{2^n}]}(x)$. 下面说明这就是我们要求的简单函数列.\par
+  首先$\phi_n$是单增的, 因为$\forall x\in E$, $\phi_n(x)$是单调递增的.\par
+  其次$\phi_n$是简单函数, 因为$\phi_n(x)$是有限个特征函数的线性组合.\par
+  最后考虑$\lim_{n \to \infty} \phi_n(x)$, 由于$\phi_n(x)$是单调递增的, 且$\phi_n(x)\leqslant f(x)$, 因此$\lim_{n \to \infty} \phi_n(x) = f(x)$.\par
+  于是$\phi_n$是满足要求的单增简单函数列.\par
+\end{proof}
+
+下面我们讨论一般函数的情形, 为了方便起见, 我们这里定义一般函数的非负部分和非正部分:\par
+
+\begin{definition}
+  设$f$是定义在$E$上的广义实函数, 则称$f$的正部为$f^+=\max\{f,0\}$, 负部为$f^-=\max\{-f,0\}$.\par
+\end{definition}
+
+\begin{remark}
+  对于函数的正部和负部, 我们有一些基本结论, 这里不再证明.\par
+  \begin{itemize}
+    \item $f=f^+-f^-$.
+    \item $|f|=f^++f^-$.
+    \item $f^+\geqslant 0$, $f^-\geqslant 0$.
+  \end{itemize}
+\end{remark}
+
+\begin{corollary}
+  设$f\in \mathcal{M}(E)$, 则$\exists \{\phi_n\}$, $\phi_n$为$E$上简单函数列满足$\lim_{n \to \infty} \phi_n = f$.\par
+\end{corollary}
+
+\begin{proof}
+  由上面的结果, 把$f$分解为正部和负部, 即$f=f^+-f^-$, 其中$f^+=\max\{f,0\}$, $f^-=\max\{-f,0\}$.\par
+  由于$f^+$和$f^-$均为非负可测函数, 因此存在单增简单函数列$\{\phi_n^{+}\}$和$\{\phi_n^{-}\}$逼近$f^+$和$f^-$.\par
+\end{proof}
+
+\begin{remark}
+  上面的结果说明了可测函数可以用一列单增的简单函数列逼近, 一方面这是和一般的微积分中的结果是类似的, 另一方面这也为下面研究可测函数提供了重要支持.\par
+\end{remark}
+
+下面我们来讨论可测函数的运算封闭性, 实际上这是由上面简单函数的逼近得到的.\par
+
+\begin{theorem}
+  设$f,g\in \mathcal{M}(E)$, 则$f+g$, $f-g$, $fg$, $\frac{f}{g}$在$E$上有意义时均可测.\par
+\end{theorem}
+
+\begin{proof}
+  由于$f$和$g$均为可测函数, 因此$\exists \{\phi_n\}$和$\{\psi_n\}$, $\phi_n$和$\psi_n$均为$E$上单增简单函数列满足$\lim_{n \to \infty} \phi_n = f$, $\lim_{n \to \infty} \psi_n = g$.\par
+  于是考虑$f+g$, $f-g$, $fg$, $\frac{f}{g}$的情况:\par
+  \begin{itemize}
+    \item 对于$f+g$, $\exists \{\phi_n+\psi_n\}$, $\phi_n+\psi_n$为$E$上单增简单函数列满足$\lim_{n \to \infty} (\phi_n+\psi_n) = f+g$.\par
+    \item 对于$f-g$, $\exists \{\phi_n-\psi_n\}$, $\phi_n-\psi_n$为$E$上单增简单函数列满足$\lim_{n \to \infty} (\phi_n-\psi_n) = f-g$.\par
+    \item 对于$fg$, $\exists \{\phi_n\cdot\psi_n\}$, $\phi_n\cdot\psi_n$为$E$上单增简单函数列满足$\lim_{n \to \infty} (\phi_n\cdot\psi_n) = fg$.\par
+    \item 对于$\frac{f}{g}$, 若$\forall x\in E, g(x)\neq 0$, 则$\exists \{\frac{\phi_n}{\psi_n}\}$, $\frac{\phi_n}{\psi_n}$为$E$上单增简单函数列满足$\lim_{n \to \infty} (\frac{\phi_n}{\psi_n}) = \frac{f}{g}$.\par
+  \end{itemize}
+  于是$f+g$, $f-g$, $fg$, $\frac{f}{g}$在$E$上均可测.\par
+\end{proof}
+
+\begin{remark}
+  上面的结果说明了可测函数在几乎处处有限的情形下构成线性空间, 即可测函数的和、差、积和商（除数不为零时）仍然是可测函数.\par
+\end{remark}
+
+最后我们给出一个关于简单函数列和函数的可测性间关系的最简洁的结果, 这个结果可以用来判断函数的可测性.\par
+
+\begin{theorem}
+  $f\in \mathcal{M}(E)$当且仅当$\exists \{\phi_n\}$, $\phi_n$为$E$上简单函数列满足$\lim_{n \to \infty} \phi_n = f$.\par
+\end{theorem}
+
+\begin{proof}
+  由上结果可知, 若$f\in \mathcal{M}(E)$, 则$\exists \{\phi_n\}$, $\phi_n$为$E$上单增简单函数列满足$\lim_{n \to \infty} \phi_n = f$.\par
+  下证反方向的命题, 设$\exists \{\phi_n\}$, $\phi_n$为$E$上简单函数列满足$\lim_{n \to \infty} \phi_n = f$.\par
+  由于$\phi_n$是简单函数, 因此$\forall a\in \mathbb{R}$, $E[\phi_n>a]$是可测集, 因此$\bigcap_{k=1}^{\infty}E[\phi_n>a]$也是可测集.\par
+  于是$\forall a\in \mathbb{R}$, $E[f>a] = \bigcap_{k=1}^{\infty}E[\phi_n>a]$是可测集.\par
+  由于$\forall a\in \mathbb{R}$, $E[f>a]$是可测集, 因此$f$在$E$上是可测的.\par
+\end{proof}
+
+\newpage
+
+\section{可测函数的收敛性}
+
+在讨论函数性质时, 我们自然想到普通微积分中实函数的收敛, 因此我们现在对函数的收敛作如下定义:\par
+
+\begin{definition}
+  设$f_n,f$是定义在$E$上的函数, 
+  \begin{itemize}
+    \item 称$f_n$逐点收敛到$f$, 当且仅当$\forall x\in E, \lim_{n \to \infty}f_n(x)=f(x)$.\par
+    \item 称$f_n$一致收敛到$f$, 当且仅当$\forall \varepsilon>0, \exists N\in \mathbb{N}, \forall n\geqslant N, |f_n(x)-f(x)|<\varepsilon$.\par
+    \item 称$f_n$几乎处处收敛到$f$, 当且仅当$\exists E_0\subset E, m(E_0) = 0, \forall x\in E\backslash E_0, \lim_{n \to \infty}f_n(x)=f(x)$.\par
+    \item 称$f_n$近乎一致收敛到$f$, 当且仅当$\forall \varepsilon>0, \forall \delta > 0, \exists E_0\subset E, m(E_0) < \delta, \exists N\in \mathbb{N}, \forall n\geqslant N, \forall x\in E\backslash E_0, |f_n(x)-f(x)|<\varepsilon$.\par
+  \end{itemize}
+\end{definition}
+
+\begin{example}
+  若$f_n(x)=x^n$, $f(x)=0$, 则$f_n(x)$近乎一致收敛到$f$.\par
+  这是由于$\forall \delta>0$, 取$E_0 =\left[1-\frac{\delta}{2},1\right]$, 则$m(E_0)=\frac{\delta}{2}<\delta$, $\forall x\in E\backslash E_0$, $|f_n(x)-f(x)|=|x^n|<\varepsilon$.\par
+  此时只需要取$N=\left|\frac{\varepsilon}{\log \left(1-\frac{\delta}{2}\right)}\right|$, 使得$\forall n\geqslant N$, $|x^n|<\varepsilon$.\par
+\end{example}
+
+\begin{remark}
+  这里$N$是和$\delta$有关的, 但不能和$x$有关, 否则就不再是一致收敛了.\par
+\end{remark}
+
+\begin{theorem}
+  下列命题等价:\par
+  \begin{itemize}
+    \item $\exists E_0\subset E, m(E_0) = 0, \forall x\in E\backslash E_0, \lim_{n \to \infty}f_n(x)=f(x)$.
+    \item $\lim_{n\to \infty}m(E[f_n \nrightarrow f])=0$.
+    \item $\forall x\in E[f_n \nrightarrow f], f_n(x)\nrightarrow f(x)$
+  \end{itemize}
+\end{theorem}
+
+\begin{lemma}
+  $E[f_n \nrightarrow f] = \bigcup_{\varepsilon} \bigcap_{N=1}^{+\infty} \bigcup_{n=N}^{+\infty}E\left[\left|f_n-f\right|\geqslant \varepsilon\right] = \bigcup_{k=1}^{+\infty} \bigcap_{N=1}^{+\infty} \bigcup_{n=N}^{+\infty}E\left[\left|f_n-f\right|\geqslant \frac{1}{k}\right]$.
+\end{lemma}
+
+\begin{proof}
+  考虑$E[f_n \nrightarrow f]$的定义:\par
+  $\exists \varepsilon_0>0, \forall N\in \mathbb{N}, \exists n_0\geqslant N, \left|f_n(x)-f(x)\right|\geqslant \varepsilon_0$.\par
+  这说明$\exists \varepsilon_0>0, \forall N\in \mathbb{N}, \exists n_0\geqslant N, x\in E\left[\left|f_n-f\right|\geqslant \varepsilon_0\right]$.\par
+  于是有$x\in \bigcup_{\varepsilon} \bigcap_{N=1}^{+\infty} \bigcup_{n=N}^{+\infty}E\left[\left|f_n-f\right|\geqslant \varepsilon_0\right]$.\par
+  更进一步考虑$\varepsilon$的任意性, 我们有$x \in \bigcup_{k=1}^{+\infty} \bigcap_{N=1}^{+\infty} \bigcup_{n=N}^{+\infty}E\left[\left|f_n-f\right|\geqslant \frac{1}{k}\right]$.\par
+\end{proof}
+
+\begin{remark}
+  上面的这种方法在后续的Lebesgue积分中也会用到, 这种方法实际上是利用了$\varepsilon$的任意性来构造一个新的集合, 使得这个集合的测度为0. 但同时考虑到$\varepsilon$是任意的, 因此我们选择$\frac{1}{k}$代替依旧是成立的.\par
+\end{remark}
+
+\begin{lemma}
+  (Borel-Cantelli) 设$\{A_n\}$是一集列, 则$\sum_{n=1}^{\infty}m(A_n)<\infty \Rightarrow m(\limsup_{n \to \infty}A_n)=0$.
+\end{lemma}
+
+\begin{proof}
+  首先考虑$e_k$和$E$均可测, 则有下面的等价关系:\par
+  $E\backslash \left(\limsup_{k \to \infty}e_k \right)= \liminf_{k\to \infty}\left(E\backslash e_k\right)$.\par
+  事实上我们有$\left(\limsup_{k\to \infty}e_k\right)^{c}=\left(\bigcap_{N=1}^{\infty}\left(\bigcup_{k=N}^{\infty}e_k\right)\right)^{c}=\bigcup_{N=1}^{\infty}\left(\bigcup_{k=N}^{\infty}e_k\right)^{c} = \bigcup_{N=1}^{\infty}\bigcap_{k=N}^{\infty}e_k^c$.\par
+  下面再考虑$m(E_k)<\frac{1}{2^k}, \forall k$, 则有$m\left(\bigcup_{k=N}^{\infty}E_k\right)\leqslant \frac{1}{2^{N-1}}$. 记$F_N = \bigcup_{k=N}^{\infty}E_k$, 则$m\left(\bigcap_{N=1}^{\infty}F_N\right)\leqslant m\left(F_N\right)\to 0$.\par
+\end{proof}
+
+下面我们讨论近乎一致收敛, 几乎处处收敛的关系:\par
+
+\begin{theorem}
+  若$f_n,f$在$E$上可测, $f_n$近乎一致收敛到$f$, 则$f_n$几乎处处收敛到$f$.\par
+\end{theorem}
+
+\begin{proof}
+  $f_n$近乎一致收敛到$f$, 则有$\forall k >0, \exists {e_k}, m(e_k)<\frac{1}{k}, f_n \Rightarrow f \text{on} E\backslash e_k$, 其中$e_k$可测.\par
+  往证$m\left(\bigcup_{k=1}^{\infty}\bigcap_{N=1}^{\infty}\bigcup_{n=N}^{\infty} E\left[\left|f_n-f\right|\geqslant \frac{1}{k}\right]\right)=0$. 令$E_0=\limsup_{k \to \infty}e_k$, 则$E\left[f_n\nrightarrow f\right]\subset E_0$.\par
+  由Borel-Cantelli引理, 我们有$\sum_{n=1}^{\infty}m\left(E\left[\left|f_n-f\right|\geqslant \frac{1}{k}\right]\right)<\infty$. \par
+  因此$m\left(\limsup_{n \to \infty}E\left[\left|f_n-f\right|\geqslant \frac{1}{k}\right]\right)=0$.\par
+\end{proof}
+
+\begin{theorem}
+  (Egoroff) 设$m(E)<\infty$, 若$f_n$在$E$上几乎处处收敛到$f$, 则$f_n$近乎一致收敛到$f$.\par
+\end{theorem}
+
+\begin{proof}
+  由$f_n \rightarrow f \text{ a.e.} on E$知, $m\left(\bigcup_{k=1}^{\infty}\bigcap_{N=1}^{\infty}\bigcup_{n=N}^{\infty}E\left[|f_n-f|\geqslant \frac{1}{k}\right]\right)=0$.\par
+  记$F_k=\bigcap_{N=1}^{\infty}\bigcup_{n=N}^{\infty}E\left[|f_n-f|\geqslant \frac{1}{k}\right]$, 则$m(F_k)=0, \forall k >0$. 由$m(E)<\infty$有$\lim_{k\to \infty}m(F_k) = m(\lim_{k\to \infty}F_k)=0$.\par
+  即$\forall k > 0, \forall \delta >0, \exists k_{\delta}>0, \forall k>k_{\delta}, m(F_{k_{\delta}})<\frac{\delta}{2^{k_{\delta}}}$, 于是$m\left(\bigcup_{k\geqslant k_{\delta}}F_k\right)<\sum_{N=1}^{\infty}\frac{\delta}{2^{k_{\delta}}}=\delta$.\par
+  令$e=\bigcup_{n\geqslant k_{\delta}}F_k$, 则$m(e)<\delta$, $\forall x\in E\backslash e, |f_n(x)-f(x)|<\frac{1}{k}$, 这说明$f_n$近乎一致收敛到$f$.\par 
+\end{proof}
+
+根据上面的讨论, 我们知道近乎一致收敛有下面的表述方法:
+$$\forall \delta >0, \forall \varepsilon >0, \exists E_0\subset E, m(E_0)<\delta, \exists N>0, \forall n\geqslant N, |f_n(x)-f(x)|<\varepsilon, \forall x\in E\backslash E_0.$$
+
+事实上, 我们知道这表示$|f_n(x)-f(x)|\geqslant \varepsilon$的集合的测度应当很小, 而又考虑到$\delta$是任意取的, $N$只与$\delta$有关, 于是我们可以作下面的定义:
+$$\forall \delta >0, \forall \varepsilon >0, \exists N, n\geqslant N, m\left(E\left[|f_n-f|\geqslant \varepsilon\right]\right)<\delta.$$
+
+更进一步, 这可以写成
+$\forall \varepsilon >0, \lim_{n \to \infty}m\left(E\left[|f_n-f|\geqslant \varepsilon\right]\right) = 0.$
+
+这就有了下面依测度收敛的定义:\par
+\begin{definition}
+  设$f_n,f$是定义在$E$可测且几乎处处有限的函数, 则$f_n$依测度收敛到$f$, 当且仅当$\forall \varepsilon >0, \lim_{n \to \infty}m\left(E\left[|f_n-f|\geqslant \varepsilon\right]\right) = 0$. 记作$f_n\Rightarrow f$.
+\end{definition}
+
+对于这种收敛, 我们继续讨论和其他收敛的关系, 于是有下面的定理:\par
+
+\begin{theorem}
+  (Lebesgue) 设$m(E)<\infty$, 若$f_n$几乎处处收敛到$f$, 则$f_n$依测度收敛到$f$.\par
+\end{theorem}
+
+\begin{proof}
+  由$f_n$几乎处处收敛到$f$, 则$\exists E_0\subset E, m(E_0)=0, \forall x\in E\backslash E_0, \lim_{n \to \infty}f_n(x)=f(x)$.\par
+  于是有$\forall \varepsilon >0, \exists N>0, \forall n\geqslant N, |f_n(x)-f(x)|<\varepsilon$, $\forall x\in E\backslash E_0$.\par
+  因此$m\left(E\left[|f_n-f|\geqslant \varepsilon\right]\right)\leqslant m(E_0)=0$, 这说明$f_n$依测度收敛到$f$.\par
+\end{proof}
+
+\begin{theorem}
+  (Riesz) 若$f_n$依测度收敛到$f$, 则$\exists f_{n_k}$, $f_{n_k}$几乎处处收敛到$f$.\par
+\end{theorem}
+
+\begin{proof}
+  对于依测度收敛的函数列$f_n$, 总可以取$k>0$使得$e_k=E\left[|f_{n_k}-f|\geqslant \varepsilon\right]$满足$m(e_k)< \frac{1}{2^k}$. 于是$\sum_{k=1}^{\infty}m(e_k)=1<\infty$.\par
+  由Borel-Cantelli引理, 我们有$m\left(\limsup_{k \to \infty}e_k\right)=0$, 令$E_0=\limsup_{k \to \infty}e_k$, 则$\forall x \in E\backslash E_0, \exists k_0, \forall k\geqslant k_0, |f_{n_k}(x)-f(x)|<\varepsilon$.\par
+  这说明$f_{n_k}$几乎处处收敛到$f$.\par
+\end{proof}
+
+\begin{remark}
+  几乎处处收敛和依测度收敛不是等价的条件, 例如下面两个例子:\par
+  令$f_n(x)=\chi_{\left(\right.0,n\left.\right]}$, 则$f_n(x)$几乎处处收敛到$f(x)=\chi_{\left(\right.0,+\infty\left.\right)}$, 但$f_n$不依测度收敛到$f$, 这是因为我们可以验证$\lim_{n \to \infty}m\left(E\left[|f_n-f|\geqslant 1\right]\right) = +\infty$.\par
+  令$f_n(x)$按下面的方法排列: $f_1(x)=\chi_{\left[\right.0,\frac{1}{2}\left.\right]}$, $f_2(x)=\chi_{\left(\right.\frac{1}{2},1\left.\right]}$, $f_3(x)=\chi_{\left[\right.0,\frac{1}{4}\left.\right]}$, $f_4(x)=\chi_{\left(\right.\frac{1}{4},\frac{1}{2}\left.\right]}$,$\cdots$, 则$f_n(x)$依测度收敛到$f(x)=\chi_{\left[\right.0,1\left.\right]}$, 但$f_n$处处不收敛到$f$.\par
+\end{remark}
+
+基于上面的结果, 我们下面讨论依测度收敛的性质:\par
+
+\begin{example}
+  若$f_n\Rightarrow f$, $f_n\Rightarrow g$, 则$f=g$几乎处处成立.\par
+\end{example}
+
+\begin{example}
+  若$f_n\Rightarrow f$, $g_n\Rightarrow g$, $f_n\geqslant g_n$在$E$上几乎处处成立, 则$f\geqslant g$在$E$上几乎处处成立.\par
+\end{example}
+
+\begin{example}
+  若$f_n\Rightarrow f$, $a\in \mathbb{R}$, 则$af_n\Rightarrow af$.\par  
+  若$f_n\Rightarrow f$, $g_n \Rightarrow g$, 则$f_n+g_n\Rightarrow f+g$.\par
+\end{example}
+
+\begin{corollary}
+  若$f_n\Rightarrow 0$, $g_n \Rightarrow 0$, 则$f_ng_n\Rightarrow 0$.\par
+\end{corollary}
+
+\begin{proof}
+  往证: $\forall \varepsilon >0, \lim_{n \to \infty}m\left(E\left[|f_ng_n|\geqslant \varepsilon\right]\right) = 0$.\par
+  记$E_n=E\left[|g_n|>1\right]$, 则$E_n^c=E\left[|g_n|\leqslant 1\right]$.\par
+  于是$E\left[|f_ng_n|\geqslant \varepsilon\right]\subset E_n\left[|f_ng_n|\geqslant \varepsilon\right]\cup E_n^c\left[|f_ng_n|\geqslant \varepsilon\right]\subset E_n\cup E\left[|f_n|\geqslant \varepsilon\right]$.\par
+  由$f_n,g_n \Rightarrow 0$, $\exists N_1,N_2$使得$n\geqslant N_1, m(E\left[|f_n|\geqslant \varepsilon\right])<\frac{\delta}{2}$, $n\geqslant N_2, m(E\left[|g_n|\geqslant 1\right])<\frac{\delta}{2}$.\par
+  取$N = \max\{N_1,N_2\}$, 则$\forall n\geqslant N$, $m(E\left[|f_ng_n|\geqslant \varepsilon\right])<\frac{\delta}{2}+\frac{\delta}{2}=\delta$.\par
+  这说明$\lim_{n \to \infty}m\left(E\left[|f_ng_n|\geqslant \varepsilon\right]\right) = 0$. 即$f_ng_n \Rightarrow 0$.\par
+\end{proof}
+
+\begin{corollary}
+  若$f_n\Rightarrow f$, $g_n = g$有界可测, 则$f_ng\Rightarrow fg$.\par
+\end{corollary}
+
+\begin{proof}
+  往证: $\forall \varepsilon >0, \lim_{n \to \infty}m\left(E\left[|f_ng-fg|\geqslant \varepsilon\right]\right) = 0$.\par
+  由$f_n\Rightarrow f$, $\exists N, \forall n\geqslant N, m(E\left[|f_n-f|\geqslant \frac{\varepsilon}{M}\right])<\delta$.\par
+  注意到$E\left[|f_ng-fg|\geqslant \varepsilon\right]\subset  E\left[|f_n-f|\geqslant \frac{\varepsilon}{M}\right]$,其中$M=\sup |g_n|=\sup |g|$.\par
+  于是$m\left(E\left[|f_ng-fg|\geqslant \varepsilon\right]\right)\leqslant m\left(E\left[|f_n-f|\geqslant \frac{\varepsilon}{M}\right]\right)<\delta$. 即$f_ng\Rightarrow fg$.\par
+\end{proof}
+
+\begin{remark}
+  上面的若干例子说明了依测度收敛的函数列在数乘和加法下是封闭的, 但同时注意到第二个推论中的有界性是必要的, 例如下面这个例子:\par
+  令$f_n(x)=\chi_{\left(\right.0,n\left.\right]} \frac{1}{x}$, $g(x)=x$, 则$f_n\Rightarrow 0$, 但$f_n\cdot g = \chi_{\left(\right.0,n\left.\right]}$, $f\cdot g = 1$. 此时并没有$\chi_{\left(\right.0,n\left.\right]}\Rightarrow \chi_{\left(0,\infty\right)}$.\par
+\end{remark}
+
+\newpage
+
+\section{可测函数的连续性}
+
+上面讨论的许多收敛都是在可测函数的基础上进行的, 现在我们讨论可测函数的连续性, 这一点是必须的, 这是因为后续我们在建立可积函数, 可测函数与联系函数的关系时会更进一步讨论连续的特点. \par
+
+\begin{lemma}
+  若$E$是一可测集, 则$C(E)\subset \mathcal{M} (E)$.
+\end{lemma}
+
+\begin{proof}
+  由$E$是可测集, 因此$E[f>a]=E\cap f^{-1}\left(a,\infty\right), \forall a \in \mathbb{R}$. \par
+  由连续映射的定义知, $f^{-1}\left(a,\infty\right)$是开集. 于是$E\cap f^{-1}\left(a,\infty\right)$可测.\par
+  即$E[f>a],\forall a \in \mathbb{R}$是可测的. 于是$f$是可测函数.\par
+\end{proof}
+
+上面这个定理说明了连续函数在可测集上是可测的, 下面我们为了得到更强结果的连续性条件, 我们首先考虑下面的一系列问题.\par
+
+\begin{lemma}
+  设$A,B$均为闭集, $A\cap B=\Phi$, 则$\exists g\in C(\mathbb{R}^n), \left.g\right|_A=1, \left.g\right|_B=0$.且$g$满足$|g(x)|\leqslant 1,\forall x\in \mathbb{R}^n$. \par
+\end{lemma}
+
+\begin{proof}
+  可以自然想到距离定义, 于是有$g=\frac{d(x,B)}{d(x,A)+d(x,B)}$.\par
+  其中$d(x,A)=\inf_{y\in A}|x-y|$, $d(x,B)=\inf_{y\in B}|x-y|$. 同样可以验证$g(x)$是满足上面的条件的.\par
+\end{proof}
+
+于是我们得到下面的定理, 具体说明了连续函数和可测函数的关系:\par
+
+\begin{theorem}
+  (Lusin I) 设$E$是一可测集, $f\in \mathcal{M} (E)$, 则$\forall \delta >0, \exists F\subset E, m(E\backslash F)<\delta,$ 其中$F$是闭集, 且$f$在$F$上连续.\par
+\end{theorem}
+
+\begin{proof}
+  由$f\in \mathcal{M} (E)$有, $\exists \psi_k \rightarrow f$, 其中$\psi_k$是简单函数.\par
+  若$f$有界可测, 则$\psi_k$有界, $\exists F_k, m(E\backslash F_k)<\frac{\delta}{2^{k+1}}$, 其中$F_k$是闭集. 此时$\psi_k$在$F_k$上连续.\par
+  令$F=\bigcap_{k=1}^{\infty}F_k$, 则$m(E\backslash F)\leqslant \sum_{k=1}^{\infty}m(E\backslash F_k)<\delta$. 于是$f$在$F$上连续.\par
+  若$f$无界, 构造$g(x)=\frac{f(x)}{1+|f(x)|}$, 则$g$是有界的, 且$g\in \mathcal{M} (E)$.\par
+  于是$\exists F\subset E, m(E\backslash F)<\delta$, 其中$F$是闭集, 且$g$在$F$上连续.\par
+  由$g(x)=\frac{f(x)}{1+|f(x)|}$, $g(x)+g(x)|f(x)|=f(x)$, 即$g(x)+|g(x)|f(x)=f(x)$, $f(x)=\frac{g(x)}{1-|g(x)|}$, $f$在$F$上连续.\par
+\end{proof}
+
+事实上我们还有$Lusin II$, 可以表示如下:\par
+
+\begin{theorem}
+  (Lusin II) 设$E$是一可测集, $f\in \mathcal{M} (E)$, 则$\forall \delta >0, \exists g\in C(\mathbb{R}^n), \exists F\subset E, m(E\backslash F)<\delta,$ 其中$F$是闭集, 且$g(x)=f(x),\forall x \in F$.\par
+\end{theorem}
+
+\begin{proof}
+  由Lusin I, 我们有$\exists F\subset E, m(E\backslash F)<\delta,$ 其中$F$是闭集, 且$f$在$F$上连续.\par
+  令$g=\left.f\right|_{F}$, 则$g\in C(F)$.\par
+  为了证明$g\in C(\mathbb{R}^n)$, 我们构造$g_k(x)=\left\{\begin{array}{ll}
+    g(x), & x\in F, \\
+    \frac{1}{k}, & x\in E\backslash F.
+  \end{array}\right.$\par
+  则$g_k\in C(\mathbb{R}^n)$, 且$\forall x\in F, g_k(x)=g(x)$, $\forall x\in E\backslash F, g_k(x)=\frac{1}{k}$.\par
+  于是$\forall x\in E, g_k(x)\rightarrow g(x)$, 这说明$g_k\rightarrow g$在$E$上收敛.\par
+  由于$g_k$是连续的, 因此$g\in C(\mathbb{R}^n)$.\par
+\end{proof}
+\newpage
+
+\chapter{Lebesgue积分}
+
+\section{非负可测函数的积分}
+
+在讨论一般的积分之前, 我们先定义下方图形, 这个概念实际上是Lebesgue积分的几何意义.\par
+
+\begin{definition}
+  设$f$是定义在$E$上的非负可测函数, 则称$f$的下方图形称为$G(E,f)=\{(x,z)\in \mathbb{R}^2: x\in E, 0\leqslant z< f(x)\}$.\par
+\end{definition}
+
+\begin{remark}
+  这里我们要求$0\leqslant z< f(x)$, 实际上$0\leqslant z\leqslant f(x)$所表达的几何意义是一样的, 但按照后者定义证明函数Lebesgue可测时需要更深层次的分析技术.\par
+\end{remark}
+
+下面我们依次定义特征函数和简单函数的Lebesgue积分, 后面我们将用这些函数来定义一般的非负可测函数的Lebesgue积分.\par
+
+\begin{definition}
+  设$f(x)=\chi_{A}(x)$, 则$\int_{E}f(x)\mathrm{d}x=1\cdot m(A\cap E)$称为$f(x)$在$E$上的Lebesgue积分.\par
+  设$f(x)=\sum_{k=1}^{N}c_k\cdot \chi_{A_k}(x)$, 则$\int_{E}f(x)\mathrm{d}x=\sum_{k=1}^{N}c_k\cdot m(A_k\cap E)$称为$f(x)$在$E$上的Lebesgue积分.\par
+\end{definition}
+
+\begin{remark}
+  显然可以得到特征函数和简单函数的Lebesgue积分的几何意义就是对应的下方图形的测度.\par
+\end{remark}
+
+\begin{lemma}
+  设$f$和$g$是定义在$E$上的非负简单函数, 则:\par
+  \begin{itemize}
+    \item $\int_{E}f(x)\mathrm{d}x\geqslant 0$.
+    \item 若$f(x)\leqslant g(x)$, 则$\int_{E}f(x)\mathrm{d}x\leqslant \int_{E}g(x)\mathrm{d}x$.
+    \item $\int_{E}(af(x)+bg(x))\mathrm{d}x=a\int_{E}f(x)\mathrm{d}x+b\int_{E}g(x)\mathrm{d}x$, 其中$a,b\in \mathrm{R}^{+}$.
+  \end{itemize}
+\end{lemma}
+
+下面我们定义一般的非负可测函数的Lebesgue积分.\par
+
+\begin{definition}
+  设$f:E\rightarrow [c,d]$是非负可测函数, 则$f$在$E$上有Riemann积分$\lim_{|\lambda|\rightarrow 0}\sum_{k=1}^{N}f(\xi_k)\cdot \Delta x_k$, 类似地, 我们有Lebesgue积分$\lim_{|\lambda|\rightarrow 0}\sum_{k=1}^{N}\eta_k\cdot m(E_k)$.\par
+\end{definition}
+
+不难注意到, 这里的$\eta_k$是$f$在$E_k$上的平均值, 而$m(E_k)$是$E_k$的测度, 因此$\eta_k\cdot m(E_k)$实际上是下方图形的面积. 但从严格证明的角度, 这种方式并不方便处理抽象测度的集合, 因此我们考虑下面这种定义方式:\par
+
+\begin{definition}
+  设$f:E\rightarrow [c,d]$是非负可测函数, 则$f$在$E$上有Lebesgue积分$\lim_{k\to \infty}\int_{E}\phi_k(x)\mathrm{d}x$, 其中$\phi_k(x)$为单增简单函数, 且$\phi_k(x)\rightarrow  f(x)$, $\forall x\in E$.\par
+\end{definition}
+
+这种定义方式看似简单, 但实际上需要证明$\phi_k(x)$的存在性, 并且若出现$\phi_k(x)$和$\psi_k(x)$时, 需要进一步说明$\lim_{k\to \infty}\int_{E}\phi_k(x)\mathrm{d}x=\lim_{k\to \infty}\int_{E}\psi _k(x)\mathrm{d}x$.\par
+
+\begin{definition}
+  设$f:E\rightarrow [c,d]$是非负可测函数, 则$f$在$E$上有Lebesgue积分$\sup\left\{\int_{E}\phi(x)\mathrm{d}x: 0\leqslant \phi(x) \leqslant f(x)\right\}$, 其中 $g(x)$是一列非负简单函数.\par
+\end{definition}
+
+后面的各种Lebesgue积分的问题中我们都只采用第三种方式定义, 但可以证明三种定义方式时等价的.\par
+
+\begin{lemma}
+  设$f$和$g$是定义在$E$上的非负可测函数, 则:\par
+  \begin{itemize}
+    \item $\int_{E}f(x)\mathrm{d}x\geqslant 0$.
+    \item 若$f(x)\leqslant g(x)$, 则$\int_{E}f(x)\mathrm{d}x\leqslant \int_{E}g(x)\mathrm{d}x$.
+    \item $\int_{E}(af(x)+bg(x))\mathrm{d}x=a\int_{E}f(x)\mathrm{d}x+b\int_{E}g(x)\mathrm{d}x$, 其中$a,b\in \mathrm{R}^{+}$.
+  \end{itemize}
+\end{lemma}
+
+\begin{theorem}
+  设$f$是定义在$E$上的非负可测函数, 则$\int_{E}f(x)\mathrm{d}x=m(G(E,f))$.\par
+\end{theorem}
+
+\begin{proof}
+  由$f$是非负可测函数, 则$\exists \phi_k(x)$是单增简单函数, 且$\phi_k(x)\rightarrow f(x)$, $\forall x\in E$.\par
+  于是$m(G(E,\phi_k))\leqslant m(G(E,f))$. 于是$\int_{E}f(x)\mathrm{d}x\leqslant m(G(E,f))$. 下证$\int_{E}f(x)\mathrm{d}x\geqslant m(G(E,f))$:\par
+  $\forall (x,z)\in G(E,f), x \in E, 0\leqslant z<f(x)$, 则$\exists \phi_{k0}(x)$满足$0\leqslant z<\phi_k(x)<f(x)$, $\forall x\in E$.\par
+  即$(x,z)\in G(E,\phi_{k_0})\subset \bigcup_{k=1}^{\infty}G(E,\phi_{k})\subset G(E,f)$.\par
+  由$(x,z)$的任意性, 有$m(G(E,f))\subset \bigcup_{k=1}^{\infty}(G(E,\phi_k))$.\par
+  于是$m(G(E,f))=\lim_{k\to \infty}m(G(E,\phi_k))$. 即$\int_{E}f(x)\mathrm{d}x\geqslant m(G(E,f))$.\par
+\end{proof}
+
+下面围绕非负可测函数的Lebesgue积分, 我们讨论一些性质.\par
+
+\begin{corollary}
+  设$f\in \mathcal{M} (E)$, $f\geqslant 0$, 若$\int_{E}f(x)\mathrm{d}x=0$, 则$f(x)=0$, a.e. on $E$.\par
+\end{corollary}
+
+\begin{proof}
+  假设$m(E[f\ne 0])>0$, 则$m(E[f> 0])>0$, 于是$m(\bigcup_{n=1}^{\infty}E[f>\frac{1}{n}])$.\par
+  于是$\exists n_0>0, \delta>0, m(E[f>\frac{1}{n_0}])\geqslant \delta>0$.\par
+  此时就会有$\int_{E}f(x)\mathrm{d}x\geqslant \frac{1}{n_0}\cdot m(E[f>\frac{1}{n_0}])\geqslant \frac{\delta}{n_0}>0$.\par 
+\end{proof}
+
+\begin{corollary}
+  设$f\in \mathcal{M} (E)$, $m(E)\geqslant 0$, $f>0$ a.e. on $E$, 则$\int_{E}f(x)\mathrm{d}x>0$.\par
+\end{corollary}
+
+\begin{proof}
+  由$f>0$ a.e. on $E$, 则$m(E[f>0])>0$. 于是$\forall \varepsilon >0, m(E[f>\varepsilon])>0$.\par
+  于是$\int_{E}f(x)\mathrm{d}x\geqslant \varepsilon\cdot m(E[f>\varepsilon])>0$.\par
+\end{proof}
+
+\begin{theorem}
+  (Levi) 设${f_n}\in \mathcal{M}(E)$, $f_n(x)\geqslant 0$ a.e. on $E$, 且$f_n(x)$单增收敛至$f(x)$, 则$f\in \mathcal{M}(E)$, 且$\lim_{n \to \infty}\int_{E}f_n(x)\mathrm{d}x= \int_{E}f(x)\mathrm{d}x$.\par 
+\end{theorem}
+
+\begin{proof}
+  考虑证明$\lim_{n \to \infty}G(E,f_n) = G(E,f)$:\par
+  $\lim_{n \to \infty}G(E,f_n) \subset G(E,f)$: $\forall (x,z)\in G(E,f_n), x\in E, 0\leqslant z<f_n(x)$, 则$\exists N>0, \forall n\geqslant N, f_n(x)\leqslant f(x)$, 于是$(x,z)\in G(E,f)$.\par
+  $\lim_{n \to \infty}G(E,f_n) \supset G(E,f)$: $\exists f_{n_0}(x)$满足$0\leqslant z<f_{n_0}(x)<f(x)$, $\forall x\in E$, 则$(x,z)\in G(E,f_{n_0})\subset \bigcup_{n=1}^{\infty}G(E,f_n)=\lim_{n \to \infty}G(E,f_n)\subset G(E,f)$.\par
+  因此$\lim_{n \to \infty}G(E,f_n) = G(E,f)$.\par
+\end{proof}
+
+\begin{corollary}
+  (Lebesgue 逐项积分) 设${f_n}\in \mathcal{M}(E)$, $f_n(x)\geqslant 0$ a.e. on $E$, $\forall n$, 则$\int_{E}\left(\sum_{n=1}^{\infty}f_n(x)\right)\mathrm{d}x = \sum_{n=1}^{\infty}\left(\int_{E}f_n(x)\mathrm{d}x\right)$.\par
+\end{corollary}
+
+\begin{proof}
+  记$P_n(x)=\sum_{k=1}^{n}f_k(x)$, 则$P_n(x)$是单增的, 且$P_n(x)\rightarrow \sum_{k=1}^{\infty}f_k(x)$ a.e. on $E$.\par
+  由Levi定理, $\lim_{n \to \infty}\int_{E}P_n(x)\mathrm{d}x= \int_{E}\left(\sum_{k=1}^{\infty}f_k(x)\right)\mathrm{d}x$.\par
+  由于$P_n(x)=\sum_{k=1}^{n}f_k(x)$, 则$\int_{E}P_n(x)\mathrm{d}x=\sum_{k=1}^{n}\left(\int_{E}f_k(x)\mathrm{d}x\right)$.\par
+  于是$\sum_{k=1}^{\infty}\left(\int_{E}f_k(x)\mathrm{d}x\right)= \int_{E}\left(\sum_{k=1}^{\infty}f_k(x)\right)\mathrm{d}x$.\par
+\end{proof}
+
+\begin{theorem}
+  (Fatou) 设${f_n}\in \mathcal{M}(E)$, $f_n(x)\geqslant 0$ a.e. on $E$, 则$\int_{E}\liminf_{n \to \infty}f(x)\mathrm{d}x\leqslant \liminf_{n \to \infty}\int_{E}f_n(x)\mathrm{d}x$.\par
+\end{theorem}
+
+\begin{proof}
+  $\liminf_{n \to \infty}f_n(x)=\lim_{N \to \infty}\inf_{n\geqslant N}f_n(x)$, 记$g_N(x) = \inf_{n\geqslant N}f_n(x)$, 于是$\inf_{n\geqslant N}\int_{E}f_n(x)\mathrm{d}x\geqslant \int_{E}g_N(x)$.\par
+  两边取极限有$\lim_{N \to \infty}\inf_{n\geqslant N}\int_{E}f_n(x)\mathrm{d}x\geqslant \int_{E}\left(\liminf_{n \to \infty}f_n(x)\right)\mathrm{d}x$.\par
+\end{proof}
+
+\newpage
+
+\section{一般可测函数的积分}
+
+对于一般可测函数, 我们考虑将其分成正部函数和负部函数, 于是有下面的定义:\par
+
+\begin{definition}
+  $f$在$E$上的Lebesgue积分定义为$\int_{E}f(x)\mathrm{d}x=\int_{E}f^{+}(x)\mathrm{d}x-\int_{E}f^{-}(x)\mathrm{d}x$.\par
+\end{definition}
+
+\begin{lemma}
+  考虑$f$在$E$上的积分存在和可积的充要条件, 我们有:\par
+  \begin{itemize}
+    \item $f$在$E$上积分存在, 即$\int_{E}f^{+}(x)\mathrm{d}x$ 和$\int_{E}f^{-}(x)\mathrm{d}x$至多一个为$\infty$.
+    \item $f$在$E$上可积, 即$\int_{E}f^{+}(x)\mathrm{d}x$ 和$\int_{E}f^{-}(x)\mathrm{d}x$均有限.
+  \end{itemize}
+\end{lemma}
+
+\begin{proof}
+  $f$在$E$上积分存在, 即$\int_{E}f(x)\mathrm{d}x=\int_{E}f^{+}(x)\mathrm{d}x-\int_{E}f^{-}(x)\mathrm{d}x$可以运算, 显然需要$f^{+}$和$f^{-}$至少有一个是有限的.\par
+  $f$在$E$上可积, 即$|\int_{E}f(x)\mathrm{d}x|<+\infty$, 则$\int_{E}f^{+}(x)\mathrm{d}x$ 和$\int_{E}f^{-}(x)\mathrm{d}x$均有限.\par
+\end{proof}
+
+下面给出一些一般可测函数的性质:\par
+
+\begin{proposition}
+  \begin{itemize}
+    \item 若$f=g$ a.e. on $E$, 则$\int_{E}f(x)\mathrm{d}x=\int_{E}g(x)\mathrm{d}x$.\par
+    \item 若$f\in L(E_1)$, $f\in L(E_2)$, 则$f\in L(E_1\cup E_2)$.\par
+    \item 若$f\in L(E)$, 则$\left|\int_{E}f(x)\mathrm{d}x\right|\leqslant \int_{E}|f(x)|\mathrm{d}x$.\par
+    \item 若$f\in L(E)$, 则$f$在$E$上几乎处处有限.\par
+  \end{itemize}
+\end{proposition}
+
+\begin{proof}
+  \begin{itemize}
+    \item 由$f=g$ a.e. on $E$, 则$m(E[f\ne g])=0$, 于是$\int_{E}f(x)\mathrm{d}x=\int_{E}g(x)\mathrm{d}x$, 其中$\int_{E[f\ne g]}f(x)\mathrm{d}x=\int_{E[f\ne g]}g(x)\mathrm{d}x=0$.\par
+    \item 由$f\in L(E_1)$, $f\in L(E_2)$, 则$\int_{E_1\cup E_2}f^{+}(x)\mathrm{d}x<\int_{E_1}f^{+}(x)\mathrm{d}x+\int_{E_2}f^{+}(x)\mathrm{d}x<+\infty$, $\int_{E_1\cup E_2}f^{-}(x)\mathrm{d}x<\int_{E_1}f^{-}(x)\mathrm{d}x+\int_{E_2}f^{-}(x)\mathrm{d}x<+\infty$, 于是$\int_{E_1\cup E_2}f(x)\mathrm{d}x<+\infty$.\par
+    \item 由$f\in L(E)$, 则$\int_{E}|f(x)|\mathrm{d}x<+\infty$, 于是$\left|\int_{E}f(x)\mathrm{d}x\right|=\left|\int_{E}f^{+}(x)\mathrm{d}x-\int_{E}f^{-}(x)\mathrm{d}x\right|\leqslant \left|\int_{E}f^{+}(x)|\mathrm{d}x\right|+\left|\int_{E}f^{-}(x)|\mathrm{d}x\right|=\int_{E}\left|f(x)\right|\mathrm{d}x$.\par
+    \item $f$ a.e. 有限等价于$f^{+}$和$f^{-}$ a.e. 有限. 由$f\in L(E)$, $\int_{E}f^{+}(x)\mathrm{d}x\geqslant \int_{E[f^{+}=\infty]}f^{+}(x)\mathrm{d}x\geqslant N\cdot m(E[f^{+}=\infty]), \forall N \in \mathbb{N}$. 于是$m(E[f^{+}=\infty])<\frac{a}{N}, \forall N\in \mathbb{N}$. 即$m(E[f^{+}=\infty])=0$. $f^{-}(x)$同理可证. 于是$f$在$E$上几乎处处有限.\par
+  \end{itemize}
+\end{proof}
+
+\begin{remark}
+  若$f\in L(E_i), i=1,2,\cdots$, 未必有$f\in L\left(\bigcup_{i=1}^{\infty}E_i\right)$, 也未必有$f$在$\bigcup_{i=1}^{\infty}E_i$上积分存在.\par
+  例如$f(x)=1$, $E_i=[i,i+1]$, $\bigcup_{i=1}^{\infty}E_i=\left[1\right.\left.,\infty\right)$, 此时$f$在$\left[1\right.\left.,\infty\right)$上不可积.\par
+  另可取$f(x)=(-1)^{i}$, $E_i=[i,i+1]$, 此时$f$在$\bigcup_{i=1}^{\infty}E_i$上积分不存在.\par
+\end{remark}
+
+下面考虑一种方法, 用来控制$f_n$在$E$上的积分值, 为了说明这个特点, 我们首先需要引入绝对连续性, 并结合上面提及过的依测度收敛给出下面一个定理.\par
+
+\begin{definition}
+  设$f\in L(E)$, 若$\forall \varepsilon >0, \exists \delta >0, \forall e\subset E, m(e)<\delta$, 有$\left|\int_{e}f(x)\mathrm{d}x\right|<\int_{e}\left|f(x)\right|\mathrm{d}x<\varepsilon$, 则称$f$在$E$上绝对连续.\par
+\end{definition}
+
+\begin{theorem}
+  设$f\in L(E)$, 则$f$在$E$上绝对连续.\par
+\end{theorem}
+
+\begin{proof}
+  由$f\in L(E)$, 则$\int_{E}|f(x)|\mathrm{d}x<+\infty$, 下面考虑取${\varphi_k}$单增简单函数逼近$f$, 于是$\int_{E}|f|\mathrm{d}x=\lim_{k \to \infty}\int_{E}\varphi_k(x)\mathrm{d}x$.\par
+  即$\forall \varepsilon >0, \exists K>0, \forall k>K, \left|\int_{E}|f|\mathrm{d}x-\int_{E}\varphi_k(x)\mathrm{d}x\right|<\frac{\varepsilon}{2}$.\par
+  考虑$f$可积, 于是$|f|=\sum_{k=1}^{n}c_k\chi_{E_k}(x)$, 记$M=\sup \{c_k:k=1,2,\cdots\}\geqslant |f|$, 则有$\int_{e}f(x)\mathrm{d}x\leqslant \int_{e}M\mathrm{d}x\leqslant M\cdot m(e) = M\cdot \delta$, $\forall e\subset E$.
+  取$\delta = \frac{\varepsilon}{2M}$, 则$\int_{e}|f(x)|\mathrm{d}x\leqslant \frac{\varepsilon}{2}+\frac{\varepsilon}{2M}\cdot M=\varepsilon$.\par
+  于是$ \exists \delta >0, \forall e\subset E, m(e)<\delta$, 有$\left|\int_{e}f(x)\mathrm{d}x\right|<\int_{e}\left|f(x)\right|\mathrm{d}x<\varepsilon$.\par
+  这说明$f$在$E$上绝对连续.\par
+\end{proof}
+
+\begin{theorem}
+  (Lebesgue 控制收敛) 设$f_n$几乎处处有限且可测, $F(x)\geqslant |f_n(x)|$, 其中$F$可积, $f_n\Rightarrow f$在$E$上, 则$f\in L(E)$, 且$\int_{E}f(x)\mathrm{d}x=\lim_{n\to \infty} \int_{E}f_n(x)\mathrm{d}x$.\par
+\end{theorem}
+
+\begin{proof}
+  由在$E$上$f_n\Rightarrow f$, $\exists f_{n_k}, f_{n_k}\rightarrow f$ a.e. on $E$, 又有$F(x)\geqslant |f_{n_k}(x)|$, 则$|f|\leqslant F$, 于是$f$在$E$上可积.\par
+  下证$\int_{E}f(x)\mathrm{d}x=\lim_{n\to \infty} \int_{E}f_n(x)\mathrm{d}x$:\par
+  考虑$E=\bigcup_{k=1}^{\infty}E_k$, 其中$\{E_k\}$递增可测.\par
+  由$0\leqslant \int_{E}F(x)\mathrm{d}x=\lim_{k\to \infty}\int_{E_k}F(x)\mathrm{d}x<+\infty$, $\forall \varepsilon >0, \exists k\in \mathrm{N}, \int_{E\backslash E_k}F(x)\mathrm{d}x<\frac{\varepsilon}{4}$.\par
+  于是有$\lim_{n\to \infty}\int_{E_k}f_n(x)\mathrm{d}x=\int_{E_k}f(x)\mathrm{d}x$. 下面考虑$\left|\int_{E_k}(f-f_n)\mathrm{d}x\right|=\left|\int_{E_k}f\mathrm{d}x-\int_{E_k}f_n\mathrm{d}x\right|<\frac{\varepsilon}{2}$.\par
+  于是有$\exists N\in \mathrm{N}, n\geqslant N, \left|\int_{E}f\mathrm{d}x-\int_{E}f_n\mathrm{d}x\right|=\left|\int_{E}(f-f_n)\mathrm{d}x\right|\leqslant \frac{\varepsilon}{2}+2\int_{E\backslash E_k}F\mathrm{d}x=\varepsilon$.\par
+  即$\int_{E}f(x)\mathrm{d}x=\lim_{n\to \infty} \int_{E}f_n(x)\mathrm{d}x$.\par
+\end{proof}
+
+\begin{remark}
+  Lebesgue控制收敛定理中依测度收敛可以改成几乎处处收敛, 而且在全空间测度有限的情况下有几乎处处收敛函数列必定近乎一致收敛, 因此也有对应于近乎一致收敛的定理.\par
+\end{remark}
+
+类似地, 我们还有Lebesgue有界收敛定理, 可以表示如下:\par
+
+\begin{corollary}
+  (Lebesgue 有界收敛) 设$f_n$几乎处处有限且可测, $m(E)<+\infty$, $\exists K >0, K\geqslant |f_n(x)|$, $f_n\Rightarrow f$在$E$上, 则$f\in L(E)$, 且$\int_{E}f(x)\mathrm{d}x=\lim_{n\to \infty} \int_{E}f_n(x)\mathrm{d}x$.\par
+\end{corollary}
+
+\begin{remark}
+  其证明过程和Lebesgue控制收敛定理完全相同, 因为这里要求有界性是一致的.\par
+  事实上, 在面对具体函数时, 使用Lebesgue有界收敛定理更方便, 因为判断函数列的界比判断其极限的有限性更简单.\par
+\end{remark}
+
+\newpage
+
+\section{Lebesgue积分与Riemann积分的关系}
+
+在讨论完基本的Lebesgue积分性质后, 我们回到最初的问题, 即分析Lebesgue积分为什么在一定程度上可以代替Riemann积分, 以及两者之间的关系. 为了明确Riemann积分的特点, 我们首先给出一个描述振幅函数的引理.\par
+
+\begin{lemma}
+  设$f$是定义在$[a,b]$上的有界函数, 记$\omega(x)$为$f$在$x$处的振幅函数, 则有$\int_{[a,b]}\omega(x)\mathrm{d}x=\overline{\int_{a}^{b}}f(x)\mathrm{d}x-\underline{\int_{a}^{b}}f(x)\mathrm{d}x$.\par
+  其中$\int_{[a,b]}\omega(x)\mathrm{d}x$是$f$在$[a,b]$上的Lebesgue积分, $\overline{\int_{a}^{b}}f(x)\mathrm{d}x$和$\underline{\int_{a}^{b}}f(x)\mathrm{d}x$分别是$f$在$[a,b]$上的上Riemann积分和下Riemann积分.\par
+\end{lemma}
+
+\begin{proof}
+  由$f$是有界函数, $\omega(x)$也是有界函数, 因此是可积的.\par
+  对$[a,b]$作划分$a=x_0<x_1<\cdots<x_n=b$, 令$M_i=\sup \{f(x): x_{i-1}<x<x_{i}\}, m_i=\inf \{f(x): x_{i-1}<x<x_{i}\}$, 则有$\overline{\int_{a}^{b}}f(x)\mathrm{d}x=\lim_{n \to \infty}\sum_{i=1}^{n}M_i\cdot (x_i-x_{i-1})$, $\underline{\int_{a}^{b}}f(x)\mathrm{d}x=\lim_{n \to \infty}\sum_{i=1}^{n}m_i\cdot (x_i-x_{i-1})$.\par
+  于是可以作函数列$\omega_{n}(x)=\begin{cases}
+    M_i-m_i, & x\in (x_{i-1},x_i), i=1,2,\cdots,n-1\\
+    0, & x=x_i, i=1,2,\cdots,n
+  \end{cases}$, 记分点全体为$E$, 则有$m(E)=0$, $\lim_{n \to \infty}\omega_{n}(x)=\omega(x)$ a.e. on $[a,b]$.\par
+  注意到$\omega_{n}(x)$是单增有界函数,于是有$\lim_{n \to \infty}\int_{[a,b]}\omega_{n}(x)\mathrm{d}x=\int_{[a,b]}\omega(x)\mathrm{d}x$.\par
+  事实上我们有$\int_{[a,b]}\omega_{n}(x)\mathrm{d}x=\sum_{i=1}^{n}(M_i-m_i)(x_i-x_{i-1})=\sum_{i=1}^{n}M_i\cdot (x_i-x_{i-1})-\sum_{i=1}^{n}m_i\cdot (x_i-x_{i-1})$.\par
+  于是$\int_{[a,b]}\omega(x)\mathrm{d}x=\lim_{n \to \infty}\int_{[a,b]}\omega_{n}(x)\mathrm{d}x=\lim_{n \to \infty}\left(\overline{\int_{a}^{b}}f(x)\mathrm{d}x-\underline{\int_{a}^{b}}f(x)\mathrm{d}x\right)$.\par
+  即$\int_{[a,b]}\omega(x)\mathrm{d}x=\overline{\int_{a}^{b}}f(x)\mathrm{d}x-\underline{\int_{a}^{b}}f(x)\mathrm{d}x$.\par
+\end{proof}
+
+\begin{theorem}
+  (Riemann可积) 设$f$是区间$[a,b]$上的有界函数, 则$f$在$[a,b]$上Riemann可积的充要条件是$f$在$[a,b]$上几乎处处连续.\par
+\end{theorem}
+
+\begin{proof}
+  由$f$在$[a,b]$上Riemann可积, 可知$f$在$[a,b]$上的Darboux上积分和Darboux下积分相等, 因此由上面的引理知, $\int_{[a,b]}\omega(x)\mathrm{d}x=0$.\par
+  由于$\omega(x)$是$f$在$x$处的振幅函数, 在$[a,b]$上几乎处处为零, 因此$f$在$[a,b]$上几乎处处连续.\par
+  反之, 若$f$在$[a,b]$上几乎处处连续, 则$\omega(x)$几乎处处为零, 因此由上面的引理知, $\int_{[a,b]}\omega(x)\mathrm{d}x=0$.\par
+  于是$f$在$[a,b]$上的Darboux上积分和下积分相等, $f$在$[a,b]$上Riemann可积.\par
+\end{proof}
+
+\begin{remark}
+  上面的结果告诉我们, 一个函数的Riemann可积性是取决于其在一个函数值有界的区间上的连续点全体的测度, 而不是不连续点的函数值.\par
+\end{remark}
+
+\begin{theorem}
+  若$f$是Riemann可积的, 则$f$在$[a,b]$上Lebesgue可积, 且$\int_{[a,b]}f(x)\mathrm{d}x=\int_{a}^{b}f(x)\mathrm{d}x$.\par
+\end{theorem}
+
+\begin{proof}
+  首先我们知道, $f$Riemann可积时一定有$f$在$[a,b]$上几乎处处连续, 于是$f$在$[a,b]$上Lebesgue可积.\par
+  下面来说明两种积分值也是相同的:\par
+  对$[a,b]$作任意划分$a=x_0<x_1<\cdots<x_n=b$, 令$M_i=\sup \{f(x): x_{i-1}<x<x_{i}\}, m_i=\inf \{f(x): x_{i-1}<x<x_{i}\}$, 则有$\int_{[a,b]}f(x)\mathrm{d}x=\sum_{i=1}^{n}\int_{[x_{i-1},x_i]}f(x)\mathrm{d}x$.\par
+  另一方面考虑$m_i(x_{i-1}-x_{i})\leqslant \int_{[x_{i-1},x_i]}f(x)\mathrm{d}x\leqslant M_i(x_{i-1}-x_{i})$, 于是有$\sum_{i=1}^{n}m_i(x_{i-1}-x_{i})\leqslant \int_{[a,b]}f(x)\mathrm{d}x\leqslant \sum_{i=1}^{n}M_i(x_{i-1}-x_{i})$.\par
+  上式左右两边取上下确界有$\underline{\int_{a}^{b}}f(x)\mathrm{d}x= \int_{[a,b]}f(x)\mathrm{d}x= \overline{\int_{a}^{b}}f(x)\mathrm{d}x$.\par
+  这说明$f$在$[a,b]$上Lebesgue可积, 且$\int_{[a,b]}f(x)\mathrm{d}x=\int_{a}^{b}f(x)\mathrm{d}x$.\par
+\end{proof}
+
+\begin{remark}
+  上述结论反之不一定成立, 即Lebesgue可积的函数不一定是Riemann可积的.\par
+\end{remark}
+
+下面我们考虑广义积分, 在Riemann积分的意义下, 其本质是累次极限, 但在这里我们有下面的结果, 说明广义的Lebesgue积分是绝对收敛的积分.\par
+
+\begin{theorem}
+  设$\{E_k\}$单增可测, 且$\bigcup_{k=1}^{\infty}E_k=E$, $f$在$E_K$上可积, 若$\lim_{k \to \infty}\int_{E_k}|f(x)|\mathrm{d}x$存在, 则$f$在$E$上可积, 且$\int_{E}f(x)\mathrm{d}x=\lim_{k \to \infty}\int_{E_k}f(x)\mathrm{d}x$.\par
+\end{theorem}
+
+\begin{proof}
+  取$F_k(x)=|f(x)|\chi_{E_k}(x)$, 则$F_k$在$E_k$上可积, 且$\int_{E_k}F_k(x)\mathrm{d}x=\int_{E_k}|f(x)|\mathrm{d}x$, $\forall k\in \mathbb{N}$.\par
+  由Levi, $\lim_{k \to \infty}\int_{E_k}F_k(x)\mathrm{d}x=\int_{E}F(x)\mathrm{d}x$, 其中$F(x)=|f(x)|\chi_{E}(x)$.\par
+  由于$\lim_{k \to \infty}\int_{E_k}|f(x)|\mathrm{d}x$存在, 则$\int_{E}F(x)\mathrm{d}x=\lim_{k \to \infty}\int_{E_k}|f(x)|\mathrm{d}x<+\infty$.\par
+  即$f$在$E$上可积, 且$\int_{E}f(x)\mathrm{d}x=\lim_{k \to \infty}\int_{E_k}f(x)\mathrm{d}x$.\par
+\end{proof}
+
+\begin{remark}
+  事实上我们可以发现, 广义积分和Lebesgue积分都是对Riemann积分的一种推广, 而又有这样的例子说明广义积分存在的函数总可积时这种积分对区域不具备可加性.\par
+\end{remark}
+
+\newpage
+
+\section{重积分与累次积分的关系}
+
+在以往的分析中, 我们已经讨论过重积分和累次积分的关系, 而这里为了给出更完善的结果, 我们进一步讨论在Lebesgue积分意义下的重积分和累次积分的关系.\par
+
+\begin{theorem}
+  在Riemann积分的意义下, 若$f$在$E=\left[a_1,b_1\right]\times \left[a_2,b_2\right]$上Riemann可积, 则$\int_{E}f(x,y)\mathrm{d}x\mathrm{d}y=\int_{a_1}^{b_1}\left(\int_{a_2}^{b_2}f(x,y)\mathrm{d}y\right)\mathrm{d}x=\int_{a_2}^{b_2}\left(\int_{a_1}^{b_1}f(x,y)\mathrm{d}x\right)\mathrm{d}y$.\par
+\end{theorem}
+
+\begin{remark}
+  这个结果是显然的, 我们不再证明, 但同时需要注意到, 这种想法是很难直接迁移到Lebesgue积分上的.\par
+\end{remark}
+
+类似地, 我们首先讨论非负可测函数的结果, 并推广至一般可测函数.\par
+
+\begin{lemma}
+  设$f(x,y)$是定义在$\mathbb{R}^n=\mathbb{R}^p\times \mathbb{R}^q$上的非负可测函数, 若$f$满足:\par
+  \begin{itemize}
+    \item $f(x,y)$是对于几乎处处的$x\in \mathbb{R}^p$都关于$y$非负可测的函数.
+    \item $F_f(x)=\int_{\mathbb{R}^q}f(x,y)\mathrm{d}y$是$\mathbb{R}^p$上关于$x$的可测函数.
+    \item $\int_{\mathbb{R}^p}F_f(x)\mathrm{d}x=\int_{\mathbb{R}^p}\mathrm{d}x\int_{\mathbb{R}^q}f(x,y)\mathrm{d}y=\int_{\mathbb{R}^n}f(x,y)\mathrm{d}x\mathrm{d}y$.
+  \end{itemize}
+  则称$f\in \mathcal{F}$.\par
+  对于$f,g\in \mathcal{F}$, 有:\par
+  \begin{itemize}
+    \item $\forall a \geqslant 0, af\in \mathcal{F}$.
+    \item $f+g\in \mathcal{F}$.
+    \item 若$f(x,y)-g(x,y)\geqslant 0$, 且$g$是在$\mathbb{R}^n$上可积的, 则$f-g\in \mathcal{F}$.
+    \item 若单增函数列$f_k\in \mathcal{F}$, 且$f_k(x,y)\rightarrow f(x,y)$ a.e. on $\mathbb{R}^n$, 则$f\in \mathcal{F}$.
+  \end{itemize}
+\end{lemma}
+
+\begin{proof}
+  根据积分的性质, 第一条和第二条是显然的.\par
+  对于第三条, 若$g\in \mathcal{F}$, 则$F_g(x)$几乎处处有限, 于是根据$(f(x,y)-g(x,y))+g(x,y)=f(x,y)$, 有$f-g\in \mathcal{F}$.\par
+  对于第四条, 往证$f$满足上面三条性质, 事实上第一条是显然的. 由于$f_k \in \mathcal{F}$, 因此$\int_{\mathbb{R}^q}f(x,y)\mathrm{d}y=\lim_{k \to \infty}\int_{\mathbb{R}^q}f_k(x,y)\mathrm{d}y$, 也是非负可测的.\par
+  最后考虑$\int_{\mathbb{R}^n}f(x,y)\mathrm{d}x\mathrm{d}y=\lim_{k \to \infty}\int_{\mathbb{R}^n}f_k(x,y)\mathrm{d}x\mathrm{d}y=\lim_{k \to \infty}\int_{\mathbb{R}^p}\mathrm{d}x\int_{\mathbb{R}^q}f_k(x,y)\mathrm{d}y$.\par
+  由$f_k(x,y)\rightarrow f(x,y)$ a.e. on $\mathbb{R}^n$,\par
+  我们有$\lim_{k \to \infty}\int_{\mathbb{R}^p}\mathrm{d}x\int_{\mathbb{R}^q}f_k(x,y)\mathrm{d}y\int_{\mathbb{R}^p}\mathrm{d}x\int_{\mathbb{R}^q}\lim_{k \to \infty}f_k(x,y)\mathrm{d}y=\int_{\mathbb{R}^p}\mathrm{d}x\int_{\mathbb{R}^q}f(x,y)\mathrm{d}y$.\par
+  于是$f\in \mathcal{F}$.\par
+\end{proof}
+
+\begin{theorem}
+  (Tonelli) 所有的非负可测函数$f$都满足$f\in\mathcal{F}$.\par
+\end{theorem}
+
+\begin{proof}
+  事实上由上面的引理, 我们只需要证明所有的非负可测简单函数都满足$f\in \mathcal{F}$. \par
+  更进一步, 根据上面的线性性质, 我们只需要说明所有在可测集上示性函数都满足$f\in \mathcal{F}$. \par
+  下面我们将仿照乘积测度的证明, 分若干步得到这个结果:\par
+  若$E=I_1\times I_2$, 则显然有$\int_{E}\chi_E(x,y)\mathrm{d}x\mathrm{d}y=\int_{I_1}\mathrm{d}x\int_{I_2}\mathrm{d}y=m(I_1)m(I_2)=|I_1||I_2|=m(E)$.\par
+  另一方面可以很自然验证$\chi_{E}(x,y)$是对于几乎处处的$x\in I_1$, $\chi_{E}(x,y)$关于$y$的非负可测函数.\par
+  若$E$为开集, 则可以找到一列区间的并, 类似也有结果.\par
+  若$E$为有界闭集, 则$E$可以表示为两个有界开集的差, 由上面引理的第三条结果可以得到.\par
+  若$E$为有界可测集, 则可以找到一列有界闭集的并, 由上面引理的第四条结果可以得到.\par
+  若$E$为一般的可测集, 则可以考虑$E=\left(\bigcup_{k=1}^{\infty}F_k\right)\cup \mathbb{Z}$, 其中$F_k$均为有界闭集, 因此$\chi_{E_k}(x,y)\in \mathcal{F}$.\par
+  另外由于$m(\mathbb{Z})=0$, 因此$\chi_{\mathbb{Z}}(x,y)$也是可测的, 于是$\chi_{E}(x,y)=\lim_{k \to \infty}\chi_{\bigcup_{k=1}^{\infty} F_k}(x,y)+\chi_{\mathbb{Z}}(x,y)$, 由上面引理的第四条和第二条结果可以得到.\par
+\end{proof}
+
+\begin{remark}
+  Tonelli定理中要求的三个结果可以对$x$和$y$交换顺序, 这是十分显然的.\par
+\end{remark}
+
+下面类似地, 我们把一般可测函数分为正部和负部, 也可以得到类似的性质.\par
+
+\begin{theorem}
+  (Fubini) 所有的可测函数$f$都满足$f\in\mathcal{F}$.\par
+\end{theorem}
+
+\begin{proof}
+  令$f(x,y)=f^{+}(x,y)-f^{-}(x,y)$, 其中$f^{+}(x,y)=\max\{f(x,y),0\}, f^{-}(x,y)=\max\{-f(x,y),0\}$, 则$f^{+}$和$f^{-}$都是非负可测函数.\par
+  由Tonelli定理, $f^{+}\in \mathcal{F}$, $f^{-}\in \mathcal{F}$, 又有$f=f^{+}-f^{-}$, 因此由上面引理的第三条结果, 有$f\in \mathcal{F}$.\par
+\end{proof}
+
+\newpage
+
+\chapter{习题集}
+
+\begin{remark}
+  这里收集了一些常见的例子和反例, 以帮助理解集合论和测度论中的一些概念. 题目可能没有按照理解Lebesgue测度的顺序安排, 但足够体现实分析的整体特点.\par
+\end{remark}
+
+\begin{example}
+  集合可以与其真子集对等.
+\end{example}
+
+\begin{proof}
+  在连续集和离散集中均存在例子, 考虑$\mathbb{N}$和$\mathbb{N}\backslash \{1\}$, 则$\mathbb{N}$和$\mathbb{N}\backslash \{1\}$是等势的.\par
+  另考虑$\mathbb{R}$和$[0,1]$, 可以构造双射$f:\mathbb{R}\rightarrow [0,1]$, 例如$f(x)=\frac{x}{1+|x|}$, 则$f$是双射, 且$f(\mathbb{R})=[0,1]$.\par
+  于是$\mathbb{R}$和$[0,1]$是等势的.\par
+\end{proof}
+
+\begin{example}
+  稠密集的余集不一定是疏朗集.
+\end{example}
+
+\begin{proof}
+  考虑$\mathbb{Q}$和$\mathbb{R}\backslash \mathbb{Q}$, 则$\mathbb{Q}$和$\mathbb{R}\backslash \mathbb{Q}$均为稠密集, 但$\mathbb{R}\backslash \mathbb{Q}$的余集$\mathbb{Q}$不是疏朗集.\par
+\end{proof}
+
+\begin{example}
+  $A \backslash C =  B \backslash C \nRightarrow A = B$.
+\end{example}
+
+\begin{proof}
+  反例可取$A=\{1,2,3\}, B=\{1,3\}, C=\{2\}$, 则$A \backslash C = \{1\} \nRightarrow B \backslash C = \{1,3\}$. 但$A=B$.\par
+\end{proof}
+
+\begin{example}
+  全体有理系数多项式是可数集.
+\end{example}
+
+\begin{proof}
+  设$P_n(x)=a_0+a_1x+\cdots+a_nx^n$, 其中$a_i\in \mathbb{Q}$, 则$P_n(x)$的系数个数为$n+1$, 因此全体有理系数多项式的个数为$\bigcup_{n=0}^{\infty}\mathbb{Q}^{n+1}$.\par
+  由于$\mathbb{Q}$是可数集, $\mathbb{Q}^{n+1}$是可数集, 因此$\bigcup_{n=0}^{\infty}\mathbb{Q}^{n+1}$是可数集.\par
+\end{proof}
+
+\begin{example}
+  开集一定是某一列闭集的并集.
+\end{example}
+
+\begin{proof}
+  设$E$是开集, 则$\forall x\in E, \exists r>0, B(x,r)\subset E$, 于是$E=\bigcup_{x\in E}B(x,r)$.\par
+  由于$B(x,r)$是闭集, 因此$E$是某一列闭集的并集.\par
+\end{proof}
+
+\begin{example}
+  任意多个可测集的交集不一定是可测集.
+\end{example}
+
+\begin{proof}
+  只能说明至多可列的情形是成立的.\par
+\end{proof}
+
+\begin{example}
+  外测度有限的集合不一定是有界集.\par
+\end{example}
+
+\begin{proof}
+  例如$\mathbb{N}$, 外测度有限, 但$\mathbb{N}$无界.\par
+\end{proof}
+
+\begin{example}
+  孤立集是至多可数集, 但可能有聚点.\par
+\end{example}
+
+\begin{proof}
+  例如$\{\frac{1}{n}\}$是孤立集, 但$0$是其聚点.\par
+\end{proof}
+
+\begin{example}
+  设映射$\varphi : A \to B$, $B \subset \varphi(\varphi^{-1}(B))$不一定成立.
+\end{example}
+
+\begin{proof}
+  例如考虑$A=\{1\}, B=\{1,2\}$, $\varphi(1)=1$, $\varphi^{-1}(B)=\{1\}$, $\varphi(\varphi^{-1}(B))=\{1\}$, 但$B \nsubseteq \{1\}$.\par
+\end{proof}
+
+\begin{example}
+  测度大于零的可测集中必定含有不可测的子集.\par
+\end{example}
+
+\begin{proof}
+  不可测集的必要条件为外测度大于0, 因此根据Vitali的构造方法, 一定有测度大于零的可测集含有不可测的子集.\par
+\end{proof}
+
+\begin{example}
+  几乎处处收敛的可测函数列不一定是依测度收敛的函数列.
+\end{example}
+
+\begin{proof}
+  由Lebesgue定理, 在测度非无限的情形时成立, 例如$f_n(x)=\chi_{[n,n+1]}(x)$, 则$f_n(x)\rightarrow 0$ a.e. on $\mathbb{R}$, 但$\int_{\mathbb{R}}f_n(x)\mathrm{d}x=1$, 因此不依测度收敛.\par
+\end{proof}
+
+\begin{example}
+  设集合$A,B$不相交, 则$m^{*}(A \cup B) \leqslant m^{*}(A) + m^{*}(B)$.
+\end{example}
+
+\begin{proof}
+  当$A,B$满足两个集合的距离严格大于0时才有$m^{*}(A \cup B) = m^{*}(A) + m^{*}(B)$, 对于一般情形由次可加性有$m^{*}(A \cup B) \leqslant m^{*}(A) + m^{*}(B)$.\par
+\end{proof}
+
+\begin{example}
+  两个非空闭集如果不相交, 则两个集合之间的距离可以等于0.
+\end{example}
+
+\begin{proof}
+  事实上当两个集合是紧的时候才有上面的结果成立.\par
+\end{proof}
+
+\begin{example}
+  集合的边界点要么是该集合的孤立点, 要么是该集合的聚点.
+\end{example}
+
+\begin{proof}
+  根据定义可知, 边界点和聚点的全体构成这个集合.
+\end{proof}
+
+\begin{example}
+  若点$p$同时是集合$E$, $F$的聚点, 则$p$不一定是$E \cap F$的聚点.
+\end{example}
+
+\begin{proof}
+  例如$E=\{1/n: n=1,2,\cdots\}, F=\{-1/n: n=1,2,\cdots\}$, 则$0$是$E$和$F$的聚点, 但$E \cap F = \emptyset$, 因此$0$不是$E \cap F$的聚点.\par
+\end{proof}
+
+\begin{example}
+  设集合$A, B$对等, $C \subset A$, $D \subset B$ 满足$C \sim D$, 则$A \backslash C$与$B \backslash D$可能不对等.
+\end{example}
+
+\begin{proof}
+  例如$A=\{1,2,3\}, B=\{4,5,6\}, C=\{1,2\}, D=\{4,5\}$, 则$C \sim D$, 但$A \backslash C = \{3\}, B \backslash D = \{6\}$.\par
+  因此$A \backslash C$与$B \backslash D$不对等.\par
+\end{proof}
+
+\begin{example}
+  设$\varphi$是集合之间的映射, 则$\varphi(A\cap B) = \varphi(A) \cap \varphi(B)$, $\varphi^{-1}(A \cap B) \subset \varphi^{-1}(A) \cap \varphi^{-1}(B)$.
+\end{example}
+
+\begin{proof}
+  由映射的定义, $\varphi(A\cap B) = \{y: \exists x\in A\cap B, y=\varphi(x)\} = \{y: \exists x\in A, y=\varphi(x)\} \cap \{y: \exists x\in B, y=\varphi(x)\} = \varphi(A) \cap \varphi(B)$.\par
+  对于第二个结论, 由$\varphi^{-1}(A \cap B) = \{x: y\in A\cap B, x=\varphi^{-1}(y)\} = \{x: y\in A, x=\varphi^{-1}(y)\} \cap \{x: y\in B, x=\varphi^{-1}(y)\} = \varphi^{-1}(A) \cap \varphi^{-1}(B)$.\par
+\end{proof}
+
+\begin{example}
+  若$f$是可测集$E$上处处有限的函数, 若$\forall a\in \mathbb{R}$, $E[f = a]$均可测, 则$f$不一定是$E$上的可测函数.
+\end{example}
+
+\begin{proof}
+  反例可取$f=\begin{cases}
+    x, x\in A\\
+    -x, x\notin A
+  \end{cases}$, 其中$A$为可测集$E$上的一个不可测子集.\par
+\end{proof}
+
+\begin{example}
+  设$\{f_n\}_{n=1}^{\infty}$是$E$上的一列实函数, 令$f(x) = \inf \{f_n(x), n = 1, 2, \cdots\}$, 则对所有的$a\in \mathbb{R}$有$E[f > a] \subset \bigcap_{n=1}^{\infty}E[f_n > a]$, 但$\{f_n\}_{n=1}^{\infty}$可测时$f$也可测.
+\end{example}
+
+\begin{proof}
+  注意到$f>a$时一定有$f_n>a$, 但反之不一定成立.\par
+  对于第二部分, 事实上$f_n$的可测性和$f$的可测性是等价的.\par
+\end{proof}
+
+\begin{example}
+  设集列$\{A_k\}$满足$A_k=\begin{cases}
+    \left[1,2-\frac{1}{k+1}\right), k =1,3,5,\cdots\\
+    \left[0,1+\frac{2}{k}\right), k=2,4,6,\cdots
+  \end{cases}$, 则集列$\{A_k\}$的下限集是$\{1\}$, 上限集是$\left[0\right.,\left. 2\right)$.
+\end{example}
+
+\begin{proof}
+  $\{A_k\}$满足$\limsup = \bigcap_{N=1}^{\infty} \bigcup_{n=N}^{\infty}A_n= \bigcap_{N=1}^{\infty} \left[0,2\right)=\left[0,2\right)$和$\liminf = \bigcup_{N=1}^{\infty} \bigcap_{n=N}^{\infty}A_n= \bigcup_{N=1}^{\infty} \{1\}=\{1\}$.\par
+\end{proof}
+
+\backmatter
+
+
+\end{document}

@@ -313,6 +313,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
     <nav class="navbar">
@@ -373,21 +374,21 @@
             <i class="fas fa-laptop-code feature-icon"></i>
             <h3 class="feature-title">MATLAB</h3>
             <p class="feature-desc">面向科学计算的高级编程环境，广泛应用于数值分析、信号处理与数学建模。</p>
-            <a href="/tools/matlab-guide" class="cta-button">使用教程</a>
+            <span class="coming-soon">教程整理中</span>
         </div>
         
         <div class="feature-card">
             <i class="fab fa-python feature-icon"></i>
             <h3 class="feature-title">Python科学计算</h3>
             <p class="feature-desc">基于NumPy、SciPy和Matplotlib的数学计算生态系统，开源且功能强大。</p>
-            <a href="/tools/python-math" class="cta-button">使用教程</a>
+            <span class="coming-soon">教程整理中</span>
         </div>
         
         <div class="feature-card">
             <i class="fas fa-infinity feature-icon"></i>
             <h3 class="feature-title">Maple/Mathematica</h3>
             <p class="feature-desc">符号计算系统，特别适合代数运算、微积分和高等数学计算。</p>
-            <a href="/tools/symbolic-math" class="cta-button">使用教程</a>
+            <span class="coming-soon">教程整理中</span>
         </div>
     </div>
 
@@ -404,14 +405,14 @@
             <i class="fas fa-book-open feature-icon"></i>
             <h3 class="feature-title">LaTeX数学符号</h3>
             <p class="feature-desc">全面的LaTeX数学符号参考表，包含常用公式和符号的输入方法。</p>
-            <a href="/tools/latex-math-symbols" class="cta-button">查看文档</a>
+            <span class="coming-soon">文档整理中</span>
         </div>
         
         <div class="feature-card">
             <i class="fas fa-chalkboard feature-icon"></i>
             <h3 class="feature-title">LaTeX入门教程</h3>
             <p class="feature-desc">针对数学专业学生的LaTeX基础教程，从安装到高级排版技巧。</p>
-            <a href="/tools/latex-tutorial" class="cta-button">开始学习</a>
+            <span class="coming-soon">教程整理中</span>
         </div>
     </div>
 
@@ -465,20 +466,10 @@
 </main>
 
     <footer>
-        <p class="footer-text">© 2024-2025 Last Updated: June 10th, 2025</p>
+        <p class="footer-text">© 海德数学 · 资料持续维护</p>
         <p class="footer-text">获取更多信息，请访问 <a href="https://github.com/haidemath/haidemath.github.io/" class="footer-link">Github</a> 或提交 <a href="https://github.com/haidemath/haidemath.github.io/issues/new" class="footer-link">Issue</a></p>
         <p class="footer-text">本项目由2023级数学2班建设, 特别感谢刘小允、孙景昱同学的支持。</p>
-        <p class="footer-text">本页访问次数: <span id="visit-count">0</span> 次</p>
-
-        <script>
-        // Visit counter using localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            let visits = localStorage.getItem('visit-count') || 0;
-            visits = parseInt(visits) + 1;
-            localStorage.setItem('visit-count', visits);
-            document.getElementById('visit-count').textContent = visits;
-        });
-        </script>
     </footer>
+    <script src="../assets/site.js" defer></script>
 </body>
 </html>

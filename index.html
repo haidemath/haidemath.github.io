@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Source Sharing Platform</title>
+    <title>海德数学 · 学习资源</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -313,6 +313,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
     <nav class="navbar">
@@ -332,8 +333,8 @@
 
     <header>
         <div class="container header-content">
-            <h1 class="header-title">Welcome to Source Sharing Platform</h1>
-            <p class="header-subtitle">You can find any course and notes information here, with also homework information and forum to communicate.</p>
+            <h1 class="header-title">海德数学 · 学习资源</h1>
+            <p class="header-subtitle">课程资料、笔记、讲义与作业，集中查找，随时阅读。</p>
         </div>
     </header>
 
@@ -357,6 +358,12 @@
                 <h3 class="feature-title">课程资料</h3>
                 <p class="feature-desc">获取课程的基本参考书目和扩展阅读材料。</p>
                 <a href="/courses" class="cta-button">点击前往</a>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-book-open feature-icon"></i>
+                <h3 class="feature-title">专题讲义</h3>
+                <p class="feature-desc">在线阅读 Markdown 讲义与数学公式。</p>
+                <a href="/lectures" class="cta-button">浏览讲义</a>
             </div>
             
             <div class="feature-card">
@@ -399,20 +406,10 @@
     </main>
 
     <footer>
-        <p class="footer-text">© 2024-2025 Last Updated: June 10th, 2025</p>
+        <p class="footer-text">© 海德数学 · 资料持续维护</p>
         <p class="footer-text">获取更多信息，请访问 <a href="https://github.com/haidemath/haidemath.github.io/" class="footer-link">Github</a> 或提交 <a href="https://github.com/haidemath/haidemath.github.io/issues/new" class="footer-link">Issue</a></p>
         <p class="footer-text">本项目由2023级数学2班建设, 特别感谢刘小允、孙景昱同学的支持。</p>
-        <p class="footer-text">本页访问次数: <span id="visit-count">0</span> 次</p>
-
-        <script>
-        // Visit counter using localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            let visits = localStorage.getItem('visit-count') || 0;
-            visits = parseInt(visits) + 1;
-            localStorage.setItem('visit-count', visits);
-            document.getElementById('visit-count').textContent = visits;
-        });
-        </script>
     </footer>
+    <script src="assets/site.js" defer></script>
 </body>
 </html>

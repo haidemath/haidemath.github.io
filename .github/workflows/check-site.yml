@@ -1,0 +1,19 @@
+name: Check static site
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  links-and-indexes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check local links and indexes
+        run: python scripts/check_site.py
+      - name: Check converted lecture formulae
+        run: python scripts/verify_analysis_conversion.py

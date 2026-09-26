@@ -1,0 +1,217 @@
+\documentclass[UTF8]{article}
+
+\usepackage{amsmath}%数学公式宏包
+\usepackage{amssymb}%数学符号宏包
+\usepackage{amsthm}%定理证明环境宏包
+\usepackage{epstopdf}%eps转pdf宏包
+\usepackage{fancyhdr}%页眉页脚宏包
+\usepackage{gensymb}%包含\celsius,\degree,\micro,\ohm,\perthousand等命令
+\usepackage{geometry}%页面设置宏包
+\usepackage{graphicx}%插入图片宏包
+\usepackage{pgfplots}%绘制图像宏包
+\usepackage{relsize}
+\usepackage{setspace}%设置间距宏包
+\usepackage{subfigure}%子图排列宏包
+\usepackage{tikz}%绘制图像宏包
+\usepackage[colorlinks,linkcolor=blue]{hyperref}%超链接宏包
+\usepackage[heading]{ctex}
+
+%选择题分行命令
+\newcommand{\onech}[4]{\indent\makebox[92pt][l]{\qquad A. #1} \hfill\makebox[92pt][l]{B. #2} \hfill \makebox[92pt][l]{C. #3} \hfill \makebox[92pt][l]{D. #4}\\}
+\newcommand{\twoch}[4]{	\indent\makebox[110pt][l]{\qquad A. #1} \hfill\makebox[220pt][l]{B. #2}\\\indent\makebox[110pt][l]{\qquad C. #3} \hfill\makebox[220pt][l]{D. #4}\\}
+\newcommand{\fourch}[4]{\indent\makebox[262pt][l]{\qquad A. #1}\\\indent\makebox[262pt][l]{\qquad B. #2}\\\indent\makebox[262pt][l]{\qquad C. #3}\\\indent\makebox[262pt][l]{\qquad D. #4}\\}
+%罗马数字命令
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+
+%页面设置
+\geometry{a4paper,left=2cm,right=2cm,top=2cm,bottom=2cm}
+%首行缩进设置
+\setlength{\parindent}{0em}
+%行距设置
+\setlength{\baselineskip}{20pt}
+\linespread{1.75}
+%页眉页脚设置 
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\textbf{\rightmark} \qquad \thepage}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%定理证明环境设置
+\newtheorem*{theorem}{Thm}
+\newtheorem*{corollary}{Cor}
+\newtheorem*{lemma}{Lem}
+\newtheorem*{definition}{Def}
+\newtheorem*{proposition}{Prop}
+\newtheorem*{remark}{Rem}
+\newtheorem{example}{Example}
+\newtheorem{solution}{Sol}
+\newtheorem{num}{}
+
+\begin{document}
+  \begin{center}
+    \LARGE \textbf{2023春-实变函数}
+  \end{center}
+
+  \subsection*{一、选择题}
+
+  1. 设$E=[a,b]\times \mathbb{Q} \times \mathbb{Q}$, 其中$\mathbb{Q}$为有理数集, 则$E$的讨论为真的是:\par
+  \twoch{$m(E)=+\infty$.}{$m(E)=0$.}{$m(E)=b-a$.}{$E$是不可测集.}
+
+  \begin{solution}
+    \textbf{A} 错误, $\mathbb{Q}$测度为0, 由乘积测度的性质知$m(E)=0$.\par
+    \textbf{B} 正确, $\mathbb{Q}$测度为0, 由乘积测度的性质知$m(E)=0$.\par
+    \textbf{C} 错误, $\mathbb{Q}$测度为0, 由乘积测度的性质知$m(E)=0$.\par
+    \textbf{D} 错误, $E$的测度为0, 一定可测.\par
+    因此正确答案是 \textbf{B}.
+  \end{solution}
+
+  2. 设$f$为可测集$E$上的可测函数, 则关于$f$的命题成立的是:\par
+  \fourch{$f$在$E$上Lebesgue可积当且仅当$f^{+}$和$f^{-}$在$E$上Lebesgue可积.}{$f$在$E$上Lebesgue可积当且仅当$|f|$在$E$上Lebesgue可积.}{$f$在$E$上Riemann可积当且仅当$|f|$在$E$上Riemann可积.}{$f$可测当且仅当$|f|$可测.}
+
+  \begin{solution}
+    \textbf{A} 正确, $f$可积的充要条件为其正部和负部函数均可积.\par
+    \textbf{B} 错误, 可举反例$f(x)=\chi_{\mathbb{Q}}-\chi_{\mathbb{R}\backslash \mathbb{Q}}$.\par
+    \textbf{C} 错误, 可举反例$f(x)=\chi_{\mathbb{Q}}-\chi_{\mathbb{R}\backslash \mathbb{Q}}$. 由为Riemann可积一定有Lebesgue可积, 现有Lebesgue不可积的反例, 因此Riemann可积也不成立.\par
+    \textbf{D} 错误, 可举反例$f(x)=\chi_{V}-\chi_{\mathbb{R}\backslash V}$, 其中$V$为$\mathbb{R}$上的不可测集.\par
+    因此正确答案是 \textbf{A}.
+  \end{solution}
+
+  3. 设$A_n=\left[-\frac{1}{n}\right.,\left.1+(-1)^n\cdot \frac{1}{2n}\right)$, 则下列关于$A_n$的运算正确的是:\par
+  \twoch{$\lim \limits_{n\to +\infty}A_n=[0,1)$}{$\liminf \limits_{n\to +\infty}A_n=[0,1]$}{$\limsup \limits_{n\to +\infty}A_n=[0,1)$}{$\limsup \limits_{n\to +\infty}A_n=[0,1]$}
+
+  \begin{solution}
+    \textbf{A} 错误, $\lim \limits_{n\to +\infty}A_n$存在当且仅当$\limsup \limits_{n\to +\infty}A_n=\liminf \limits_{n\to +\infty}A_n$.\par
+    而这里$\limsup \limits_{n\to +\infty}A_n=\bigcap_{N=1}^{+\infty}\bigcup_{n=N}^{+\infty}A_n=[0,1]$, $\liminf \limits_{n\to +\infty}A_n=\bigcup_{N=1}^{+\infty}\bigcap_{n=N}^{+\infty}A_n=\left[0\right.,\left.1\right)$.\par
+    \textbf{B} 错误, $\liminf \limits_{n\to +\infty}A_n=\bigcup_{N=1}^{+\infty}\bigcap_{n=N}^{+\infty}A_n=\left[0\right.,\left.1\right)$.\par
+    \textbf{C} 错误, $\limsup \limits_{n\to +\infty}A_n=\bigcap_{N=1}^{+\infty}\bigcup_{n=N}^{+\infty}A_n=[0,1]$.\par
+    \textbf{D} 正确, $\limsup \limits_{n\to +\infty}A_n=\bigcap_{N=1}^{+\infty}\bigcup_{n=N}^{+\infty}A_n=[0,1]$.\par
+    因此正确答案是 \textbf{D}.
+  \end{solution}
+
+  4. 设$C$为Cantor集, 则下列关于$C$的命题不成立的是:\par
+  \twoch{$m(C)=0$.}{$\overline{C}=C$.}{$C$中有至多可数个点.}{$C$是疏朗集.}
+
+  \begin{solution}
+    \textbf{A} 正确, Cantor集是一个闭的零测集.\par
+    \textbf{B} 正确, Cantor集是闭集, 因此$\overline{C}=C$.\par
+    \textbf{C} 错误, Cantor集是不可数的.\par
+    \textbf{D} 正确, Cantor集是疏朗集.\par
+    因此正确答案是 \textbf{C}.
+  \end{solution}
+  
+  5. 设$E\subset \mathbb{R}^n$是Lebesgue可测集, 则下列关于$E$的命题成立的是:\par
+  \fourch{$\forall \varepsilon >0$, 存在紧集$K\subset E$, $m(E\backslash K)<\varepsilon$.}{$\forall \varepsilon >0$, 存在闭集$F\subset E$, $m(E\backslash F)<\varepsilon$.}{$\forall \varepsilon >0$, 存在紧集$K\subset E$, $m(E)<m(K)+\varepsilon$.}{$\forall \varepsilon >0$, 存在闭集$F\subset E$, $m(E)<m(F)+\varepsilon$.}
+  
+  \begin{solution}
+    \textbf{A} 错误, 在空间测度无限的情形下未必成立.\par
+    \textbf{B} 正确, Lebesgue可测集可以用闭集近似, 且有对应的测度结果.\par
+    \textbf{C} 错误, 在空间测度无限的情形下未必成立.\par
+    \textbf{D} 错误, 在空间测度无限的情形下未必成立.\par
+    因此正确答案是 \textbf{B}.
+  \end{solution}
+
+  \subsection*{二、判断题}
+
+  1. 若$E\subset \mathbb{R}^n$是零测集, 则$E$的闭包也是零测集.\par
+
+  \begin{solution}
+    错误, 例如$\mathbb{Q}$是零测集, 但其闭包$\mathbb{R}$不是零测集.\par
+  \end{solution}
+
+  2. 若$\{f_n\},\{g_n\}$是可测集$E$上的几乎处处有限的可测函数, 若$f_n\Rightarrow f$, $g_n \Rightarrow g$, 则$f_ng_n\Rightarrow fg$.\par
+  
+  \begin{solution}
+    正确, 在已经有$f_n$和$g_n$几乎处处有限的前提下, $f_ng_n$一定依测度收敛到$fg$.\par
+  \end{solution}
+
+  3. 设$E_k$为一列可测集, 若$E=\bigcap_{k=1}^{+\infty}E_k$, 则$m(E)=\lim \limits_{k \to +\infty}m(E_k)$.\par
+
+  \begin{solution}
+    错误, 一般情况下不成立, 例如$E_k=[0,k]$, 则$m(E_k)=k$, $\lim \limits_{k \to +\infty}m(E_k)=+\infty$, 但$E=\bigcap_{k=1}^{+\infty}E_k=[0,1]$, $m(E)=1$.\par
+  \end{solution}
+
+  4. 设$A$为集合, 则总存在集合$B$, $A$的势严格大于$B$的势.\par
+
+  \begin{solution}
+    正确, 取$B=2^{A}$, 则$A$的势严格大于$B$的势, 因为根据康托尔定理, 集合的势总是小于其幂集的势.\par
+  \end{solution}
+
+  5. 设$f_n(x)$为可测集$E$上几乎处处有限的实函数, 则$E\left[f_n\nrightarrow 0\right]=\bigcup_{k\geqslant 1} \bigcap_{N\geqslant 1}\bigcup_{n\geqslant N} E\left[|f_n(x)|\geqslant \frac{1}{k}\right]$.\par
+
+  \begin{solution}
+    正确, $E\left[f_n\nrightarrow 0\right]$表示存在$\varepsilon >0$, 使得对于任意的$N$, 存在$n\geqslant N$, 使得$|f_n(x)|\geqslant \varepsilon$.\par
+  \end{solution}
+
+  6. 有限个闭集的并是闭集, 可数多个闭集的并不一定是闭集.\par
+
+  \begin{solution}
+    正确, 有限个闭集的并是闭集, 但可数多个闭集的并不一定是闭集, 例如$\bigcup_{n=1}^{+\infty}[0,\frac{1}{n}]$是开集.\par
+  \end{solution}
+
+  \subsection*{三、简答题}
+
+  1. 设$e_n$是一列可测集, 分析$\limsup \limits_{n \ to +\infty}e_n$是否可测.\par
+
+  \begin{solution}
+    $\limsup \limits_{n \to +\infty}e_n = \bigcap_{N=1}^{+\infty}\bigcup_{n=N}^{+\infty}e_n$.\par
+    由于可测集的可数并和交仍然是可测集, 因此$\limsup \limits_{n \to +\infty}e_n$是可测集.\par
+  \end{solution}
+
+  2. 叙述几乎处处收敛和依测度收敛的定义, 并分析两者的关系.\par
+
+  \begin{solution}
+    几乎处处收敛: $\exists A\subset E, m(A)=0$, $f_n(x) \to f(x)$在$E\backslash A$上成立.\par
+    依测度收敛: 对于任意$\varepsilon >0$, $\lim \limits_{n \to +\infty}m(E\left[|f_n(x)-f(x)|\geqslant \varepsilon\right])=0$.\par
+    两者的关系: 在全空间测度有限的情况下, 几乎处处收敛一定有依测度收敛, 而依测度收敛一定有子列几乎处处收敛.\par
+  \end{solution}
+
+  3. 设$C$为Cantor集, 设$f(x)=\begin{cases}
+    \frac{\ln x}{x}, & x\in C \\
+    \mathrm{e}^x+1, & x\notin C
+  \end{cases}$.\par
+  (1) $f$是否在$[0,1]$上Riemann可积? 简单说明理由.\par
+  (2) $f$是否在$[0,1]$上Lebesgue可积? 简单说明理由.\par
+
+  \begin{solution}
+    (1) $f$在$[0,1]$上不是Riemann可积的. 因为Cantor集是不可数的, 且$f(x)$在Cantor集上不连续, 不满足Riemann可积的条件.\par
+    (2) $f$在$[0,1]$上是Lebesgue可积的. 因为$f(x)$在$[0,1]$上几乎处处有限, 其不连续点构成零测集.\par
+    积分计算如下:\par
+    $\int_{0}^{1}f(x)\mathrm{d}x=\int_{C}\frac{\ln x}{x}\mathrm{d}x+\int_{[0,1]\backslash C}(\mathrm{e}^x+1)\mathrm{d}x=\int_{0}^{1}(\mathrm{e}^x+1)\mathrm{d}x = \mathrm{e}$.\par
+  \end{solution}
+
+  \subsection*{四、证明题}
+
+  1. 设$f$为可测集$E$上的可积函数, 记$E_k=E\left[|f|<\frac{1}{k^2}\right]$, 证明$\lim \limits_{k \to +\infty}\int_{E_k}|f(x)|\mathrm{d}x=0$.\par
+
+  \begin{solution}
+    考虑$\lim \limits_{k \to +\infty}\int_{E_k}|f(x)|\mathrm{d}x=\lim \limits_{k \to +\infty}\int_{E\left[|f|<\frac{1}{k^2}\right]}|f(x)|\mathrm{d}x=\int_{E\left[|f|=0\right]}|f(x)|\mathrm{d}x=0$.\par
+  \end{solution}
+
+  2. 设$f_k(x)$为可测集$E$上的可测函数列, 若$\lim \limits_{k \to +\infty}\int_{E_k}|f(x)|\mathrm{d}x=0$, 证明$f_k(x)$在$E$上依测度收敛到0.\par
+
+  \begin{solution}
+    由于$\lim \limits_{k \to +\infty}\int_{E_k}|f(x)|\mathrm{d}x=0$, 则对于任意$\varepsilon >0$, 存在$N$使得当$k>N$时$m(E_k)<\frac{\varepsilon}{\int_{E}|f(x)|\mathrm{d}x}$.\par
+    由依测度收敛的定义, 对于任意$\varepsilon >0$, 存在$N$使得当$k>N$时$m(E\left[|f_k(x)|\geqslant \varepsilon\right])\to 0$. 因此$f_k(x)$在$E$上依测度收敛到0.\par
+  \end{solution}
+
+  \subsection*{五、解答题}
+
+  1. 设$e_k$是一列集合, 若$m^{*}(e_k)<\frac{1}{2^k}$, 计算$\limsup \limits_{k \to +\infty}e_k$的外测度.\par
+
+  \begin{solution}
+    由$\sum_{k=1}^{+\infty}m(e_k)<\sum_{k=1}^{+\infty}\frac{1}{2^k}<+\infty$, 因此$m(\limsup \limits_{k \to +\infty}e_k)=0$.\par
+  \end{solution}
+
+  2. 计算$\lim \limits_{n \to +\infty}\int_{0}^{1}\frac{kx \sin{kx}}{2+k^2x^3}\mathrm{d}x$.\par
+
+  \begin{solution}
+    考虑$\lim \limits_{n \to +\infty}\int_{0}^{1}\frac{kx \sin{kx}}{2+k^2x^3}\mathrm{d}x$.\par
+    由于$\frac{kx \sin{kx}}{2+k^2x^3}$在$[0,1]$上几乎处处有限, 且$\int_{0}^{1}\frac{kx}{2+k^2x^3}\mathrm{d}x$是有界的, 因此根据有界收敛定理, $\lim \limits_{n \to +\infty}\int_{0}^{1}\frac{kx \sin{kx}}{2+k^2x^3}\mathrm{d}x=0$.\par
+  \end{solution}
+
+\end{document}

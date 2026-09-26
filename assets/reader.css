@@ -1,0 +1,363 @@
+/* Reading surface shared by the imported mathematics notes. */
+:root {
+    --primary: #245e72;
+    --primary-dark: #19495b;
+    --primary-light: #3b7890;
+    --accent: #bf7951;
+    --bg-primary: #fffefa;
+    --bg-secondary: #f4f2ed;
+    --bg-tertiary: #eae8e1;
+    --bg-overlay: rgba(255, 254, 250, .94);
+    --text-primary: #202b32;
+    --text-secondary: #40505a;
+    --text-tertiary: #66757d;
+    --border-light: #deded5;
+    --border-medium: #c6ccc7;
+}
+
+html[data-theme="dark"] {
+    --primary: #89c9d7;
+    --primary-dark: #6fb3c3;
+    --primary-light: #a1d9e2;
+    --accent: #e4ad82;
+    --bg-primary: #1d282e;
+    --bg-secondary: #152027;
+    --bg-tertiary: #28363d;
+    --bg-overlay: rgba(29, 40, 46, .95);
+    --text-primary: #f1f3ed;
+    --text-secondary: #c6d3d1;
+    --text-tertiary: #a2b4b5;
+    --border-light: #3c4c51;
+    --border-medium: #506166;
+}
+
+body {
+    font-family: "Inter", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    background: var(--bg-secondary);
+}
+
+.header {
+    height: 64px;
+    padding: 0 1.5rem;
+    box-shadow: none;
+}
+
+.header-brand {
+    color: var(--text-primary);
+    font-family: "Inter", "Microsoft YaHei", sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+}
+
+.header-brand i { color: var(--primary); }
+.header-actions { gap: .35rem; }
+.btn-icon { border-radius: 10px; }
+.btn-icon:focus-visible, .nav-item:focus-visible,
+.reader-toc button:focus-visible, .search-input:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.app-container { padding-top: 64px; }
+.sidebar {
+    flex: 0 0 292px;
+    width: 292px;
+    background: var(--bg-primary);
+}
+.sidebar.collapsed {
+    flex-basis: 0;
+    width: 0;
+    border: 0;
+    overflow: hidden;
+}
+.sidebar-header {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 1.45rem 1.35rem 1rem;
+    border-bottom: 0;
+}
+.sidebar-title {
+    font-family: "Inter", "Microsoft YaHei", sans-serif;
+    font-size: 1rem;
+    letter-spacing: -.02em;
+}
+.sidebar-title i { color: var(--primary); }
+.sidebar-content { padding-top: .25rem; }
+.search-input {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-radius: 10px;
+}
+.nav-item {
+    width: calc(100% - 1rem);
+    margin: .1rem .5rem;
+    padding: .72rem .8rem;
+    border-left: 0;
+    border-radius: 9px;
+    font-family: "Inter", "Microsoft YaHei", sans-serif;
+}
+.nav-item.active {
+    background: var(--bg-tertiary);
+    color: var(--primary-dark);
+    border-left: 0;
+}
+html[data-theme="dark"] .nav-item.active { color: var(--primary); }
+.nav-group { margin: .15rem .5rem; }
+.nav-group > summary {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .7rem .8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-tertiary);
+    font-size: .78rem;
+    font-weight: 650;
+    list-style: none;
+}
+.nav-group > summary::-webkit-details-marker { display: none; }
+.nav-group > summary::after {
+    content: "⌄";
+    margin-left: auto;
+    transform: rotate(-90deg);
+    transition: transform .18s ease;
+}
+.nav-group[open] > summary::after { transform: rotate(0deg); }
+.nav-group > summary:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.nav-group .nav-item { width: 100%; margin: .08rem 0; padding-left: 1.2rem; }
+
+.main-content { min-width: 0; }
+.content-header {
+    display: block;
+    padding: 1.55rem clamp(1.25rem, 5vw, 4rem) 1.2rem;
+    background: var(--bg-secondary);
+    border-bottom: 0;
+}
+.content-title {
+    max-width: 840px;
+    margin: 0 auto .3rem;
+    font-family: "Inter", "Microsoft YaHei", sans-serif;
+    font-size: clamp(1.25rem, 2vw, 1.7rem);
+    letter-spacing: -.025em;
+}
+.content-meta {
+    max-width: 840px;
+    margin: 0 auto;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    color: var(--text-tertiary);
+    font-size: .78rem;
+}
+.content-body {
+    padding: 0 clamp(1.25rem, 5vw, 4rem) 3rem;
+    scroll-behavior: smooth;
+}
+#content {
+    max-width: 920px;
+    min-height: 70vh;
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+    border: 1px solid var(--border-light);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(25, 45, 50, .055);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "SimSun", Georgia, serif;
+    font-size: 1.04rem;
+    line-height: 1.95;
+}
+#content h1, #content h2, #content h3, #content h4, #content h5 {
+    font-family: "Inter", "Microsoft YaHei", sans-serif;
+    color: var(--text-primary);
+    line-height: 1.45;
+    scroll-margin-top: 1.5rem;
+}
+#content h1 {
+    font-size: clamp(1.75rem, 3vw, 2.3rem);
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 1rem;
+    margin: 0 0 1.4rem;
+}
+#content h2 {
+    font-size: 1.65rem;
+    margin: 3rem 0 1.2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-light);
+}
+#content .reader-toc + h2,
+#content > h2:first-child {
+    margin-top: .6rem;
+    padding-top: 0;
+    border-top: 0;
+}
+#content h3 { font-size: 1.3rem; margin: 2.3rem 0 .9rem; }
+#content h4 { font-size: 1.1rem; margin: 1.8rem 0 .7rem; color: var(--primary-dark); }
+#content p {
+    color: var(--text-primary);
+    line-height: 1.95;
+    margin: .75rem 0 1.1rem;
+    text-indent: 0;
+    overflow-wrap: break-word;
+}
+#content img { max-width: 100%; height: auto; display: block; margin: 1.5rem auto; }
+#content ul, #content ol { padding-left: 1.6rem; }
+#content li { color: var(--text-primary); line-height: 1.85; }
+#content blockquote {
+    font-style: normal;
+    margin: 1.4rem 0;
+    padding: .8rem 1.15rem;
+    border-left: 3px solid var(--primary);
+    border-radius: 0 10px 10px 0;
+    background: color-mix(in srgb, var(--primary) 6%, var(--bg-primary));
+}
+#content blockquote blockquote {
+    background: transparent;
+    margin: .8rem 0 0;
+    border-color: var(--accent);
+}
+#content blockquote p { margin: .25rem 0 .65rem; }
+#content blockquote > p:first-child > strong { color: var(--primary-dark); }
+html[data-theme="dark"] #content blockquote > p:first-child > strong { color: var(--primary); }
+html[data-theme="dark"] #content .definition,
+html[data-theme="dark"] #content .theorem,
+html[data-theme="dark"] #content .example,
+html[data-theme="dark"] #content .note,
+html[data-theme="dark"] #content .warning,
+html[data-theme="dark"] #content .proof {
+    background: var(--bg-tertiary);
+    border-color: var(--border-medium);
+    color: var(--text-primary);
+}
+html[data-theme="dark"] #content :is(.definition, .theorem, .example, .note, .warning, .proof) p {
+    color: var(--text-primary);
+}
+#content mjx-container[display="true"] {
+    max-width: 100%;
+    overflow-x: auto;
+    padding: .35rem 0;
+    margin: 1rem 0 !important;
+}
+#content pre { max-width: 100%; overflow-x: auto; }
+#content a { color: var(--primary-dark); text-underline-offset: 3px; }
+html[data-theme="dark"] #content a { color: var(--primary); }
+
+.reader-toc {
+    margin: .5rem 0 2rem;
+    padding: .2rem 1rem;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    background: var(--bg-secondary);
+    font-family: "Inter", "Microsoft YaHei", sans-serif;
+}
+.reader-toc summary {
+    cursor: pointer;
+    color: var(--primary-dark);
+    font-weight: 600;
+    padding: .75rem .2rem;
+}
+html[data-theme="dark"] .reader-toc summary { color: var(--primary); }
+.reader-toc nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: .25rem .75rem;
+    padding: .2rem 0 .9rem;
+    max-height: 45vh;
+    overflow-y: auto;
+}
+.reader-toc button {
+    border: 0;
+    border-radius: 6px;
+    padding: .35rem .5rem;
+    background: transparent;
+    color: var(--text-secondary);
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    font-size: .86rem;
+}
+.reader-toc button:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.reader-toc .toc-chapter { font-weight: 700; color: var(--text-primary); }
+.reader-toc .toc-section { padding-left: 1rem; }
+.reader-toc .toc-subsection { padding-left: 1.5rem; font-size: .8rem; }
+
+#content .chapter-outline {
+    margin: .65rem 0;
+    border: 1px solid var(--border-light);
+    border-radius: 11px;
+    background: var(--bg-secondary);
+    font-family: "Inter", "Microsoft YaHei", sans-serif;
+}
+#content .chapter-outline summary {
+    padding: .9rem 1rem;
+    font-weight: 650;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+#content .chapter-outline[open] summary { border-bottom: 1px solid var(--border-light); }
+#content .chapter-outline .chapter-read {
+    display: inline-block;
+    margin: .9rem 1rem .45rem;
+    font-size: .88rem;
+    font-weight: 600;
+}
+#content .chapter-outline ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: .2rem .75rem;
+    padding: 0 1rem 1rem;
+    margin: 0;
+    list-style: none;
+}
+#content .chapter-outline li { margin: 0; font: inherit; font-size: .86rem; }
+#content .chapter-outline .outline-level-4,
+#content .chapter-outline .outline-level-5 { padding-left: .75rem; }
+#content .chapter-outline a { text-decoration: none; }
+#content .chapter-outline a:hover { text-decoration: underline; }
+#content .preface-outline {
+    margin-top: 2rem;
+    padding: .1rem 1rem;
+    border: 1px solid var(--border-light);
+    border-radius: 11px;
+}
+#content .preface-outline summary {
+    padding: .75rem 0;
+    cursor: pointer;
+    font-family: "Inter", "Microsoft YaHei", sans-serif;
+    font-weight: 600;
+}
+
+#content .section-block {
+    margin: .7rem 0;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    background: var(--bg-secondary);
+    overflow: hidden;
+}
+#content .section-block > summary {
+    padding: .9rem 1rem;
+    color: var(--text-primary);
+    font: 650 1rem/1.5 "Inter", "Microsoft YaHei", sans-serif;
+    cursor: pointer;
+    overflow-wrap: anywhere;
+}
+#content .section-block > summary:hover { color: var(--primary-dark); background: var(--bg-tertiary); }
+#content .section-block[open] > summary { border-bottom: 1px solid var(--border-light); }
+#content .section-content { padding: .35rem 1.1rem 1rem; background: var(--bg-primary); }
+#content .section-content > h4:first-child { margin-top: 1rem; }
+html[data-theme="dark"] #content .section-block > summary:hover { color: var(--primary); }
+#content .chapter-navigation {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-light);
+    font: 600 .9rem/1.7 "Inter", "Microsoft YaHei", sans-serif;
+}
+
+@media (max-width: 768px) {
+    .sidebar { top: 64px; height: calc(100vh - 64px); width: min(86vw, 320px); flex-basis: auto; }
+    .sidebar.collapsed { width: min(86vw, 320px); transform: translateX(-105%); }
+    .content-header { padding: 1rem 1rem .9rem; }
+    .content-body { padding: 0 .65rem 2rem; }
+    #content { padding: 1.3rem 1rem; border-radius: 10px; }
+    #content h2 { font-size: 1.4rem; }
+    .content-meta { font-size: .72rem; }
+}
