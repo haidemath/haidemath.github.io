@@ -11,7 +11,6 @@
   {"title":"统计建模与推断笔记 · 2025 春","section":"课程笔记","path":"notes/2025Spring/2025-Spring-SMI.html","keywords":"统计"},
   {"title":"优化与运筹学笔记 · 2025 春","section":"课程笔记","path":"notes/2025Spring/2025-Spring-OOR.html","keywords":"优化"},
   {"title":"数值方法笔记 · 2025 春","section":"课程笔记","path":"notes/2025Spring/2025-Spring-NM.html","keywords":"数值分析"},
-  {"title":"实分析：集合论基础","section":"专题讲义","path":"lectures/markdown/viewer.html?md=Real-Analysis-Set-Theory","keywords":"集合 运算"},
   {"title":"复分析讲义 · Markdown 章节","section":"专题讲义","path":"lectures/markdown/viewer.html?md=Complex-Analysis-Notes","keywords":"复变函数 洛朗 留数 保形映射"},
   {"title":"实分析讲义 · Markdown 章节","section":"专题讲义","path":"lectures/markdown/viewer.html?md=Real-Analysis-Notes","keywords":"实变函数 测度 Lebesgue 积分"},
   {"title":"复分析原仓库文件清单","section":"专题讲义","path":"lectures/markdown/viewer.html?md=Complex-Analysis-Project-Catalog","keywords":"源码 小测 试题"},

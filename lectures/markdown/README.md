@@ -9,10 +9,10 @@
 
 ```json
 {
-  "id": "Real-Analysis-Set-Theory",
-  "title": "实分析-集合论基础",
-  "file": "Real-Analysis-Set-Theory.md",
-  "category": "实分析"
+  "id": "New-Lecture",
+  "title": "新讲义",
+  "file": "New-Lecture.md",
+  "category": "专题讲义"
 }
 ```
 

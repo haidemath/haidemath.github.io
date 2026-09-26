@@ -151,20 +151,6 @@
       "file": "imports/Complex-Analysis-Notes/26小测/小测解答.md",
       "category": "复分析 · 原仓库",
       "icon": "fas fa-check"
-    },
-    {
-      "id": "Real-Analysis-Set-Theory",
-      "title": "实分析-集合论基础",
-      "file": "Real-Analysis-Set-Theory.md",
-      "category": "实分析",
-      "icon": "fas fa-layer-group",
-      "description": "集合的基础运算、关系与集族的定义",
-      "tags": [
-        "实分析",
-        "集合论",
-        "基础数学"
-      ],
-      "lastModified": "2025-06-29T00:00:00.000Z"
     }
   ],
   "categories": [
